@@ -1,0 +1,2 @@
+#!/bin/bash
+sed -e 's/^ *"nodemon": "[^"]".*$//' -i $OPENSHIFT_REPO_DIR/package.json
