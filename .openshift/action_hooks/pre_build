@@ -1,3 +1,0 @@
-#!/bin/bash
-echo "OpenShift Pre_build"
-sed -e 's/^ *"nodemon": "[^"]".*$//' -i $OPENSHIFT_REPO_DIR/package.json
