@@ -1,0 +1,234 @@
+{
+  "kind": "Template",
+  "apiVersion": "v1beta3",
+  "metadata": {
+    "name": "nodejs-example",
+    "creationTimestamp": null,
+    "annotations": {
+      "description": "Node.js example in OpenShift 3",
+      "iconClass": "icon-nodejs",
+      "tags": "instant-app,nodejs"
+    }
+  },
+  "objects": [
+    {
+      "kind": "Service",
+      "apiVersion": "v1beta3",
+      "metadata": {
+        "name": "nodejs-frontend",
+        "creationTimestamp": null
+      },
+      "spec": {
+        "ports": [
+          {
+            "name": "web",
+            "protocol": "TCP",
+            "port": 8080,
+            "targetPort": 8080,
+            "nodePort": 0
+          }
+        ],
+        "selector": {
+          "name": "nodejs-frontend"
+        },
+        "portalIP": "",
+        "type": "ClusterIP",
+        "sessionAffinity": "None"
+      },
+      "status": {
+        "loadBalancer": {}
+      }
+    },
+    {
+      "kind": "Route",
+      "apiVersion": "v1beta3",
+      "metadata": {
+          "name": "nodejs-route",
+          "creationTimestamp": null
+      },
+      "spec": {
+          "host" : "${ROUTE}",
+          "to": {
+              "kind" : "Service",
+              "name" : "nodejs-frontend"
+          }
+      }
+    },
+    {
+      "kind": "ImageStream",
+      "apiVersion": "v1beta3",
+      "metadata": {
+        "name": "nodejs-example",
+        "creationTimestamp": null
+      },
+      "spec": {},
+      "status": {
+        "dockerImageRepository": ""
+      }
+    },
+    {
+      "kind": "ImageStream",
+      "apiVersion": "v1beta3",
+      "metadata": {
+        "name": "nodejs-010-centos7",
+        "creationTimestamp": null
+      },
+      "spec": {
+        "dockerImageRepository": "openshift/nodejs-010-centos7"
+      },
+      "status": {
+        "dockerImageRepository": ""
+      }
+    },
+    {
+      "kind": "BuildConfig",
+      "apiVersion": "v1beta3",
+      "metadata": {
+        "name": "nodejs-example",
+        "creationTimestamp": null,
+        "labels": {
+          "name": "nodejs-example"
+        }
+      },
+      "spec": {
+        "triggers": [
+          {
+            "type": "github",
+            "github": {
+              "secret": "secret101"
+            }
+          },
+          {
+            "type": "generic",
+            "generic": {
+              "secret": "secret101"
+            }
+          },
+          {
+            "type": "imageChange",
+            "imageChange": {}
+          }
+        ],
+        "source": {
+          "type": "Git",
+          "git": {
+            "uri": "${GITHUB_URL}"
+          }
+        },
+        "strategy": {
+          "type": "Source",
+          "sourceStrategy": {
+            "from": {
+              "kind": "DockerImage",
+              "name": "openshift/nodejs-010-centos7:latest"
+            },
+            "incremental": true
+          }
+        },
+        "output": {
+          "to": {
+            "kind": "ImageStreamTag",
+            "name": "nodejs-example:latest"
+          }
+        },
+        "resources": {}
+      },
+      "status": {
+        "lastVersion": 0
+      }
+    },
+    {
+      "kind": "DeploymentConfig",
+      "apiVersion": "v1beta3",
+      "metadata": {
+        "name": "nodejs-frontend",
+        "creationTimestamp": null
+      },
+      "spec": {
+        "strategy": {
+          "type": "Rolling",
+          "rollingParams": {
+            "updatePeriodSeconds": 1,
+            "intervalSeconds": 1,
+            "timeoutSeconds": 120
+          },
+          "resources": {}
+        },
+        "triggers": [
+          {
+            "type": "ImageChange",
+            "imageChangeParams": {
+              "automatic": true,
+              "containerNames": [
+                "nodejs-example"
+              ],
+              "from": {
+                "name": "nodejs-example:latest"
+              },
+              "lastTriggeredImage": ""
+            }
+          }
+        ],
+        "replicas": 1,
+        "selector": {
+          "name": "nodejs-frontend"
+        },
+        "template": {
+          "metadata": {
+            "creationTimestamp": null,
+            "labels": {
+              "name": "nodejs-frontend"
+            }
+          },
+          "spec": {
+            "containers": [
+              {
+                "name": "nodejs-example",
+                "image": "nodejs-example",
+                "ports": [
+                  {
+                    "containerPort": 8080,
+                    "protocol": "TCP"
+                  }
+                ],
+                "resources": {},
+                "terminationMessagePath": "/dev/termination-log",
+                "imagePullPolicy": "IfNotPresent",
+                "capabilities": {},
+                "securityContext": {
+                  "capabilities": {},
+                  "privileged": false
+                }
+              }
+            ],
+            "restartPolicy": "Always",
+            "dnsPolicy": "ClusterFirst"
+          }
+        }
+      },
+      "status": {}
+    }
+  ],
+  "parameters": [
+    {
+      "name": "GITHUB_URL",
+      "description": "The URL with your Node.js application source code.",
+      "value": "https://github.com/openshift/nodejs-ex.git"
+    },
+    {
+      "name": "SECRET_KEY_BASE",
+      "description": "Your secret key for verifying the integrity of signed cookies.",
+      "generate": "expression",
+      "from": "[a-z0-9]{127}"
+    },
+    {
+      "name": "ROUTE",
+      "description": "The exposed hostname that will route to the Node.js service",
+      "value": "nodejs.apps"
+    }
+  ],
+  "labels": {
+    "template": "application-template-stibuild"
+  }
+}
+
