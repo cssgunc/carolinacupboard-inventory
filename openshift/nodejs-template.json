@@ -5,7 +5,7 @@
     "name": "nodejs-example",
     "creationTimestamp": null,
     "annotations": {
-      "description": "Node.js example in OpenShift 3",
+      "description": "Node.js example that responds with information about server.",
       "iconClass": "icon-nodejs",
       "tags": "instant-app,nodejs"
     }
@@ -119,8 +119,8 @@
           "type": "Source",
           "sourceStrategy": {
             "from": {
-              "kind": "DockerImage",
-              "name": "openshift/nodejs-010-centos7:latest"
+              "kind": "ImageStreamTag",
+              "name": "nodejs-010-centos7:latest"
             },
             "incremental": true
           }
@@ -163,6 +163,7 @@
                 "nodejs-example"
               ],
               "from": {
+              	"kind": "ImageStreamTag",
                 "name": "nodejs-example:latest"
               },
               "lastTriggeredImage": ""
@@ -228,7 +229,7 @@
     }
   ],
   "labels": {
-    "template": "application-template-stibuild"
+    "template": "nodejs-example"
   }
 }
 
