@@ -1,12 +1,15 @@
 var util = require('util');
-var http = require('http');
 var url = require('url');
 var qs = require('querystring');
 var os = require('os')
 var port = process.env.PORT || process.env.port || process.env.OPENSHIFT_NODEJS_PORT || 8080;
 var ip = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
 var nodeEnv = process.env.NODE_ENV || 'unknown';
-var server = http.createServer(function (req, res) {
+
+var express = require('express');
+var app = express();
+
+app.use(function(req, res, next) {
 	var url_parts = url.parse(req.url, true);
 
 	var body = '';
@@ -43,8 +46,9 @@ var server = http.createServer(function (req, res) {
 		res.write('OS CPU model: ' + os.cpus()[0].model + '\n');
 		res.write('OS CPU speed: ' + os.cpus()[0].speed + 'mhz\n');
 		res.end('\n');
-
 	});
+	next();
 });
-server.listen(port);
+
+app.listen(port, ip);
 console.log('Server running on ' + ip + ':' + port);

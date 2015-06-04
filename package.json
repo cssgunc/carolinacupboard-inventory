@@ -1,7 +1,7 @@
 {
-  "name": "node-echo",
+  "name": "nodejs-ex",
   "version": "0.0.1",
-  "description": "node-echo",
+  "description": "Node.js sample app for OpenShift 3",
   "main": "server.js",
   "dependencies": {
   },
@@ -18,15 +18,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/bettiolo/node-echo.git"
+    "url": "http://github.com/openshift/nodejs-ex.git"
   },
   "keywords": [
     "Echo"
   ],
-  "author": "Marco Bettiolo <marco@bettiolo.it>",
+  "author": "Steve Speicher <sspeiche@gmail.com>",
   "license": "",
   "bugs": {
-    "url": "http://github.com/bettiolo/node-echo/issues"
+    "url": "http://github.com/openshift/nodejs-ex/issues"
   },
-  "homepage": "http://apilb.com"
+  "homepage": "http://github.com/openshift/nodejs-ex"
 }
