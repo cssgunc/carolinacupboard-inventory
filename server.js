@@ -18,7 +18,7 @@ var server = http.createServer(function (req, res) {
 
 		res.writeHead(200, {'Content-Type': 'text/plain'});
 
-		res.write('This is a Node.js echo service\n');
+		res.write('Hello OpenShift World! This is a Node.js-based sample application.\n');
 		res.write('Host: ' + req.headers.host + '\n');
 		res.write('\n');
 		res.write('node.js Production Mode: ' + (nodeEnv == 'production' ? 'yes' : 'no') + '\n');
