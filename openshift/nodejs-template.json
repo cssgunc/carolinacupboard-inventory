@@ -5,7 +5,7 @@
     "name": "nodejs-example",
     "creationTimestamp": null,
     "annotations": {
-      "description": "Node.js example that responds with information about server.",
+      "description": "A simple Node.js application that responds with information about the server.",
       "iconClass": "icon-nodejs",
       "tags": "instant-app,nodejs"
     }
@@ -43,11 +43,11 @@
       "kind": "Route",
       "apiVersion": "v1beta3",
       "metadata": {
-          "name": "nodejs-route",
+          "name": "frontend-route",
           "creationTimestamp": null
       },
       "spec": {
-          "host" : "${ROUTE}",
+          "host" : "${FRONTEND_ROUTE}",
           "to": {
               "kind" : "Service",
               "name" : "nodejs-frontend"
@@ -212,19 +212,13 @@
   ],
   "parameters": [
     {
-      "name": "GITHUB_URL",
+      "name": "SOURCE_REPOSITORY_URL",
       "description": "The URL with your Node.js application source code.",
       "value": "https://github.com/openshift/nodejs-ex.git"
     },
     {
-      "name": "SECRET_KEY_BASE",
-      "description": "Your secret key for verifying the integrity of signed cookies.",
-      "generate": "expression",
-      "from": "[a-z0-9]{127}"
-    },
-    {
-      "name": "ROUTE",
-      "description": "The exposed hostname that will route to the Node.js service",
+      "name": "FRONTEND_ROUTE",
+      "description": "The exposed hostname that will route to the Node.js service.",
       "value": "nodejs.apps"
     }
   ],
