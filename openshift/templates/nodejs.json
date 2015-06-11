@@ -51,16 +51,6 @@
       }
     },
     {
-      "kind": "ImageStream",
-      "apiVersion": "v1",
-      "metadata": {
-        "name": "nodejs-010-centos7"
-      },
-      "spec": {
-        "dockerImageRepository": "openshift/nodejs-010-centos7"
-      }
-    },
-    {
       "kind": "BuildConfig",
       "apiVersion": "v1",
       "metadata": {
@@ -98,7 +88,8 @@
           "sourceStrategy": {
             "from": {
               "kind": "ImageStreamTag",
-              "name": "nodejs-010-centos7:latest"
+              "name": "nodejs:latest",
+              "namespace": "openshift"
             },
             "incremental": true
           }
