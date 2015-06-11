@@ -4,17 +4,23 @@
   "metadata": {
     "name": "nodejs-example",
     "annotations": {
-      "description": "A simple Node.js application with no database",
-      "iconClass": "icon-nodejs",
-      "tags": "instant-app,nodejs"
+      "description": "An example Node.js application with no database",
+      "tags": "instant-app,nodejs",
+      "iconClass": "icon-nodejs"
     }
+  },
+  "labels": {
+    "template": "nodejs-example"
   },
   "objects": [
     {
       "kind": "Service",
       "apiVersion": "v1",
       "metadata": {
-        "name": "${FRONTEND_SERVICE_NAME}"
+        "name": "nodejs-frontend",
+        "annotations": {
+          "description": "Exposes and load balances the application pods"
+        }
       },
       "spec": {
         "ports": [
@@ -25,7 +31,7 @@
           }
         ],
         "selector": {
-          "name": "${FRONTEND_SERVICE_NAME}"
+          "name": "nodejs-frontend"
         }
       }
     },
@@ -33,21 +39,24 @@
       "kind": "Route",
       "apiVersion": "v1",
       "metadata": {
-          "name": "${FRONTEND_ROUTE}"
+        "name": "nodejs-route"
       },
       "spec": {
-          "host" : "${FRONTEND_ROUTE}",
-          "to": {
-              "kind" : "Service",
-              "name" : "${FRONTEND_SERVICE_NAME}"
-          }
+        "host": "${FRONTEND_ROUTE}",
+        "to": {
+          "kind": "Service",
+          "name": "nodejs-frontend"
+        }
       }
     },
     {
       "kind": "ImageStream",
       "apiVersion": "v1",
       "metadata": {
-        "name": "nodejs-example"
+        "name": "nodejs-example",
+        "annotations": {
+          "description": "Keeps track of changes in the application image"
+        }
       }
     },
     {
@@ -55,67 +64,59 @@
       "apiVersion": "v1",
       "metadata": {
         "name": "nodejs-example",
-        "labels": {
-          "name": "nodejs-example"
+        "annotations": {
+          "description": "Defines how to build the application"
         }
       },
       "spec": {
-        "triggers": [
-          {
-            "type": "GitHub",
-            "github": {
-              "secret": "secret101"
-            }
-          },
-          {
-            "type": "Generic",
-            "generic": {
-              "secret": "secret101"
-            }
-          },
-          {
-            "type": "ImageChange"
-          }
-        ],
         "source": {
           "type": "Git",
           "git": {
             "uri": "${SOURCE_REPOSITORY_URL}"
-          }
+          },
+          "contextDir": "${CONTEXT_DIR}"
         },
         "strategy": {
           "type": "Source",
           "sourceStrategy": {
             "from": {
               "kind": "ImageStreamTag",
-              "name": "nodejs:latest",
-              "namespace": "openshift"
-            },
-            "incremental": true
+              "namespace": "openshift",
+              "name": "nodejs:0.10"
+            }
           }
         },
         "output": {
           "to": {
-            "kind": "ImageStreamTag",
-            "name": "nodejs-example:latest"
+            "kind": "ImageStream",
+            "name": "nodejs-example"
           }
-        }
+        },
+        "triggers": [
+          {
+            "type": "ImageChange"
+          },
+          {
+            "type": "GitHub",
+            "github": {
+              "secret": "${GITHUB_WEBHOOK_SECRET}"
+            }
+          }
+        ]
       }
     },
     {
       "kind": "DeploymentConfig",
       "apiVersion": "v1",
       "metadata": {
-        "name": "nodejs-frontend"
+        "name": "nodejs-frontend",
+        "annotations": {
+          "description": "Defines how to deploy the application server"
+        }
       },
       "spec": {
         "strategy": {
-          "type": "Rolling",
-          "rollingParams": {
-            "updatePeriodSeconds": 1,
-            "intervalSeconds": 1,
-            "timeoutSeconds": 120
-          }
+          "type": "Rolling"
         },
         "triggers": [
           {
@@ -126,20 +127,24 @@
                 "nodejs-example"
               ],
               "from": {
-              	"kind": "ImageStreamTag",
+                "kind": "ImageStreamTag",
                 "name": "nodejs-example:latest"
               }
             }
+          },
+          {
+            "type": "ConfigChange"
           }
         ],
         "replicas": 1,
         "selector": {
-          "name": "nodejs-example"
+          "name": "nodejs-frontend"
         },
         "template": {
           "metadata": {
+            "name": "nodejs-frontend",
             "labels": {
-              "name": "nodejs-example"
+              "name": "nodejs-frontend"
             }
           },
           "spec": {
@@ -162,21 +167,23 @@
   "parameters": [
     {
       "name": "SOURCE_REPOSITORY_URL",
-      "description": "The URL with your Node.js application source code",
+      "description": "The URL of the repository with your application source code",
       "value": "https://github.com/openshift/nodejs-ex.git"
     },
     {
-      "name": "FRONTEND_SERVICE_NAME",
-      "description": "Frontend service name",
-      "value": "nodejs"
+      "name": "CONTEXT_DIR",
+      "description": "Set this to the relative path to your project if it is not in the root of your repository"
     },
     {
       "name": "FRONTEND_ROUTE",
       "description": "The exposed hostname that will route to the Node.js service",
-      "value": "nodejs.apps"
-    }    
-  ],
-  "labels": {
-    "template": "nodejs-example"
-  }
+      "value": "nodejs.app"
+    },
+    {
+      "name": "GITHUB_WEBHOOK_SECRET",
+      "description": "A secret string used to configure the GitHub webhook",
+      "generate": "expression",
+      "from": "[a-zA-Z0-9]{40}"
+    }
+  ]
 }
