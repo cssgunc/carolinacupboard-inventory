@@ -4,7 +4,7 @@
   "metadata": {
     "name": "nodejs-example",
     "annotations": {
-      "description": "A simple Node.js application that responds with information about the server.",
+      "description": "A simple Node.js application with no database",
       "iconClass": "icon-nodejs",
       "tags": "instant-app,nodejs"
     }
@@ -14,7 +14,7 @@
       "kind": "Service",
       "apiVersion": "v1",
       "metadata": {
-        "name": "nodejs-frontend"
+        "name": "${FRONTEND_SERVICE_NAME}"
       },
       "spec": {
         "ports": [
@@ -25,7 +25,7 @@
           }
         ],
         "selector": {
-          "name": "nodejs-frontend"
+          "name": "${FRONTEND_SERVICE_NAME}"
         }
       }
     },
@@ -33,13 +33,13 @@
       "kind": "Route",
       "apiVersion": "v1",
       "metadata": {
-          "name": "frontend-route"
+          "name": "${FRONTEND_ROUTE}"
       },
       "spec": {
           "host" : "${FRONTEND_ROUTE}",
           "to": {
               "kind" : "Service",
-              "name" : "nodejs-frontend"
+              "name" : "${FRONTEND_SERVICE_NAME}"
           }
       }
     },
@@ -143,12 +143,12 @@
         ],
         "replicas": 1,
         "selector": {
-          "name": "nodejs-frontend"
+          "name": "nodejs-example"
         },
         "template": {
           "metadata": {
             "labels": {
-              "name": "nodejs-frontend"
+              "name": "nodejs-example"
             }
           },
           "spec": {
@@ -171,14 +171,19 @@
   "parameters": [
     {
       "name": "SOURCE_REPOSITORY_URL",
-      "description": "The URL with your Node.js application source code.",
+      "description": "The URL with your Node.js application source code",
       "value": "https://github.com/openshift/nodejs-ex.git"
     },
     {
+      "name": "FRONTEND_SERVICE_NAME",
+      "description": "Frontend service name",
+      "value": "nodejs"
+    },
+    {
       "name": "FRONTEND_ROUTE",
-      "description": "The exposed hostname that will route to the Node.js service.",
+      "description": "The exposed hostname that will route to the Node.js service",
       "value": "nodejs.apps"
-    }
+    }    
   ],
   "labels": {
     "template": "nodejs-example"
