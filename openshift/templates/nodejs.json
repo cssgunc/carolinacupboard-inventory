@@ -88,8 +88,8 @@
         },
         "output": {
           "to": {
-            "kind": "ImageStream",
-            "name": "nodejs-example"
+            "kind": "ImageStreamTag",
+            "name": "nodejs-example:latest"
           }
         },
         "triggers": [
