@@ -11,11 +11,11 @@ One possible option is to use the Docker all-in-one launch as described in the [
 
 If you don't have a project setup all ready, go ahead and take care of that
 
-        $ osc new-project nodejs-echo --display-name="nodejs" --description="Sample Node.js app"
+        $ oc new-project nodejs-echo --display-name="nodejs" --description="Sample Node.js app"
 
 That's it, project has been created.  Though it would probably be good to set your current project to this (thought new-project does it automatically as well), such as:
 
-        $ osc project nodejs
+        $ oc project nodejs
 
 ### The app ###
 
@@ -23,7 +23,7 @@ Now let's pull in the app source code from [GitHub repo](https://github.com/open
 
 #### create ####
 
-        $ osc new-app https://github.com/openshift/nodejs-ex
+        $ oc new-app https://github.com/openshift/nodejs-ex
         
 That should be it, `new-app` will take care of creating the right build configuration, deployment configuration and service definition.  Next you'll be able to kick off the build.
 
@@ -31,15 +31,15 @@ Note, you can follow along with the web console (located at https://ip-address:8
 
 #### build ####
 
-        $ osc start-build nodejs --follow
+        $ oc start-build nodejs --follow
 
-You can alternatively leave off `--follow` and use `osc build-logs nodejs-n` where n is the number of the build (output of start-build).
+You can alternatively leave off `--follow` and use `oc build-logs nodejs-n` where n is the number of the build (output of start-build).
 
-#### deploy #### 
+#### deploy ####
 
-happens automatically, to monitor its status either watch the web console or `osc get pods` to see when the pod is up.  Another helpful command is
+happens automatically, to monitor its status either watch the web console or `oc get pods` to see when the pod is up.  Another helpful command is
 
-        $ osc status
+        $ oc status
 
 This will help indicate what IP address the service is running, the default port for it to deploy at is 8080.  
 
@@ -52,6 +52,12 @@ Run/test our app by simply doing an HTTP GET request
 #### update ####
 
 Assuming you used the URL of your own forked report, we can easily push changes to that hosted repo and simply repeat the steps above to build (this is obviously just demonstrating the manually kicking off of builds) which will trigger the new built image to be deployed.
+
+#### delete ####
+
+		$ oc delete all --all
+
+To remove all the resources created for you application.
 
 ### Web UI ###
 
