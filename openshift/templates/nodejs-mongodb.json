@@ -2,15 +2,15 @@
   "kind": "Template",
   "apiVersion": "v1",
   "metadata": {
-    "name": "nodejs-example",
+    "name": "nodejs-mongodb-example",
     "annotations": {
-      "description": "An example Node.js application with no database",
-      "tags": "instant-app,nodejs",
+      "description": "An example Node.js application with a MongoDB database",
+      "tags": "instant-app,nodejs,mongodb",
       "iconClass": "icon-nodejs"
     }
   },
   "labels": {
-    "template": "nodejs-example"
+    "template": "nodejs-mongodb-example"
   },
   "objects": [
     {
@@ -157,6 +157,109 @@
                   {
                     "containerPort": 8080
                   }
+                ],
+                "env": [
+                  {
+                    "name": "MONGODB_USER",
+                    "value": "${MONGODB_USER}"
+                  },
+                  {
+                    "name": "MONGODB_PASSWORD",
+                    "value": "${MONGODB_PASSWORD}"
+                  },
+                  {
+                    "name": "MONGODB_DATABASE",
+                    "value": "${MONGODB_DATABASE}"
+                  },
+                  {
+                    "name": "MONGODB_ADMIN_PASSWORD",
+                    "value": "${MONGODB_ADMIN_PASSWORD}"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "Service",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "${DATABASE_SERVICE_NAME}",
+        "annotations": {
+          "description": "Exposes the database server"
+        }
+      },
+      "spec": {
+        "ports": [
+          {
+            "name": "mongodb",
+            "port": 27017,
+            "targetPort": 27017
+          }
+        ],
+        "selector": {
+          "name": "${DATABASE_SERVICE_NAME}"
+        }
+      }
+    },
+    {
+      "kind": "DeploymentConfig",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "${DATABASE_SERVICE_NAME}",
+        "annotations": {
+          "description": "Defines how to deploy the database"
+        }
+      },
+      "spec": {
+        "strategy": {
+          "type": "Recreate"
+        },
+        "triggers": [
+          {
+            "type": "ConfigChange"
+          }
+        ],
+        "replicas": 1,
+        "selector": {
+          "name": "${DATABASE_SERVICE_NAME}"
+        },
+        "template": {
+          "metadata": {
+            "name": "${DATABASE_SERVICE_NAME}",
+            "labels": {
+              "name": "${DATABASE_SERVICE_NAME}"
+            }
+          },
+          "spec": {
+            "containers": [
+              {
+                "name": "mongodb",
+                "image": "openshift/mongodb-24-centos7",
+                "ports": [
+                  {
+                    "containerPort": 27017
+                  }
+                ],
+                "env": [
+                  {
+                    "name": "MONGODB_USER",
+                    "value": "${MONGODB_USER}"
+                  },
+                  {
+                    "name": "MONGODB_PASSWORD",
+                    "value": "${MONGODB_PASSWORD}"
+                  },
+                  {
+                    "name": "MONGODB_DATABASE",
+                    "value": "${MONGODB_DATABASE}"
+                  },
+                  {
+                    "name": "MONGODB_ADMIN_PASSWORD",
+                    "value": "${MONGODB_ADMIN_PASSWORD}"
+                  }
                 ]
               }
             ]
@@ -192,23 +295,31 @@
     },
     {
       "name": "DATABASE_SERVICE_NAME",
-      "description": "Database service name"
+      "description": "Database service name",
+      "value": "mongodb"
     },
     {
       "name": "MONGODB_USER",
-      "description": "Username for MongoDB user that will be used for accessing the database"
+      "description": "Username for MongoDB user that will be used for accessing the database",
+      "generate": "expression",
+      "from": "user[A-Z0-9]{3}"
     },
     {
       "name": "MONGODB_PASSWORD",
-      "description": "Password for the MongoDB user"
+      "description": "Password for the MongoDB user",
+      "generate": "expression",
+      "from": "[a-zA-Z0-9]{16}"
     },
     {
       "name": "MONGODB_DATABASE",
-      "description": "Database name"
+      "description": "Database name",
+      "value": "sampledb"
     },
     {
       "name": "MONGODB_ADMIN_PASSWORD",
-      "description": "Password for the database admin user"
+      "description": "Password for the database admin user",
+      "generate": "expression",
+      "from": "[a-zA-Z0-9]{16}"
     }
   ]
 }
