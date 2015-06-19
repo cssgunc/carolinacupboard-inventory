@@ -1,11 +1,11 @@
 Node.js sample app on OpenShift!
 -----------------
 
-This example will serve an http response of various "machine" stats from the "machine" the Node.js app is running on to [http://host:8080](http://host:8080).
+This example will serve a welcome page and the current hit count as stored in a database to [http://host:8080](http://host:8080).
 
 ### OpenShift setup ###
 
-One possible option is to use the Docker all-in-one launch as described in the [origins project](https://github.com/openshift/origins).
+One option is to use the Docker all-in-one launch as described in the [origins project](https://github.com/openshift/origins).
 
 ### The project ###
 
@@ -23,9 +23,9 @@ Now let's pull in the app source code from [GitHub repo](https://github.com/open
 
 #### create ####
 
-        $ oc new-app https://github.com/openshift/nodejs-ex
+        $ oc new-app https://github.com/openshift/nodejs-ex -l name=myapp
         
-That should be it, `new-app` will take care of creating the right build configuration, deployment configuration and service definition.  Next you'll be able to kick off the build.
+That should be it, `new-app` will take care of creating the right build configuration, deployment configuration and service definition.  Next you'll be able to kick off the build.  The -l flag will apply a label of "name=myapp" to all the resources created by new-app, for easy management later.
 
 Note, you can follow along with the web console (located at https://ip-address:8443/console) to see what new resources have been created and watch the progress of the build and deployment.
 
@@ -45,19 +45,23 @@ This will help indicate what IP address the service is running, the default port
 
 #### enjoy ####
 
-Run/test our app by simply doing an HTTP GET request
+Determine the service ip for the application by running
 
-        $ curl ip-address:8080
+		$ oc svc
+
+Run/test your app by browsing to
+
+        $ curl service-ip-address:8080
 
 #### update ####
 
-Assuming you used the URL of your own forked report, we can easily push changes to that hosted repo and simply repeat the steps above to build (this is obviously just demonstrating the manually kicking off of builds) which will trigger the new built image to be deployed.
+Assuming you used the URL of your own forked report, we can easily push changes to that hosted repo and simply repeat the steps above to build which will trigger the new built image to be deployed.
 
 #### delete ####
 
-		$ oc delete all --all
+		$ oc delete all -l name=myapp
 
-To remove all the resources created for you application.
+To remove all the resources with the label "name=myapp".
 
 ### Web UI ###
 
