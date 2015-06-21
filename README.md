@@ -5,7 +5,7 @@ This example will serve a welcome page and the current hit count as stored in a 
 
 ### OpenShift setup ###
 
-One option is to use the Docker all-in-one launch as described in the [origins project](https://github.com/openshift/origins).
+One option is to use the Docker all-in-one launch as described in the [OpenShift Origin project](https://github.com/openshift/origin).
 
 ### The project ###
 
