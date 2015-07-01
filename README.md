@@ -9,7 +9,7 @@ One option is to use the Docker all-in-one launch as described in the [OpenShift
 
 ### The project ###
 
-If you don't have a project setup all ready, go ahead and take care of that
+After logging in with `oc login`, if you don't have a project setup all ready, go ahead and take care of that
 
         $ oc new-project nodejs-echo --display-name="nodejs" --description="Sample Node.js app"
 
@@ -19,25 +19,27 @@ That's it, project has been created.  Though it would probably be good to set yo
 
 ### The app ###
 
-Now let's pull in the app source code from [GitHub repo](https://github.com/openshift/nodejs-ex) (fork if you like)
+Now let's pull in the app source code from [GitHub repo](https://github.com/openshift/nodejs-ex) (fork if you like).
 
 #### create ####
 
         $ oc new-app https://github.com/openshift/nodejs-ex -l name=myapp
         
-That should be it, `new-app` will take care of creating the right build configuration, deployment configuration and service definition.  Next you'll be able to kick off the build.  The -l flag will apply a label of "name=myapp" to all the resources created by new-app, for easy management later.
+That should be it, this form of `new-app` will locate an appropriate image on DockerHub, create an ImageStream for that image, and then create the right build configuration, deployment configuration and service definition.  Next you'll be able to kick off the build, though new-app will kick off a build once all required dependencies are confirmed.  The -l flag will apply a label of "name=myapp" to all the resources created by new-app, for easy management later.
 
 Note, you can follow along with the web console (located at https://ip-address:8443/console) to see what new resources have been created and watch the progress of the build and deployment.
 
 #### build ####
 
-        $ oc start-build nodejs --follow
+If the build is not started (you can check by running "oc get builds"), start one and stream the logs with:
 
-You can alternatively leave off `--follow` and use `oc build-logs nodejs-n` where n is the number of the build (output of start-build).
+        $ oc start-build nodejs-ex --follow
+
+You can alternatively leave off `--follow` and use `oc build-logs nodejs-ex-n` where n is the number of the build to track the output of the build.
 
 #### deploy ####
 
-happens automatically, to monitor its status either watch the web console or `oc get pods` to see when the pod is up.  Another helpful command is
+Deployment happens automatically once the new application image is available.  To monitor its status either watch the web console or execute `oc get pods` to see when the pod is up.  Another helpful command is
 
         $ oc status
 
@@ -47,7 +49,7 @@ This will help indicate what IP address the service is running, the default port
 
 Determine the service ip for the application by running
 
-		$ oc svc
+		$ oc get svc
 
 Run/test your app by browsing to
 
@@ -62,6 +64,11 @@ Assuming you used the URL of your own forked report, we can easily push changes 
 		$ oc delete all -l name=myapp
 
 To remove all the resources with the label "name=myapp".
+
+###Debugging Unexpected Failures
+
+Review some of the common tips and suggestions [here](https://github.com/openshift/origin/blob/master/docs/debugging-openshift.md).
+
 
 ### Web UI ###
 
