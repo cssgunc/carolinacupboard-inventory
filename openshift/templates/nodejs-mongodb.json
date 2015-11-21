@@ -240,6 +240,7 @@
               ],
               "from": {
                 "kind": "ImageStreamTag",
+                "name": "openshift",
                 "name": "mongodb:2.6"
               }
             }
