@@ -5,7 +5,7 @@
     "name": "nodejs-example",
     "annotations": {
       "description": "An example Node.js application with no database",
-      "tags": "instant-app,nodejs",
+      "tags": "quickstart,nodejs",
       "iconClass": "icon-nodejs"
     }
   },
