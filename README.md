@@ -158,7 +158,7 @@ Running `oc status` or checking the web console will reveal the address of the n
 	    bc/nodejs-ex builds https://github.com/openshift/nodejs-ex with openshift/nodejs:0.10
 	    deployment #1 deployed 14 minutes ago - 1 pod
 
-Note that the url for our new Mongo instance, for our example, is `172.30.0.112:27017`, your's will likely differ.
+Note that the url for our new Mongo instance, for our example, is `172.30.0.112:27017`, yours will likely differ.
 
 #### Setting environment variables
 
