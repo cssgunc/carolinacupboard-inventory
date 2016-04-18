@@ -25,7 +25,7 @@
     "url": "http://github.com/openshift/nodejs-ex.git"
   },
   "author": "Steve Speicher <sspeiche@gmail.com>",
-  "license": "",
+  "license": "CC-BY-1.0",
   "bugs": {
     "url": "http://github.com/openshift/nodejs-ex/issues"
   },

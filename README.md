@@ -201,3 +201,12 @@ To run this example from the Web UI, you can same steps following done on the CL
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=uocucZqg_0I&t=225" target="_blank">
 <img src="http://img.youtube.com/vi/uocucZqg_0I/0.jpg"
 alt="OpenShift 3: Node.js Sample" width="240" height="180" border="10" /></a>
+
+## Looking for help
+
+If you get stuck at some point, or think that this document needs further details or clarification, you can give feedback and look for help using the channels mentioned in [the OpenShift Origin repo](https://github.com/openshift/origin), or by filing an issue.
+
+
+## License
+
+This code is dedicated to the public domain to the maximum extent permitted by applicable law, pursuant to [CC0](http://creativecommons.org/publicdomain/zero/1.0/).
