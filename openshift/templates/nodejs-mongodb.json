@@ -330,6 +330,20 @@
                     "limits": {
                         "memory": "${MEMORY_MONGODB_LIMIT}"
                     }
+                },
+                "volumeMounts": [
+                  {
+                    "name": "${DATABASE_SERVICE_NAME}-data",
+                    "mountPath": "/var/lib/mongodb/data"
+                  }
+                ]
+              }
+            ],
+            "volumes": [
+              {
+                "name": "${DATABASE_SERVICE_NAME}-data",
+                "emptyDir": {
+                  "medium": ""
                 }
               }
             ]
