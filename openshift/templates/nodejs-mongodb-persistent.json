@@ -4,11 +4,13 @@
   "metadata": {
     "name": "nodejs-mongo-persistent",
     "annotations": {
-      "description": "An example Node.js application with a MongoDB database",
-      "tags": "quickstart,nodejs,mongodb",
+      "openshift.io/display-name": "Node.js + MongoDB (Persistent)",
+      "description": "An example Node.js application with a MongoDB database. For more information about using this template, including OpenShift considerations, see https://github.com/openshift/nodejs-ex/blob/master/README.md.",
+      "tags": "quickstart,nodejs",
       "iconClass": "icon-nodejs"
     }
   },
+  "message": "The following service(s) have been created in your project: ${NAME}, ${DATABASE_SERVICE_NAME}.\n\nFor more information about using this template, including OpenShift considerations, see https://github.com/openshift/nodejs-ex/blob/master/README.md.",
   "labels": {
     "template": "nodejs-mongo-persistent"
   },
@@ -20,7 +22,7 @@
         "name": "${NAME}",
         "annotations": {
           "description": "Exposes and load balances the application pods",
-          "service.alpha.openshift.io/dependencies": "[{\"name\": \"${DATABASE_SERVICE_NAME}\", \"namespace\": \"\", \"kind\": \"Service\"}]"
+          "service.alpha.openshift.io/dependencies": "[{\"name\": \"${DATABASE_SERVICE_NAME}\", \"kind\": \"Service\"}]"
         }
       },
       "spec": {
