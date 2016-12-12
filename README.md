@@ -26,7 +26,7 @@ Red Hat periodically publishes OpenShift Origin Server binaries for Linux, which
 
 #### Running an Ansible playbook
 
-Outlined as the [Advanced Intallation](https://docs.openshift.org/latest/install_config/install/advanced_install.html) method for poduction environments, OpenShift Origin is also installable via Ansible playbook made avaialble on the GitHub [openShift-ansible](https://github.com/openshift/openshift-ansible) repo.
+Outlined as the [Advanced Installation](https://docs.openshift.org/latest/install_config/install/advanced_install.html) method for poduction environments, OpenShift Origin is also installable via Ansible playbook made avaialble on the GitHub [openshift-ansible](https://github.com/openshift/openshift-ansible) repo.
 
 
 ### Creating a project
@@ -64,16 +64,19 @@ We can also [create new apps using OpenShift template files](https://docs.opensh
 
         $ git clone https://github.com/openshift/nodejs-ex
 
-Looking at the repo, you'll notice two files in the openshift/template directory:
+Looking at the repo, you'll notice three files in the openshift/template directory:
 
 	nodejs-ex
-	├── README.md
 	├── openshift
 	│   └── templates
+	│       ├── nodejs.json
 	│       ├── nodejs-mongodb.json
-	│       └── nodejs.json
+	│       └── nodejs-mongodb-persistent.json
 	├── package.json
+	├── README.md
 	├── server.js
+	├── tests
+	│   └── app_test.js
 	└── views
 	    └── index.html
 
