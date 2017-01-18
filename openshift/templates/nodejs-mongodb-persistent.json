@@ -22,9 +22,9 @@
         "name": "${NAME}"
       },
       "stringData": {
-        "databaseUser": "${DATABASE_USER}",
-        "databasePassword": "${DATABASE_PASSWORD}",
-        "databaseAdminPassword" : "${DATABASE_ADMIN_PASSWORD}"
+        "database-user": "${DATABASE_USER}",
+        "database-password": "${DATABASE_PASSWORD}",
+        "database-admin-password" : "${DATABASE_ADMIN_PASSWORD}"
       }
     },
     {
@@ -102,8 +102,8 @@
             },
             "env":  [
               {
-                  "name": "NPM_MIRROR",
-                  "value": "${NPM_MIRROR}"
+                "name": "NPM_MIRROR",
+                "value": "${NPM_MIRROR}"
               }
             ]
           }
@@ -201,7 +201,7 @@
                     "valueFrom": {
                       "secretKeyRef" : {
                         "name" : "${NAME}",
-                        "key" : "databaseUser"
+                        "key" : "database-user"
                       }
                     }
                   },
@@ -210,7 +210,7 @@
                     "valueFrom": {
                       "secretKeyRef" : {
                         "name" : "${NAME}",
-                        "key" : "databasePassword"
+                        "key" : "database-password"
                       }
                     }
                   },
@@ -223,7 +223,7 @@
                     "valueFrom": {
                       "secretKeyRef" : {
                         "name" : "${NAME}",
-                        "key" : "databaseAdminPassword"
+                        "key" : "database-admin-password"
                       }
                     }
                   }
@@ -237,17 +237,17 @@
                   }
                 },
                 "livenessProbe": {
-                    "timeoutSeconds": 3,
-                    "initialDelaySeconds": 30,
-                    "httpGet": {
-                        "path": "/pagecount",
-                        "port": 8080
-                    }
+                  "timeoutSeconds": 3,
+                  "initialDelaySeconds": 30,
+                  "httpGet": {
+                    "path": "/pagecount",
+                    "port": 8080
+                  }
                 },
                 "resources": {
-                    "limits": {
-                        "memory": "${MEMORY_LIMIT}"
-                    }
+                  "limits": {
+                    "memory": "${MEMORY_LIMIT}"
+                  }
                 }
               }
             ]
@@ -353,7 +353,7 @@
                     "valueFrom": {
                       "secretKeyRef" : {
                         "name" : "${NAME}",
-                        "key" : "databaseUser"
+                        "key" : "database-user"
                       }
                     }
                   },
@@ -362,7 +362,7 @@
                     "valueFrom": {
                       "secretKeyRef" : {
                         "name" : "${NAME}",
-                        "key" : "databasePassword"
+                        "key" : "database-password"
                       }
                     }
                   },
@@ -375,7 +375,7 @@
                     "valueFrom": {
                       "secretKeyRef" : {
                         "name" : "${NAME}",
-                        "key" : "databaseAdminPassword"
+                        "key" : "database-admin-password"
                       }
                     }
                   }
@@ -400,9 +400,9 @@
                   }
                 },
                 "resources": {
-                    "limits": {
-                        "memory": "${MEMORY_MONGODB_LIMIT}"
-                    }
+                  "limits": {
+                    "memory": "${MEMORY_MONGODB_LIMIT}"
+                  }
                 },
                 "volumeMounts": [
                   {
