@@ -10,7 +10,8 @@
     }
   },
   "labels": {
-    "template": "nodejs-mongodb-example"
+      "template": "nodejs-mongodb-example",
+      "app": "nodejs-mongodb-example"
   },
   "objects": [
     {

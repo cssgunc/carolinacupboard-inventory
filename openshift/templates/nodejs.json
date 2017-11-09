@@ -10,7 +10,8 @@
     }
   },
   "labels": {
-    "template": "nodejs-example"
+      "template": "nodejs-example",
+      "app": "nodejs-example"
   },
   "objects": [
     {
