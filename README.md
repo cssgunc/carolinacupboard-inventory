@@ -5,6 +5,7 @@
 - [Node.js sample app on OpenShift!](#nodejs-sample-app-on-openshift)
   * [OpenShift Origin v3 setup](#openshift-origin-v3-setup)
     + [Running a virtual machine with Vagrant](#running-a-virtual-machine-with-vagrant)
+    + [Running a virtual machine managed by minishift](#running-a-virtual-machine-managed-by-minishift)
     + [Starting a Docker container](#starting-a-docker-container)
     + [Downloading the Binary](#downloading-the-binary)
     + [Running an Ansible playbook](#running-an-ansible-playbook)
@@ -37,6 +38,7 @@ This example will serve a welcome page and the current hit count as stored in a 
 There are four methods to get started with OpenShift v3:
 
   - Running a virtual machine with Vagrant
+  - Running a virtual machine managed by minishift
   - Starting a Docker container
   - Downloading the binary
   - Running an Ansible playbook
@@ -44,6 +46,10 @@ There are four methods to get started with OpenShift v3:
 #### Running a virtual machine with Vagrant
 
 One option is to use the Vagrant all-in-one launch as described in the [OpenShift Origin All-In-One Virtual Machine](https://www.openshift.org/vm/). This option works on Mac, Windows and Linux, but requires that you install [Vagrant](https://www.vagrantup.com/downloads.html) running [VirtualBox](https://www.virtualbox.org/wiki/Downloads).
+
+#### Running a virtual machine managed by minishift
+
+Another option to run virtual machine but not having to using Vagrant is to download and use the `minishift` binary as described in its [getting started](https://github.com/minishift/minishift/#getting-started) section. `minishift` can be used to spin up a VM on any of Windows, Linux or Mac with the help of supported underlying virtualization technologies like KVM, xhyve, Hyper-V, VirtualBox.
 
 #### Starting a Docker container
 
