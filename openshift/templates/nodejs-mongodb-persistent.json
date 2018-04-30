@@ -104,7 +104,7 @@
             "from": {
               "kind": "ImageStreamTag",
               "namespace": "${NAMESPACE}",
-              "name": "nodejs:6"
+              "name": "nodejs:${NODEJS_VERSION}"
             },
             "env":  [
               {
@@ -326,7 +326,7 @@
               "from": {
                 "kind": "ImageStreamTag",
                 "namespace": "${NAMESPACE}",
-                "name": "mongodb:3.2"
+                "name": "mongodb:${MONGODB_VERSION}"
               }
             }
           },
@@ -447,6 +447,20 @@
       "description": "The OpenShift Namespace where the ImageStream resides.",
       "required": true,
       "value": "openshift"
+    },
+    {
+      "name": "NODEJS_VERSION",
+      "displayName": "Version of NodeJS Image",
+      "description": "Version of NodeJS image to be used (6, 8, or latest).",
+      "value": "8",
+      "required": true
+    },
+    {
+      "name": "MONGODB_VERSION",
+      "displayName": "Version of MongoDB Image",
+      "description": "Version of MongoDB image to be used (3.2, 3.4, or latest).",
+      "value": "3.4",
+      "required": true
     },
     {
       "name": "MEMORY_LIMIT",
