@@ -240,7 +240,7 @@
                   "timeoutSeconds": 3,
                   "initialDelaySeconds": 3,
                   "httpGet": {
-                    "path": "/pagecount",
+                    "path": "/",
                     "port": 8080
                   }
                 },
@@ -248,7 +248,7 @@
                   "timeoutSeconds": 3,
                   "initialDelaySeconds": 30,
                   "httpGet": {
-                    "path": "/pagecount",
+                    "path": "/",
                     "port": 8080
                   }
                 },
