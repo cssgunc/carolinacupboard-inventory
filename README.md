@@ -87,7 +87,7 @@ You can create a new OpenShift application using the web console or by running t
 
 Pointing `oc new-app` at source code kicks off a chain of events, for our example run:
 
-        $ oc new-app https://github.com/openshift/nodejs-ex -l name=myapp
+        $ oc new-app https://github.com/sclorg/nodejs-ex -l name=myapp
 
 The tool will inspect the source code, locate an appropriate image on DockerHub, create an ImageStream for that image, and then create the right build configuration, deployment configuration and service definition.
 
@@ -95,9 +95,9 @@ The tool will inspect the source code, locate an appropriate image on DockerHub,
 
 #### Create a new app from a template (method 2)
 
-We can also [create new apps using OpenShift template files](https://docs.openshift.com/enterprise/3.0/dev_guide/new_app.html#specifying-a-template). Clone the demo app source code from [GitHub repo](https://github.com/openshift/nodejs-ex) (fork if you like).
+We can also [create new apps using OpenShift template files](https://docs.openshift.com/enterprise/3.0/dev_guide/new_app.html#specifying-a-template). Clone the demo app source code from [GitHub repo](https://github.com/sclorg/nodejs-ex) (fork if you like).
 
-        $ git clone https://github.com/openshift/nodejs-ex
+        $ git clone https://github.com/sclorg/nodejs-ex
 
 Looking at the repo, you'll notice three files in the openshift/template directory:
 
@@ -133,7 +133,7 @@ Which should return something like:
 
         svc/nodejs-ex - 172.30.108.183:8080
           dc/nodejs-ex deploys istag/nodejs-ex:latest <-
-            bc/nodejs-ex builds https://github.com/openshift/nodejs-ex with openshift/nodejs:0.10
+            bc/nodejs-ex builds https://github.com/sclorg/nodejs-ex with openshift/nodejs:0.10
               build #1 running for 7 seconds
             deployment #1 waiting on image or update
 
@@ -193,7 +193,7 @@ Running `oc status` or checking the web console will reveal the address of the n
 
 	http://10.2.2.2 to pod port 8080-tcp (svc/nodejs-ex)
 	  dc/nodejs-ex deploys istag/nodejs-ex:latest <-
-	    bc/nodejs-ex builds https://github.com/openshift/nodejs-ex with openshift/nodejs:0.10
+	    bc/nodejs-ex builds https://github.com/sclorg/nodejs-ex with openshift/nodejs:0.10
 	    deployment #1 deployed 14 minutes ago - 1 pod
 
 Note that the url for our new Mongo instance, for our example, is `172.30.0.112:27017`, yours will likely differ.
@@ -216,7 +216,7 @@ Then check `oc status` to see that an updated deployment has been kicked off:
 
 	http://10.2.2.2 to pod port 8080-tcp (svc/nodejs-ex)
 	  dc/nodejs-ex deploys istag/nodejs-ex:latest <-
-	    bc/nodejs-ex builds https://github.com/openshift/nodejs-ex with openshift/nodejs:0.10
+	    bc/nodejs-ex builds https://github.com/sclorg/nodejs-ex with openshift/nodejs:0.10
 	    deployment #2 deployed about a minute ago - 1 pod
 	    deployment #1 deployed 2 hours ago
 
