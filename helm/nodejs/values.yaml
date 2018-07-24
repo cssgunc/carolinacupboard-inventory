@@ -5,7 +5,7 @@ namespace: openshift
 # Memory Limit: Maximum amount of memory the container can use.
 memory_limit: 512Mi
 # Git Repository URL: The URL of the repository with your application source code.
-source_repository_url: https://github.com/openshift/nodejs-ex.git
+source_repository_url: https://github.com/sclorg/nodejs-ex.git
 # Git Reference: Set this to a branch name, tag or other ref of your repository if you are not using the default branch.
 source_repository_ref:
 # Context Directory: Set this to the relative path to your project if it is not in the root of your repository.
