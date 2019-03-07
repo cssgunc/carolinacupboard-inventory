@@ -1,12 +1,15 @@
 //  OpenShift sample Node application
 var express = require('express'),
     app     = express(),
-    morgan  = require('morgan');
-    
+    morgan  = require('morgan'),
+    request = require('request');
+
 Object.assign=require('object-assign')
 
 app.engine('html', require('ejs').renderFile);
 app.use(morgan('combined'))
+
+app.use('/static', express.static('static'))
 
 var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
     ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0',
@@ -107,6 +110,17 @@ app.get('/pagecount', function (req, res) {
   } else {
     res.send('{ pageCount: -1 }');
   }
+});
+
+app.get('/scan', function(req, res) {
+  const code = req.query.code;
+  const url = "https://www.datakick.org/api/items/"+code;
+  request.get(url, (error, response, body) => {
+    if (!error && response.statusCode === 200) {
+      return res.send(body);
+    }
+    return res.send('ERROR: ' + error.message);
+  });  
 });
 
 // error handling
