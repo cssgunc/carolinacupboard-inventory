@@ -27,7 +27,7 @@ if (mongoURL == null) {
     mongoPassword = process.env[mongoServiceName + '_PASSWORD'];
     mongoUser = process.env[mongoServiceName + '_USER'];
 
-  // If using env vars from secret from service binding  
+  // If using env vars from secret from service binding
   } else if (process.env.database_name) {
     mongoDatabase = process.env.database_name;
     mongoPassword = process.env.password;
@@ -90,11 +90,35 @@ app.get('/', function (req, res) {
       if (err) {
         console.log('Error running count. Message:\n'+err);
       }
-      res.render('index.html', { pageCountMessage : count, dbInfo: dbDetails });
+      res.render('admin/index.html', { pageCountMessage : count, dbInfo: dbDetails });
     });
   } else {
-    res.render('index.html', { pageCountMessage : null});
+    res.render('admin/index.html', { pageCountMessage : null});
   }
+});
+
+app.get('/entry', function(req, res) {
+  res.render('admin/entry.html');
+});
+
+app.get('/approve', function(req, res) {
+  res.render('admin/approve.html');
+});
+
+app.get('/removal', function(req, res) {
+  res.render('admin/removal.html');
+});
+
+app.get('/preorder', function(req, res) {
+  res.render('user/preorder.html');
+});
+
+app.get('/cart', function(req, res) {
+  res.render('user/cart.html');
+});
+
+app.get('/orderconfirm', function(req, res) {
+  res.render('user/orderconfirm.html');
 });
 
 app.get('/pagecount', function (req, res) {
@@ -120,7 +144,7 @@ app.get('/scan', function(req, res) {
       return res.send(body);
     }
     return res.send('ERROR: ' + error.message);
-  });  
+  });
 });
 
 // error handling
