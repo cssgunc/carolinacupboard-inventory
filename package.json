@@ -6,7 +6,8 @@
   "scripts": {
     "start": "npm run prod",
     "dev": "cross-env NODE_ENV=dev nodemon index.js",
-    "prod": "cross-env NODE_ENV=prod node index.js"
+    "prod": "cross-env NODE_ENV=prod node index.js",
+    "bootstrap": "cross-env NODE_ENV=dev sh scripts/bootstrap.sh"
   },
   "author": "",
   "license": "ISC",
@@ -14,7 +15,11 @@
     "body-parser": "^1.18.3",
     "cross-env": "^5.2.0",
     "express": "^4.16.4",
-    "morgan": "^1.9.1"
+    "morgan": "^1.9.1",
+    "sequelize": "^4.41.2",
+    "dotenv": "^6.1.0",
+    "pg": "^7.7.1",
+    "pg-hstore": "^2.3.2"
   },
   "devDependencies": {
     "chai": "^4.2.0",
