@@ -9,13 +9,10 @@ exports.init_table = function (sequelize) {
             primaryKey: true
         },
 		
-        item: {
-            type: Sequelize.STRING,
+        item_id: {
+            type: Sequelize.INTEGER,
             allowNull: false,
-            require: true,
-            validate: {
-                isAlphanumeric: true
-            }
+            require: true
         },
 		
 		count: {
@@ -37,24 +34,19 @@ exports.init_table = function (sequelize) {
                 isAlphanumeric: true
             }
         },
-		
 		volunteer_id: {
             type: Sequelize.STRING,
             allowNull: false,
-            require: true,
-            unique: false,
-            validate: {
-                isAlphanumeric: true
-            }
+            require: true
         },
-		
 		status: {
             type: Sequelize.BOOLEAN,
             allowNull: false,
             require: true,
-            unique: false,
+            validate: {
+                isIn: [['pending', 'complete']]
+            }
         },
-		
 		transaction_date: {
             type: Sequelize.DATE,
             allowNull: false,

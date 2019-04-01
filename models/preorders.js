@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
 
 exports.init_table = function (sequelize) {
-    return sequelize.define('preorder', {
+    return sequelize.define('preorders', {
         
 		onyen: {
             type: Sequelize.STRING,
