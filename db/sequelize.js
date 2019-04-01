@@ -1,11 +1,8 @@
-let Sequelize = require("sequelize"),
-    Attribute = require("../models/attribute"),
-    User = require("../models/user"),
-    PatientInfo = require("../models/patient-info"),
-    PatientXAttribute = require("../models/patient-x-attribute"),
-    UserMatch = require("../models/user-match"),
-    PatientXParent = require("../models/patient-x-parent"),
-    Message = require("../models/message");
+let Sequelize       = require("sequelize"),
+    Items           = require("../models/items"),
+    Preorders       = require("../models/preorders"),
+    Transactions    = require("../models/transactions"),
+    Users           = require("../models/users");
 
 if (!process.env.DATABASE_URL) {
     require("dotenv").config()
@@ -23,28 +20,16 @@ let options = {
     logging: false
 }
 
-let sequelize;
-if (process.env.NODE_ENV == 'test') {
-    sequelize = new Sequelize(process.env.TEST_DATABASE_URL, options);
-} else {
-    sequelize = new Sequelize(process.env.DATABASE_URL, options);
-}
+let sequelize = new Sequelize(process.env.DATABASE_URL, options);
 
 //define models
-sequelize.attribute = Attribute.init_table(sequelize);
-sequelize.user = User.init_table(sequelize);
-sequelize.user_match = UserMatch.init_table(sequelize);
-sequelize.patient_x_attribute = PatientXAttribute.init_table(sequelize);
-sequelize.patient_x_parent = PatientXParent.init_table(sequelize);
-sequelize.patient_info = PatientInfo.init_table(sequelize);
-sequelize.message = Message.init_table(sequelize);
+sequelize.items = Items.init_table(sequelize);
+sequelize.preorders = Preorders.init_table(sequelize);
+sequelize.transactions = Transactions.init_table(sequelize);
+sequelize.users = Users.init_table(sequelize);
 
 //define relationships
-sequelize.user.belongsToMany(sequelize.attribute, {through: sequelize.patient_x_attribute, foreignKey: 'patient_id', otherKey:'attribute_id'});
-sequelize.patient_info.belongsTo(sequelize.user, {foreignKey: 'user_id'});
-sequelize.user.belongsToMany(sequelize.user, {through: sequelize.patient_x_parent, as:'PatientXParent', foreignKey:'patient_id', otherKey:'parent_id'});
-sequelize.user.belongsToMany(sequelize.user, {through: sequelize.user_match, as: 'UserMatch', foreignKey:'user_one_id', otherKey:'user_two_id'});
-sequelize.user_match.hasMany(sequelize.message);
-sequelize.message.belongsTo(sequelize.user, { foreignKey: 'sender' });
+sequelize.transactions.belongsTo(sequelize.users, {foreignKey: 'volunteer_id'});
+sequelize.transactions.belongsTo(sequelize.items, {foreignKey: 'item_id'});
 
 module.exports = sequelize;
