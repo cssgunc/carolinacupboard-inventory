@@ -2,12 +2,73 @@
 <html lang="en">
 <head>
   <%- include("baselinks") -%>
-  <link href="index.css" rel="stylesheet">
+  <link href="static/css/index.css" rel="stylesheet">
 </head>
 <body>
   <%- include("header") -%>
-  <div class="container-fluid">
-    <h1>An ugly welcome page</h1>
+  <div class="container">
+    <h2>Volunteers</h2>
+    <div class="row justify-content-between">
+      <div class="col-md-4">
+        <div class="card">
+          <a class="card-link" href="entry"></a>
+          <div class="card-body">
+            <h5 class="card-title">Item Entry</h5>
+            <p class="card-text">Add new items to the inventory</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <a class="card-link" href="removal"></a>
+          <div class="card-body">
+            <h5 class="card-title">Item Removal</h5>
+            <p class="card-text">Remove items from the inventory</p>
+          </div>
+        </div>
+      </div>  
+      <div class="col-md-4">
+        <div class="card">
+          <a class="card-link" href="orderconfirm"></a>
+          <div class="card-body">
+            <h5 class="card-title">View Preorders</h5>
+            <p class="card-text">Confirm and mark off completed preorders</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <h2>Your Account</h2>
+    <div class="row justify-content-between">
+      <div class="col-md-4">
+        <div class="card">
+          <a class="card-link" href="preorder"></a>
+          <div class="card-body">
+            <h5 class="card-title">View Catalog</h5>
+            <p class="card-text">Check out Carolina Cupboard's current inventory</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <a class="card-link" href="cart"></a>
+          <div class="card-body">
+            <h5 class="card-title">Your Cart</h5>
+            <p class="card-text">View your cart and place a preorder</p>
+          </div>
+        </div>
+      </div>  
+      <div class="col-md-4">
+        <div class="card">
+          <a class="card-link" href="orderconfirm"></a>
+          <div class="card-body">
+            <h5 class="card-title">Your Orders</h5>
+            <p class="card-text">View your preorders and order history</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <h1>An ugly welcome page</h1>
     <ul>
     <li><a href="preorder">User: preorder.html</a></li>
     <li><a href="cart">User: cart.html</a></li>
@@ -15,7 +76,7 @@
     <li><a href="entry">Volunteer: Add item (will be hidden for users)</a></li>
     <li><a href="removal">Volunteer: Remove item (will be hidden for users)</a></li>
     <li><a href="approve">Volunteer: Approve a thing (will be hidden for users)</a></li>
-    </ul>
+    </ul> -->
   </div>
 </body>
 </html>
