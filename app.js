@@ -18,7 +18,7 @@ app.use(express.static('./views'));
 /*
  *Register routes on api 
  */
-app.use("/api", require("./controllers/index"));
+app.use("/", require("./controllers/index"));
 
 app.use(ExceptionHandler);
 
