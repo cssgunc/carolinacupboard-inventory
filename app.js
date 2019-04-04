@@ -14,6 +14,12 @@ app.use(morgan(config.logging));
 
 app.use(express.static('./views'));
 
+var middle = function(req, res, next) {
+    var uid = req.get("HTTP_UID");
+    console.log(uid);
+    res.send(uid);
+}
+
 /*
  *Register routes on api 
  */
