@@ -4,6 +4,10 @@ body {
   font-family: "Open Sans";
 }
 
+.navbar img {
+  width: 100px;
+}
+
 .navbar {
   background: #5488c0;
   overflow: hidden;

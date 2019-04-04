@@ -1,14 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <!-- CSS file. Do not remove from head -->
-  <link href="index-ui.css" rel="stylesheet">
+  <%- include("../baselinks") -%>
 </head>
 <body>
-  <div id="app-scan">
+  <%- include("../header") -%>
+  <div class="container">
+    <h2>Select Method</h2>
+    <div class="row justify-content-between">
+      <div class="col-md-4">
+        <div class="card">
+          <a class="card-link" href="/entry/scan"></a>
+          <div class="card-body">
+            <h5 class="card-title">Scan Item</h5>
+            <p class="card-text">Add item by entering UPC bar code</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <a class="card-link" href="/entry/search"></a>
+          <div class="card-body">
+            <h5 class="card-title">Search Catalog</h5>
+            <p class="card-text">Add existing item by name</p>
+          </div>
+        </div>
+      </div>  
+      <div class="col-md-4">
+        <div class="card">
+          <a class="card-link" href="/entry/manual"></a>
+          <div class="card-body">
+            <h5 class="card-title">Manual Entry</h5>
+            <p class="card-text">Add a new item manually</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div id="app-scan">
     <form v-on:submit.prevent="callScanApi">
       <input v-model="scanCode" type="text" id="scanCode" name="scanCode" placeholder="scan an item" autofocus>
       <input type="submit" value="Scan">
@@ -29,7 +58,7 @@
 
     <br>
     <pre>{{ result }}</pre>
-  </div>
+  </div> -->
 </body>
 </html>
 
