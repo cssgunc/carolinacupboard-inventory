@@ -102,6 +102,18 @@ app.get("/entry", function(req, res) {
   res.render("admin/entry.ejs");
 });
 
+app.get("/entry/scan", function(req, res) {
+  res.render("admin/entry-scan.ejs");
+});
+
+app.get("/entry/search", function(req, res) {
+  res.render("admin/entry-search.ejs");
+});
+
+app.get("/entry/manual", function(req, res) {
+  res.render("admin/entry-manual.ejs");
+});
+
 app.get("/approve", function(req, res) {
   res.render("admin/approve.ejs");
 });
