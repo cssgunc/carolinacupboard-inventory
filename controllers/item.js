@@ -10,7 +10,6 @@ router.post('/', async function(req, res, next) {
 
         await itemService.createItem(name, barcode, description);
 
-        res.sendStatus(201);
     } catch(e)  {
         next(e);
     }
@@ -19,7 +18,6 @@ router.post('/', async function(req, res, next) {
 router.get('/', async function(req, res, next) {
     try {
         let items = await itemService.getItems();
-        res.json(items);
     } catch(e)  {
         next(e);
     }
