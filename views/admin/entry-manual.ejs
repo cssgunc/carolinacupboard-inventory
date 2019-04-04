@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("../baselinks") -%>
+</head>
+<body>
+  <%- include("../header") -%>
+    <div class="container">
+  	<h1>Enter an Item Manually</h1>
+    <form>
+      <div class="form-group">
+      	<label for="Item Name">Item Name: </label>
+  	        <input class="form-control form-control-lg" type="text" 	placeholder="Ex. Campbell's Chicken Noodle Soup">
+      	<label for="Barcode">Barcode: </label>
+  	        <input class="form-control form-control-lg" type="text" 	placeholder="Ex. 123456789098">
+      	<label for="Count">Count: </label>
+  	        <input class="form-control form-control-lg" type="text" 	placeholder="Ex. 20">
+      	<label for="Description">Short Description:</label>
+       		<input class="form-control form-control-lg" type="text" placeholder="Ex. Gluten-free soup expiring 4/20/19">
+
+	    <div class="form-check">
+	  		<input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+	  		<label class="form-check-label" for="defaultCheck1">
+	    		Are all the details correct?
+	  		</label>
+		</div>
+		<input class="form-control btn-success btn-md" type="submit" value="Submit New Item"> <!-- Add post(?) functionality here, and style more -->
+      </div>
+    </form>
+  </div>
+</body>
+</html>
