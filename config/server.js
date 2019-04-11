@@ -7,7 +7,7 @@ let dev = {
 let prod = {
     mode: 'prod',
     logging: 'common',
-    port: process.env.PORT || 80
+    port: process.env.PORT || 8080
 }
 
 let configs = {
