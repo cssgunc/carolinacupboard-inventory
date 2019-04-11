@@ -1,0 +1,48 @@
+body {
+  width: 100vw;
+  margin: 0;
+  font-family: "Open Sans";
+}
+
+.navbar img {
+  width: 100px;
+}
+
+.navbar {
+  background: #5488c0;
+  overflow: hidden;
+  width: 100vw;
+  height: 50px;
+  padding: 0;
+  margin-bottom: 10px;
+}
+
+.navbar .container-fluid {
+  height: 100%;
+}
+
+.navbar-collapse, .navbar-nav {
+  height: 100%;
+}
+
+.navbar .nav-link {
+  color: white;
+  text-decoration: none;
+}
+
+.navbar-nav li {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.nav-link {
+  height: 100%;
+  padding: 11px 15px 11px 15px;
+  vertical-align: middle;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.25);
+}
+
+.nav-item:hover, .nav-item:visited:hover, .nav-item:focus, .nav-item:visited:focus {
+    background: rgba(255, 255, 255, 0.5);
+    transition: all .3s ease-in-out;
+}
