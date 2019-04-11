@@ -46,12 +46,6 @@ exports.init_table = function (sequelize) {
             validate: {
                 isIn: [['pending', 'complete']]
             }
-        },
-		transaction_date: {
-            type: Sequelize.DATE,
-            allowNull: false,
-            require: true,
-            unique: false,
         }
     });
 }
