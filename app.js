@@ -27,7 +27,9 @@ var middle = function(req, res, next) {
 app.use("/api", require("./controllers/index"));
 
 app.get("/", function(req, res) {
-    res.render("index.ejs");
+    var msg = "Welcome to Carolina Cupboard!"
+    var uid = req.get("HTTP_UID");
+    res.render("index.ejs", {uid: uid, msg: msg});
   });
   
   app.get("/entry", function(req, res) {
