@@ -2,7 +2,6 @@ let express     = require("express"),
     app         = express(),
     bodyParser  = require("body-parser"),
     morgan      = require("morgan"),
-    ExceptionHandler    = require("./exceptions/exception-handler"),
     config      = require("./config/server"),
     ejs = require("ejs");
 
@@ -65,8 +64,6 @@ var middle = function(req, res, next) {
  *Register routes on api 
  */
 app.use("/", require("./controllers/index"));
-
-app.use(ExceptionHandler);
 
 app.get("/", function(req, res) {
     var msg = "Welcome to Carolina Cupboard!"

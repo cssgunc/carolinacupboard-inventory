@@ -7,12 +7,14 @@ router.post('/', async function(req, res, next) {
         let name = req.body.name;
         let barcode = req.body.barcode;
         let description = req.body.description;
+        let count = req.body.count;
 
-        await itemService.createItem(name, barcode, description);
-
+        await itemService.createItem(name, barcode, description, count);
     } catch(e)  {
-        next(e);
+        console.error(`Item could not be saved: ${e.stack}`);
     }
+
+    res.render("admin/entry-manual.ejs");
 });
 
 router.get('/', async function(req, res, next) {
