@@ -5,12 +5,13 @@ const   Item = require("../db/sequelize").items,
         InternalErrorException = require("../exceptions/internal-error-exception"),
         CarolinaCupboardException = require("../exceptions/carolina-cupboard-exception");
 
-exports.createItem = async function (name, barcode, description) {
+exports.createItem = async function (name, barcode, description, count) {
     try {
         let item = await Item.build({
             name: name,
             barcode: barcode,
-            description: description
+            description: description,
+            count: count
         });
         await item.save();
     } catch (e) {
@@ -21,7 +22,8 @@ exports.createItem = async function (name, barcode, description) {
             });
             throw new BadRequestException(errorMessage);
         }
-        throw new InternalErrorException("A problem occurred when saving the item",e);
+        console.error(e.stack);
+        throw new InternalErrorException("A problem occurred when saving the item");
     }
 }
 

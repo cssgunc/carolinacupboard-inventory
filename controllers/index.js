@@ -2,6 +2,6 @@ let express = require("express"),
     router  = express.Router();
 
 router.use("/scan", require("./scan"));
-router.use("/item", require("./item"));
+router.use("/items", require("./item"));
 
 module.exports = router;

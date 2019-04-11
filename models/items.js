@@ -18,7 +18,7 @@ exports.init_table = function (sequelize) {
             }
         },
 		barcode: {
-            type: Sequelize.INTEGER,
+            type: Sequelize.BIGINT,
             allowNull: true,
             require: false,
             unique: true,
