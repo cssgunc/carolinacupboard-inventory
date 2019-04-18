@@ -19,6 +19,10 @@ let options = {
     operatorsAliases: false,
     logging: false
 }
+if(process.env.DATABASE_HOST) {
+    options.host = process.env.DATABASE_HOST;
+}
+
 
 let sequelize = new Sequelize(process.env.DATABASE_URL, process.env.DATABASE_USER, process.env.DATABASE_PASSWORD, options);
 
