@@ -29,11 +29,23 @@ exports.createItem = async function (name, barcode, description, count) {
 exports.getItems = async function (name, barcode) {
     try {
         let whereStatement = {};
+        let orStatement = [];
+
         if(name) {
-            whereStatement.name = name;
+            orStatement.push({
+                name: name
+            });
         }
         if(barcode) {
-            whereStatement.barcode = barcode;
+            orStatement.push({
+                barcode: barcode
+            });
+        }
+
+        if(orStatement.length > 0) {
+            whereStatement = {
+                [Sequelize.Op.or]: orStatement
+            };
         }
 
         let items = await Item.findAll({
