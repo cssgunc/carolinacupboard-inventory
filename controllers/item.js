@@ -20,11 +20,14 @@ router.post('/', async function(req, res, next) {
 });
 
 router.get('/', async function(req, res, next) {
+    let response = {};
     try {
-        let items = await itemService.getItems();
+        response.items = await itemService.getItems();
     } catch(e)  {
-        next(e);
+        response.error = exceptionHandler.retrieveException(e);
     }
+
+    res.render("user/view-items.ejs",{response: response});
 });
 
 module.exports = router;
