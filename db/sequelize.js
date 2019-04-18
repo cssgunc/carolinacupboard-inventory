@@ -20,7 +20,7 @@ let options = {
     logging: false
 }
 
-let sequelize = new Sequelize(process.env.DATABASE_URL, options);
+let sequelize = new Sequelize(process.env.DATABASE_URL, process.env.DATABASE_USER, process.env.DATABASE_PASSWORD, options);
 
 //define models
 sequelize.items = Items.init_table(sequelize);
