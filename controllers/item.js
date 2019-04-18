@@ -22,7 +22,21 @@ router.post('/', async function(req, res, next) {
 router.get('/', async function(req, res, next) {
     let response = {};
     try {
-        response.items = await itemService.getItems();
+        response.items = await itemService.getItems(null, null);
+    } catch(e)  {
+        response.error = exceptionHandler.retrieveException(e);
+    }
+
+    res.render("user/view-items.ejs",{response: response});
+});
+
+router.post('/search', async function(req, res, next) {
+    let response = {};
+    try {
+        let name = req.body.name;
+        let barcode = req.body.barcode;
+
+        response.items = await itemService.getItems(name, barcode);
     } catch(e)  {
         response.error = exceptionHandler.retrieveException(e);
     }

@@ -26,9 +26,19 @@ exports.createItem = async function (name, barcode, description, count) {
     }
 }
 
-exports.getItems = async function () {
+exports.getItems = async function (name, barcode) {
     try {
-        let items = await Item.findAll();
+        let whereStatement = {};
+        if(name) {
+            whereStatement.name = name;
+        }
+        if(barcode) {
+            whereStatement.barcode = barcode;
+        }
+
+        let items = await Item.findAll({
+            where: whereStatement
+        });
         return items;
     } catch (e) {
         throw new InternalErrorException("A problem occurred when retrieving items",e);
