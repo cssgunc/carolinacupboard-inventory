@@ -1,6 +1,5 @@
 module.exports = class CarolinaCupboardException extends Error {
-    constructor(message,status_code) {
+    constructor(message) {
         super(message);
-        this.status_code = status_code;
     }
 }

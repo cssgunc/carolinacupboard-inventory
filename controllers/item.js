@@ -1,8 +1,10 @@
 let express = require("express"),
     router = express.Router(),
-    itemService = require("../services/item-service");
+    itemService = require("../services/item-service"),
+    exceptionHandler = require("../exceptions/exception-handler");
 
 router.post('/', async function(req, res, next) {
+    let response = {};
     try {
         let name = req.body.name;
         let barcode = req.body.barcode;
@@ -11,10 +13,10 @@ router.post('/', async function(req, res, next) {
 
         await itemService.createItem(name, barcode, description, count);
     } catch(e)  {
-        console.error(`Item could not be saved: ${e.stack}`);
+        response.error = exceptionHandler.retrieveException(e);
     }
 
-    res.render("admin/entry-manual.ejs");
+    res.render("admin/entry-manual.ejs", {response: response});
 });
 
 router.get('/', async function(req, res, next) {
