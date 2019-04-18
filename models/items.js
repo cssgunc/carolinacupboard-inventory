@@ -18,13 +18,12 @@ exports.init_table = function (sequelize) {
             }
         },
 		barcode: {
-            type: Sequelize.BIGINT,
+            type: Sequelize.STRING,
             allowNull: true,
             require: false,
             unique: true,
             validate: {
-                isAlphanumeric: true,
-				len: [12]
+                len: [12]
             }
         },
 		count: {
