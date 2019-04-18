@@ -32,6 +32,11 @@
 				</button>
 			</div>
 		</form>
+		<% if (response && response.error) {%>
+			<div class="alert alert-danger">
+				<%= response.error%>
+			</div>
+		<% } %>
 	</div>
 </body>
 

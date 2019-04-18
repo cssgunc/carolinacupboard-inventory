@@ -48,7 +48,7 @@ app.get("/entry/search", function(req, res) {
 });
   
 app.get("/entry/manual", function(req, res) {
-    res.render("admin/entry-manual.ejs");
+    res.render("admin/entry-manual.ejs", {response: null});
 });
   
 app.get("/approve", function(req, res) {

@@ -22,8 +22,7 @@ exports.createItem = async function (name, barcode, description, count) {
             });
             throw new BadRequestException(errorMessage);
         }
-        console.error(e.stack);
-        throw new InternalErrorException("A problem occurred when saving the item");
+        throw new InternalErrorException("A problem occurred when saving the item",e);
     }
 }
 
