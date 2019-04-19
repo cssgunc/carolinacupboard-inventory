@@ -67,8 +67,8 @@ app.get("/cart", function(req, res) {
     res.render("user/cart.ejs");
 });
   
-app.get("/orderconfirm", function(req, res) {
-    res.render("user/orderconfirm.ejs");
+app.get("/history", function(req, res) {
+    res.render("user/history.ejs");
 });
 
 module.exports = app;
