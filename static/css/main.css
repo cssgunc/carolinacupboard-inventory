@@ -11,17 +11,12 @@ body {
 .navbar {
   background: #5488c0;
   overflow: hidden;
-  width: 100vw;
-  height: 50px;
-  padding: 0;
+  min-width: 100vw;
+  min-height: 50px;
   margin-bottom: 10px;
 }
 
 .navbar .container-fluid {
-  height: 100%;
-}
-
-.navbar-collapse, .navbar-nav {
   height: 100%;
 }
 
@@ -43,6 +38,14 @@ body {
 }
 
 .nav-item:hover, .nav-item:visited:hover, .nav-item:focus, .nav-item:visited:focus {
-    background: rgba(255, 255, 255, 0.5);
-    transition: all .3s ease-in-out;
+  background: rgba(255, 255, 255, 0.5);
+  transition: all .3s ease-in-out;
 }
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='white' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+}
+
+.navbar-toggler {
+  border-color: white;
+} 
