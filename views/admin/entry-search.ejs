@@ -6,13 +6,28 @@
 <body>
   <%- include("../header") -%>
   <div class="container">
+    <h2>Search for an item to add</h2>
     <form action="/items/search" method="post">
       <div class="form-group">
-        <input class="form-control form-control-lg" name="name" type="text" placeholder="Search for an item">
+        <div class="row">
+          <div class="input-group col-sm-6">
+            <input type="text" class="form-control" name="name" placeholder="Search by item name" aria-label="Item Name" aria-describedby="button-name">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary btn-md form-control" type="action" value="Confirm">Search</button>
+            </div>
+          </div>
+          <div class="input-group col-sm-6">
+            <input type="number" class="form-control" name="barcode" placeholder="Search by barcode" aria-label="Item Code" aria-describedby="button-code">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary btn-md form-control" type="action" value="Confirm">Search</button>
+            </div>
+          </div>
+        </div>
+        <!-- <input class="form-control form-control-lg" name="name" type="text" placeholder="Search for an item">
         <input class="form-control form-control-lg" type="number" name="barcode"
-        placeholder="Enter a barcode">
-		<button class="form-control btn-success btn-md" type="action"value="Confirm">Confirm
-		</button>        
+        placeholder="Enter a barcode"> -->
+		<!-- <button class="form-control btn-success btn-md" type="action"value="Confirm">Confirm
+		</button>         -->
       </div>
     </form>
   </div>

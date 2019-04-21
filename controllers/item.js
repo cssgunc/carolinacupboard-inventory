@@ -33,8 +33,8 @@ router.get('/', async function(req, res, next) {
 router.post('/search', async function(req, res, next) {
     let response = {};
     try {
-        let name = req.body.name;
-        let barcode = req.body.barcode;
+        let name = req.body.name === '' ? null : req.body.name;
+        let barcode = req.body.barcode === '' ? null : req.body.barcode;
 
         response.items = await itemService.getItems(name, barcode);
     } catch(e)  {
