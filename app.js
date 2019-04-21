@@ -31,7 +31,7 @@ app.use("/", require("./controllers/index"));
 
 app.get("/", function(req, res) {
     var msg = "Welcome to Carolina Cupboard!"
-    var uid = req.header("HTTP_UID");
+    var uid = req.header("uid");
     console.log(req.headers);
     res.render("index.ejs", {uid: uid, msg: msg});
 });
