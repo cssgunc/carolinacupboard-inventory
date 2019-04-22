@@ -4,6 +4,8 @@ let express = require("express"),
     exceptionHandler = require("../exceptions/exception-handler");
 
 router.post('/', async function(req, res, next) {
+    let onyen = req.header("uid");
+    let userType = await authService.getUserType(onyen);
     let response = {};
     try {
         let name = req.body.name;
@@ -16,10 +18,12 @@ router.post('/', async function(req, res, next) {
         response.error = exceptionHandler.retrieveException(e);
     }
 
-    res.render("admin/entry-manual.ejs", {response: response});
+    res.render("admin/entry-manual.ejs", {response: response, onyen: onyen, userType: userType});
 });
 
 router.get('/', async function(req, res, next) {
+    let onyen = req.header("uid");
+    let userType = await authService.getUserType(onyen);
     let response = {};
     try {
         response.items = await itemService.getItems(null, null);
@@ -27,10 +31,12 @@ router.get('/', async function(req, res, next) {
         response.error = exceptionHandler.retrieveException(e);
     }
 
-    res.render("user/view-items.ejs",{response: response});
+    res.render("user/view-items.ejs",{response: response, onyen: onyen, userType: userType});
 });
 
 router.post('/search', async function(req, res, next) {
+    let onyen = req.header("uid");
+    let userType = await authService.getUserType(onyen);
     let response = {};
     try {
         let name = req.body.name === '' ? null : req.body.name;
@@ -41,7 +47,7 @@ router.post('/search', async function(req, res, next) {
         response.error = exceptionHandler.retrieveException(e);
     }
 
-    res.render("user/view-items.ejs",{response: response});
+    res.render("user/view-items.ejs",{response: response, onyen: onyen, userType: userType});
 });
 
 module.exports = router;
