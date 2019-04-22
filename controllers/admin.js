@@ -1,5 +1,6 @@
 let express = require("express"),
     router = express.Router(),
+    adminService = require("../services/admin-service"),
     authService = require("../services/authorization-service"),
     exceptionHandler = require("../exceptions/exception-handler");
 
@@ -12,7 +13,7 @@ router.get('/', async function(req, res, next) {
         let types = ["admin","volunteer"];
 
         try {
-            response.users = await authService.getAllUsers();
+            response.users = await adminService.getAllUsers();
         } catch(e)  {
             response.error = exceptionHandler.retrieveException(e);
         }
@@ -29,7 +30,7 @@ router.post('/create', async function(req, res, next) {
             let newOnyen = req.body.onyen;
             let type = req.body.type;
 
-            await authService.createUser(newOnyen, type);
+            await adminService.createUser(newOnyen, type);
         } catch(e) {
             res.status(500).send("Internal server error");
             return;
@@ -51,13 +52,13 @@ router.post('/edit', async function(req, res, next) {
 
             let currtype = await authService.getUserType(editOnyen);
             if(currtype === "admin") {
-                let adminCount = await authService.countAllAdmins();
+                let adminCount = await adminService.countAllAdmins();
                 if(adminCount <= 1) {
                     res.status(500).send('Cannot remove the last admin');
                     return;
                 }
             }
-            await authService.changeUserType(editOnyen, type);
+            await adminService.changeUserType(editOnyen, type);
 
         } catch(e) {
             res.status(500).send("Internal server error");
@@ -78,14 +79,14 @@ router.post('/delete', async function(req, res, next) {
 
             
             if(await authService.getUserType(delOnyen) === "admin") {
-                let adminCount = await authService.countAllAdmins();
+                let adminCount = await adminService.countAllAdmins();
                 console.log("Admin count: " + adminCount);
                 if(adminCount <= 1) {
                     res.status(500).send('Cannot delete the last admin');
                     return;
                 }
             }
-            await authService.deleteUser(delOnyen);
+            await adminService.deleteUser(delOnyen);
 
         } catch(e) {
             res.status(500).send("Internal server error");
