@@ -31,7 +31,3 @@ $('#submitEdit').on('click', function(event) {
 $('#submitDelete').on('click', function(event) {
     $('#deleteForm').submit();
 });
-
-$("form :input").change(function() {
-    console.log($(this).closest('form').serialize());
-});
