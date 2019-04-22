@@ -3,7 +3,7 @@ let express     = require("express"),
     bodyParser  = require("body-parser"),
     morgan      = require("morgan"),
     config      = require("./config/server"),
-    ejs = require("ejs"),
+    ejs         = require("ejs"),
     authService = require("./services/authorization-service");
 
 app.engine("html", ejs.renderFile);
@@ -31,10 +31,11 @@ var middle = function(req, res, next) {
 app.use("/", require("./controllers/index"));
 
 app.get("/", function(req, res) {
-    let msg = "Welcome to Carolina Cupboard!"
-    let uid = req.header("uid");
+    // let onyen = req.header("uid");
+    let onyen = "austinyw";
+    let userType = authService.getUserType(onyen);
     console.log(req.headers);
-    res.render("index.ejs", {uid: uid, msg: msg});
+    res.render("index.ejs", {onyen: onyen, userType: userType});
 });
 
 app.get("/entry", function(req, res) {

@@ -19,6 +19,8 @@
       <li class="nav-item rounded">
         <a class="nav-link" href="/history">Orders</a>
       </li>
+      <% if(locals.userType) { %>
+      <% if(userType == "volunteer" || userType == "admin") { %>
       <li class="nav-item rounded">
         <a class="nav-link" href="/entry">Entry</a>
       </li>
@@ -28,6 +30,14 @@
       <li class="nav-item rounded">
         <a class="nav-link" href="/approve">Approve</a>
       </li>
+      <% } %>
+
+      <% if(userType == "admin") { %>
+      <li class="nav-item rounded">
+        <a class="nav-link" href="/admin">Admin</a>
+      </li>
+      <% } %>
+      <% } %>
     </ul>
   </div>
   </div>
