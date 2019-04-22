@@ -6,8 +6,9 @@ let express = require("express"),
 
 router.get('/', async function(req, res, next) {
     let onyen = req.header("uid");
-    if(!onyen) res.sendStatus(403);
-    else if(await authService.getUserType(onyen) !== "admin") res.sendStatus(403);
+    let userType = await authService.getUserType(onyen);
+    // if(!onyen) res.sendStatus(403);
+    if(userType !== "admin") res.sendStatus(403);
     else {
         let response = {};
         let types = ["admin","volunteer"];
@@ -17,14 +18,15 @@ router.get('/', async function(req, res, next) {
         } catch(e)  {
             response.error = exceptionHandler.retrieveException(e);
         }
-        res.render("admin/admin.ejs", {response : response, types : types});
+        res.render("admin/admin.ejs", {response : response, types : types, onyen: onyen, userType: userType});
     }
 });
 
 router.post('/create', async function(req, res, next) {
     let onyen = req.header("uid");
-    if(!onyen) res.sendStatus(403);
-    else if(await authService.getUserType(onyen) !== "admin") res.sendStatus(403);
+    let userType = await authService.getUserType(onyen);
+    // if(!onyen) res.sendStatus(403);
+    if(userType !== "admin") res.sendStatus(403);
     if(true) {
         try {
             let newOnyen = req.body.onyen;
@@ -43,8 +45,9 @@ router.post('/create', async function(req, res, next) {
 
 router.post('/edit', async function(req, res, next) {
     let onyen = req.header("uid");
-    if(!onyen) res.sendStatus(403);
-    else if(await authService.getUserType(onyen) !== "admin") res.sendStatus(403);
+    let userType = await authService.getUserType(onyen);
+    // if(!onyen) res.sendStatus(403);
+    if(userType !== "admin") res.sendStatus(403);
     else {
         try {
             let editOnyen = req.body.onyen;
@@ -71,8 +74,9 @@ router.post('/edit', async function(req, res, next) {
 
 router.post('/delete', async function(req, res, next) {
     let onyen = req.header("uid");
-    if(!onyen) res.sendStatus(403);
-    else if(await authService.getUserType(onyen) !== "admin") res.sendStatus(403);
+    let userType = await authService.getUserType(onyen);
+    // if(!onyen) res.sendStatus(403);
+    if(userType !== "admin") res.sendStatus(403);
     else {
         try {
             let delOnyen = req.body.onyen;
@@ -95,20 +99,6 @@ router.post('/delete', async function(req, res, next) {
 
         res.redirect('/admin');
     }
-});
-
-router.post('/users', async function(req, res, next) {
-    let response = {};
-    try {
-        let name = req.body.name === '' ? null : req.body.name;
-        let barcode = req.body.barcode === '' ? null : req.body.barcode;
-
-        response.items = await itemService.getItems(name, barcode);
-    } catch(e)  {
-        response.error = exceptionHandler.retrieveException(e);
-    }
-
-    res.render("admin/admin-users.ejs",{response: response});
 });
 
 module.exports = router;
