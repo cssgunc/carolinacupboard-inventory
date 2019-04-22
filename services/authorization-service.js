@@ -7,7 +7,7 @@ const   User = require("../db/sequelize").users,
 
 exports.createUser = async function(onyen, type) {
     try {
-        if(User.findOne({ where: {onyen : onyen } })) {
+        if(User.count({ where: {onyen : onyen } }) > 0) {
             return;
         }
         let user = await User.build({
@@ -39,7 +39,27 @@ exports.getUserType = async function (onyen) {
             throw e;
         }
 
-        throw new InternalErrorException("A problem occurred when retrieving the item",e);
+        throw new InternalErrorException("A problem occurred when retrieving the user",e);
+    }
+}
+
+exports.countAllAdmins = async function () {
+    try {
+        let users = await User.count({
+            where: {type: "admin"}
+        });
+        return users;
+    } catch (e) {
+        throw new InternalErrorException("A problem occurred when retrieving users",e);
+    }
+}
+
+exports.getAllUsers = async function () {
+    try {
+        let users = await User.findAll();
+        return users;
+    } catch (e) {
+        throw new InternalErrorException("A problem occurred when retrieving all users",e);
     }
 }
 
@@ -57,7 +77,7 @@ exports.changeUserType = async function(onyen, type) {
             });
             throw new BadRequestException(errorMessage);
         }
-        throw new InternalErrorException("A problem occurred when saving the user",e);
+        throw new InternalErrorException("A problem occurred when editting the user",e);
     }
 }
 
@@ -71,6 +91,6 @@ exports.deleteUser = async function(onyen) {
             throw e;
         }
 
-        throw new InternalErrorException("A problem occurred when saving the user",e);
+        throw new InternalErrorException("A problem occurred when deleting the user",e);
     }
 }
