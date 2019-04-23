@@ -32,7 +32,8 @@ exports.init_table = function (sequelize) {
             require: true,
             unique: false,
             validate: {
-                isAlphanumeric: true
+                isAlphanumeric: true,
+                min: 0
             }
         },
 		description: {

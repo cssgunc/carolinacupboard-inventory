@@ -36,30 +36,6 @@ app.get("/", async function(req, res) {
     console.log(req.headers);
     res.render("index.ejs", {onyen: onyen, userType: userType});
 });
-
-app.get("/entry", async function(req, res) {
-    let onyen = req.header("uid");
-    let userType = await authService.getUserType(onyen);
-    res.render("admin/entry.ejs", {onyen: onyen, userType: userType});
-});
-  
-app.get("/entry/scan", async function(req, res) {
-    let onyen = req.header("uid");
-    let userType = await authService.getUserType(onyen);
-    res.render("admin/entry-scan.ejs", {onyen: onyen, userType: userType});
-});
-  
-app.get("/entry/search", async function(req, res) {
-    let onyen = req.header("uid");
-    let userType = await authService.getUserType(onyen);
-    res.render("admin/entry-search.ejs", {onyen: onyen, userType: userType});
-});
-  
-app.get("/entry/manual", async function(req, res) {
-    let onyen = req.header("uid");
-    let userType = await authService.getUserType(onyen);
-    res.render("admin/entry-manual.ejs", {response: null, onyen: onyen, userType: userType});
-});
   
 app.get("/approve", async function(req, res) {
     let onyen = req.header("uid");
