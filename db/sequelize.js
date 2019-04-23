@@ -19,8 +19,13 @@ let options = {
     operatorsAliases: false,
     logging: false
 }
-if(process.env.DATABASE_HOST) {
-    options.host = process.env.DATABASE_HOST;
+if(process.env.POSTGRESQL_SERVICE_HOST) {
+    console.log("POSTGRESQL_SERVICE_HOST: " + process.env.POSTGRESQL_SERVICE_HOST);
+    options.host = process.env.POSTGRESQL_SERVICE_HOST;
+}
+if(process.env.POSTGRESQL_SERVICE_PORT) {
+    console.log("POSTGRESQL_SERVICE_PORT: " + process.env.POSTGRESQL_SERVICE_PORT);
+    options.post = process.env.POSTGRESQL_SERVICE_PORT;
 }
 
 let sequelize = new Sequelize(process.env.DATABASE_URL, process.env.DATABASE_USER, process.env.DATABASE_PASSWORD, options);
