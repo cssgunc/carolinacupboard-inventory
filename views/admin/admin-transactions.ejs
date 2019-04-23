@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("../baselinks") -%>
+</head>
+<body>
+    <%- include("../header") -%>
+    <div class="container">
+        <h2>Transaction History</h2>
+        <form>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Item ID</th>
+                            <th scope="col">Count</th>
+                            <th scope="col">Customer ID</th>
+                            <th scope="col">Volunteer ID</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (response && response.transactions) {%>
+                        <% response.transactions.forEach((trans) => {%>
+                        <tr>
+                            <td><%= trans.id %></td>
+                            <td><%= trans.item_id %></td>
+                            <td><%= trans.count %></td>
+                            <td><%= trans.onyen %></td>
+                            <td><%= trans.volunteer_id %></td>
+                            <td><%= trans.status %></td>
+                        </tr>
+                        <% }); %>
+                        <% } %>
+                    </tbody>
+                </table>
+                <% if (response && response.error) {%>
+                <div class="alert alert-danger">
+                    <%= response.error%>
+                </div>
+                <% } %>
+            </div>
+        </form>
+    </div>
+    <%- include("../scripts") -%>
+</body>
+</html>
