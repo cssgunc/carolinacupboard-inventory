@@ -19,10 +19,7 @@ exports.init_table = function (sequelize) {
             type: Sequelize.INTEGER,
             allowNull: false,
             require: true,
-            unique: false,
-            validate: {
-                isAlphanumeric: true
-            }
+            unique: false
         },
 		
 		onyen: {
@@ -40,7 +37,7 @@ exports.init_table = function (sequelize) {
             require: true
         },
 		status: {
-            type: Sequelize.BOOLEAN,
+            type: Sequelize.STRING,
             allowNull: false,
             require: true,
             validate: {
