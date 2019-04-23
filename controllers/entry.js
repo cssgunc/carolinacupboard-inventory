@@ -38,8 +38,12 @@ router.get("/manual", async function(req, res) {
 });
 
 router.post("/add", async function(req, res) {
+<<<<<<< HEAD
     // let onyen = req.header("uid");
     let onyen = 'austinyw';
+=======
+    let onyen = req.header("uid");
+>>>>>>> 956b62ef88636c030c32e22aed97650258d0b1b6
     let userType = await authService.getUserType(onyen);
     
     let id  = req.body.id;
@@ -55,8 +59,12 @@ router.post("/add", async function(req, res) {
 });
 
 router.post("/remove", async function(req, res) {
+<<<<<<< HEAD
     // let onyen = req.header("uid");
     let onyen = 'austinyw';
+=======
+    let onyen = req.header("uid");
+>>>>>>> 956b62ef88636c030c32e22aed97650258d0b1b6
     let userType = await authService.getUserType(onyen);
     
     let id  = req.body.id;

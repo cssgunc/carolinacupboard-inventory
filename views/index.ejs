@@ -10,25 +10,16 @@
     <% if(locals.userType) { %>
     <% if(userType == "volunteer" || userType == "admin") { %>
     <h2>Volunteers</h2>
-    <div class="row justify-content-between">
+    <div class="row">
       <div class="col-md-4">
         <div class="card">
           <a class="card-link" href="/entry"></a>
           <div class="card-body">
-            <h5 class="card-title">Item Entry</h5>
-            <p class="card-text">Add new items to the inventory</p>
+            <h5 class="card-title">Add & Remove Items</h5>
+            <p class="card-text">Update item counts in the inventory</p>
           </div>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="card">
-          <a class="card-link" href="/removal"></a>
-          <div class="card-body">
-            <h5 class="card-title">Item Removal</h5>
-            <p class="card-text">Remove items from the inventory</p>
-          </div>
-        </div>
-      </div>  
       <div class="col-md-4">
         <div class="card">
           <a class="card-link" href="/approve"></a>
