@@ -2,9 +2,19 @@ let express = require("express"),
     router = express.Router(),
     adminService = require("../services/admin-service"),
     authService = require("../services/authorization-service"),
+    tranService = require("../services/transaction-service");
     exceptionHandler = require("../exceptions/exception-handler");
 
 router.get('/', async function(req, res, next) {
+    let onyen = req.header("uid");
+    let userType = await authService.getUserType(onyen);
+    if(userType !== "admin") res.sendStatus(403);
+    else {
+        res.render("admin/admin.ejs", {onyen: onyen, userType: userType});
+    }
+});
+
+router.get('/users', async function(req, res, next) {
     let onyen = req.header("uid");
     let userType = await authService.getUserType(onyen);
     // if(!onyen) res.sendStatus(403);
@@ -18,11 +28,11 @@ router.get('/', async function(req, res, next) {
         } catch(e)  {
             response.error = exceptionHandler.retrieveException(e);
         }
-        res.render("admin/admin.ejs", {response : response, types : types, onyen: onyen, userType: userType});
+        res.render("admin/admin-users.ejs", {response : response, types : types, onyen: onyen, userType: userType});
     }
 });
 
-router.post('/create', async function(req, res, next) {
+router.post('/users/create', async function(req, res, next) {
     let onyen = req.header("uid");
     let userType = await authService.getUserType(onyen);
     // if(!onyen) res.sendStatus(403);
@@ -38,12 +48,12 @@ router.post('/create', async function(req, res, next) {
             return;
         }
 
-        res.redirect('/admin');
+        res.redirect('/admin/users');
     }
 });
 
 
-router.post('/edit', async function(req, res, next) {
+router.post('/users/edit', async function(req, res, next) {
     let onyen = req.header("uid");
     let userType = await authService.getUserType(onyen);
     // if(!onyen) res.sendStatus(403);
@@ -68,11 +78,11 @@ router.post('/edit', async function(req, res, next) {
             return;
         }
 
-        res.redirect('/admin');
+        res.redirect('/admin/users');
     }
 });
 
-router.post('/delete', async function(req, res, next) {
+router.post('/users/delete', async function(req, res, next) {
     let onyen = req.header("uid");
     let userType = await authService.getUserType(onyen);
     // if(!onyen) res.sendStatus(403);
@@ -80,7 +90,6 @@ router.post('/delete', async function(req, res, next) {
     else {
         try {
             let delOnyen = req.body.onyen;
-
             
             if(await authService.getUserType(delOnyen) === "admin") {
                 let adminCount = await adminService.countAllAdmins();
@@ -97,7 +106,23 @@ router.post('/delete', async function(req, res, next) {
             return;
         }
 
-        res.redirect('/admin');
+        res.redirect('/admin/users');
+    }
+});
+
+router.get('/history', async function(req, res, next) {
+    let onyen = req.header("uid");
+    let userType = await authService.getUserType(onyen);
+    if(userType !== "admin") res.sendStatus(403);
+    else {
+        let response = {};
+        try {
+            response.transactions = await tranService.getAllTransactions();
+        }
+        catch(e) {
+            response.error = e;
+        }
+        res.render('admin/admin-transactions.ejs', {response: response, onyen: onyen, userType: userType    });
     }
 });
 
