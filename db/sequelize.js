@@ -35,15 +35,4 @@ sequelize.users = Users.init_table(sequelize);
 sequelize.transactions.belongsTo(sequelize.users, {foreignKey: 'volunteer_id'});
 sequelize.transactions.belongsTo(sequelize.items, {foreignKey: 'item_id'});
 
-async function createTables() {
-    try {
-        await sequelize.sync();
-    } catch (e) {
-        console.error(e);
-        process.exit(1);
-    }
-}
-
-createTables();
-
 module.exports = sequelize;
