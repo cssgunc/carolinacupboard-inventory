@@ -5,7 +5,7 @@ const   User = require("../db/sequelize").users,
         CarolinaCupboardException = require("../exceptions/carolina-cupboard-exception");
 
 exports.getUserType = async function (onyen) {
-    if(process.env.NODE_ENV === 'dev') {
+    if(process.env.NODE_ENV === "dev") {
         if(process.env.DEV_USERTYPE === "admin" || process.env.DEV_USERTYPE === "volunteer") {
             return process.env.DEV_USERTYPE;
         }
@@ -14,14 +14,14 @@ exports.getUserType = async function (onyen) {
     try {
         let user = await User.findOne({ where: { onyen: onyen } });
         if (!user) {
-            return "user"
+            return "user";
         }
         return user.type;
     } catch (e) {
         if(e instanceof CarolinaCupboardException) {
             throw e;
         }
-
-        throw new InternalErrorException("A problem occurred when retrieving the user",e);
+        throw e;
+        // throw new InternalErrorException("A problem occurred when retrieving the user",e);
     }
 }
