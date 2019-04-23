@@ -83,23 +83,25 @@ exports.removeItems = async function (itemId, quantity, onyen, volunteerId) {
 
 exports.createTransaction = async function (itemId, quantity, onyen, volunteerId) {
     let item = await this.getItem(itemId);
-    item.count += quantity;
+    // item.count += quantity;
 
-    if(item.count < 0) {
+    if(quantity < 0 && item.count < Math.abs(quantity)) {
         throw new BadRequestException("The amount requested is larger than the quantity in the system");
     }
 
     try {
         let transaction = await Transaction.build({
             item_id: itemId,
-            count: -quantity,
+            count: quantity,
             onyen: onyen,
             volunteer_id: volunteerId,
             status: 'complete'
         });
-        await item.save();
+        // await item.save();
+        item.increment('count', {by: quantity});
         await transaction.save();
     } catch (e) {
-        throw new InternalErrorException("A problem occurred when adding the transaction",e);
+        throw e;
+        // throw new InternalErrorException("A problem occurred when adding the transaction",e);
     }
 }
