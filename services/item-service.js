@@ -6,6 +6,7 @@ const   Item = require("../db/sequelize").items,
         CarolinaCupboardException = require("../exceptions/carolina-cupboard-exception");
 
 exports.createItem = async function (name, barcode, description, count) {
+    if(barcode) barcode = barcode.padStart(14, '0');
     try {
         let item = await Item.build({
             name: name,
@@ -27,6 +28,7 @@ exports.createItem = async function (name, barcode, description, count) {
 }
 
 exports.getItems = async function (name, barcode) {
+    if(barcode) barcode = barcode.padStart(14, '0');
     try {
         let whereStatement = {};
         let orStatement = [];

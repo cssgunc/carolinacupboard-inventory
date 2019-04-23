@@ -36,3 +36,7 @@ $('#submitAdd').on('click', function(event) {
 $('#submitRemove').on('click', function(event) {
     $('#removeForm').submit();
 });
+
+$('#submitFound').on('click', function(event) {
+    $('#foundForm').submit();
+});
