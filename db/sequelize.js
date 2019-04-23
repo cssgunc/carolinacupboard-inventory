@@ -19,13 +19,9 @@ let options = {
     operatorsAliases: false,
     logging: false
 }
-if(process.env.POSTGRESQL_SERVICE_HOST) {
-    options.host = process.env.POSTGRESQL_SERVICE_HOST;
+if(process.env.DATABASE_HOST) {
+    options.host = process.env.DATABASE_HOST;
 }
-if(process.env.POSTGRESQL_SERVICE_PORT) {
-    options.port = process.env.POSTGRESQL_SERVICE_PORT;
-}
-
 
 let sequelize = new Sequelize(process.env.DATABASE_URL, process.env.DATABASE_USER, process.env.DATABASE_PASSWORD, options);
 
@@ -38,5 +34,16 @@ sequelize.users = Users.init_table(sequelize);
 //define relationships
 sequelize.transactions.belongsTo(sequelize.users, {foreignKey: 'volunteer_id'});
 sequelize.transactions.belongsTo(sequelize.items, {foreignKey: 'item_id'});
+
+async function createTables() {
+    try {
+        await sequelize.sync();
+    } catch (e) {
+        console.error(e);
+        process.exit(1);
+    }
+}
+
+createTables();
 
 module.exports = sequelize;
