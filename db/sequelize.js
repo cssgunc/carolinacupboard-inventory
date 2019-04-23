@@ -19,8 +19,11 @@ let options = {
     operatorsAliases: false,
     logging: false
 }
-if(process.env.DATABASE_HOST) {
-    options.host = process.env.DATABASE_HOST;
+if(process.env.POSTGRESQL_SERVICE_HOST) {
+    options.host = process.env.POSTGRESQL_SERVICE_HOST;
+}
+if(process.env.POSTGRESQL_SERVICE_PORT) {
+    options.port = process.env.POSTGRESQL_SERVICE_PORT;
 }
 
 
