@@ -12,23 +12,33 @@
 		<form action="/items" method="post">
 			<div class="form-group">
 				<label for="Item Name">Item Name: </label>
-				<input name="name" class="form-control form-control-lg" type="text"
-					placeholder="Ex. Campbell's Chicken Noodle Soup" required>
+				<div class="input-group">
+					<input name="name" class="form-control form-control-lg" type="text"
+						placeholder="Ex. Campbell's Chicken Noodle Soup" required>
+				</div>
+			</div>
+			<div class="form-group">
 				<label for="Barcode">Barcode: </label>
-				<input name="barcode" class="form-control form-control-lg" type="number" placeholder="Ex. 123456789098"
-					required>
+				<div class="input-group">
+					<input name="barcode" class="form-control form-control-lg" type="number" placeholder="Ex. 123456789098"
+						required>
+				</div>
+			</div>
+			<div class="form-group">
 				<label for="Count">Count: </label>
-				<input name="count" class="form-control form-control-lg" type="number" placeholder="Ex. 20" required>
+				<div class="input-group">
+					<input name="count" class="form-control form-control-lg" type="number" placeholder="Ex. 20" required>
+				</div>
+			</div>
+			<div class="form-group">
 				<label for="Description">Short Description:</label>
-				<input name="description" class="form-control form-control-lg" type="text"
-					placeholder="Ex. Gluten-free soup expiring 4/20/19" required>
-				<!-- 	    <div class="form-check">
-	  		<input class="form-check-input" type="checkbox" value="" id="defaultCheck1" required>
-	  		<label class="form-check-label" for="defaultCheck1">
-	    		Are all the details correct?
-	  		</label>
-		</div> -->
-				<button class="form-control btn-success btn-md" type="action" value="Submit New Item">Submit New Item
+				<div class="input-group">
+					<input name="description" class="form-control form-control-lg" type="text"
+						placeholder="Ex. Gluten-free soup expiring 4/20/19" required>
+				</div>
+			</div>
+			<div class="form-group">
+				<button class="form-control btn-success btn-md float-middle" style="margin:px" type="action" value="Submit New Item">Submit New Item
 				</button>
 			</div>
 		</form>
