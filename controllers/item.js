@@ -1,6 +1,7 @@
 let express = require("express"),
     router = express.Router(),
     itemService = require("../services/item-service"),
+    authService = require("../services/authorization-service")
     exceptionHandler = require("../exceptions/exception-handler");
 
 router.post('/', async function(req, res, next) {
