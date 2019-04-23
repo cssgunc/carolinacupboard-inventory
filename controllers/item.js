@@ -32,7 +32,7 @@ router.get('/', async function(req, res, next) {
         response.error = exceptionHandler.retrieveException(e);
     }
 
-    res.render("admin/view-items.ejs",{response: response, onyen: onyen, userType: userType});
+    res.render("user/view-items.ejs",{response: response, onyen: onyen, userType: userType});
 });
 
 router.post('/search', async function(req, res, next) {
