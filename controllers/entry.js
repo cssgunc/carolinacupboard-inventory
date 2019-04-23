@@ -30,6 +30,22 @@ router.get("/search", async function(req, res) {
 
     res.render("admin/entry-search.ejs", {response: response, onyen: onyen, userType: userType});
 });
+
+router.post('/search', async function(req, res, next) {
+    let onyen = req.header("uid");
+    let userType = await authService.getUserType(onyen);
+    let response = {};
+    try {
+        let name = req.body.name === '' ? null : req.body.name;
+        let barcode = req.body.barcode === '' ? null : req.body.barcode;
+
+        response.items = await itemService.getItems(name, barcode);
+    } catch(e)  {
+        response.error = exceptionHandler.retrieveException(e);
+    }
+
+    res.render("admin/entry-search.ejs",{response: response, onyen: onyen, userType: userType});
+});
   
 router.get("/manual", async function(req, res) {
     let onyen = req.header("uid");
