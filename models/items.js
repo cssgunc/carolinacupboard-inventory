@@ -13,18 +13,12 @@ exports.init_table = function (sequelize) {
             allowNull: false,
             require: true,
             unique: true,
-            validate: {
-                isAlphanumeric: true
-            }
         },
 		barcode: {
             type: Sequelize.STRING,
             allowNull: true,
             require: false,
-            unique: true,
-            validate: {
-                len: [12]
-            }
+            unique: true
         },
 		count: {
             type: Sequelize.INTEGER,
@@ -41,9 +35,6 @@ exports.init_table = function (sequelize) {
             allowNull: true,
             require: false,
             unique: false,
-            validate: {
-                isAlphanumeric: true
-            }
         }
     });
 }
