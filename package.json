@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run prod",
+    "start": "node db/init-db.js && npm run prod",
     "dev": "cross-env NODE_ENV=dev nodemon index.js",
     "prod": "cross-env NODE_ENV=prod node index.js",
-    "bootstrap": "cross-env NODE_ENV=dev sh scripts/bootstrap.sh"
+    "bootstrap": "cross-env NODE_ENV=dev sh scripts/bootstrap.sh;"
   },
   "author": "",
   "license": "ISC",
