@@ -8,8 +8,32 @@
   <div class="container">
     <p>Hi <%= onyen %>. Welcome to Carolina Cupboard!</p>
     <% if(locals.userType) { %>
+    <% if(userType == "admin") { %>
+    <h2>Admin</h2>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card">
+          <a class="card-link" href="/admin/users"></a>
+          <div class="card-body">
+            <h5 class="card-title">Manage Users</h5>
+            <p class="card-text">Add, delete, and edit volunteers and admins</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <a class="card-link" href="/admin/history"></a>
+          <div class="card-body">
+            <h5 class="card-title">Transaction History</h5>
+            <p class="card-text">See the history of transactions</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <% } %>
     <% if(userType == "volunteer" || userType == "admin") { %>
-    <h2>Volunteers</h2>
+    <h2>Volunteer</h2>
     <div class="row">
       <div class="col-md-4">
         <div class="card">
