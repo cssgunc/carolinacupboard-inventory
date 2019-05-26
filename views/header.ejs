@@ -8,33 +8,64 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav">
       <li class="nav-item rounded">
-        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item rounded">
-        <a class="nav-link" href="/items">View Items</a>
-      </li>
-      <li class="nav-item rounded">
-        <a class="nav-link" href="/cart">Cart</a>
-      </li>
-      <li class="nav-item rounded">
-        <a class="nav-link" href="/history">Orders</a>
+        <a class="nav-link rounded" href="/">Home</a>
       </li>
       <% if(locals.userType) { %>
-      <% if(userType == "volunteer" || userType == "admin") { %>
-      <li class="nav-item rounded">
-        <a class="nav-link" href="/entry">Add & Remove</a>
-      </li>
-      <li class="nav-item rounded">
-        <a class="nav-link" href="/approve">Approve</a>
-      </li>
+        <% if(userType == "volunteer" || userType == "admin") { %>
+          <li class="nav-item rounded dropdown">
+          <a class="nav-link rounded dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Visitor
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="nav-link rounded" href="/items">View Items</a>
+              <a class="nav-link rounded" href="/cart">Cart</a>
+              <a class="nav-link rounded" href="/history">Orders</a>
+          </div>
+          </li>
+          
+          <li class="nav-item rounded dropdown">
+          <a class="nav-link rounded dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Volunteer
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="nav-link rounded" href="/entry">Add & Remove</a>
+              <a class="nav-link rounded" href="/approve">Approve</a>
+          </div>
+          </li>
       <% } %>
-
       <% if(userType == "admin") { %>
+        <li class="nav-item rounded dropdown">
+          <a class="nav-link rounded dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Admin
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="nav-link rounded" href="/admin/users">Manage Users</a>
+              <a class="nav-link rounded" href="/admin/history">Transaction History</a>
+          </div>
+        </li>
+      <% } %>
+      <% if(userType == "user") { %>
+        <li class="nav-item rounded">
+        <a class="nav-link rounded" href="/items">View Items</a>
+        </li>
+        <li class="nav-item rounded">
+        <a class="nav-link rounded" href="/cart">Cart</a>
+        </li>
+        <li class="nav-item rounded">
+        <a class="nav-link rounded" href="/history">Orders</a>
+        </li>
+      <% } %>
+    <% } else { %>
       <li class="nav-item rounded">
-        <a class="nav-link" href="/admin">Admin</a>
+          <a class="nav-link rounded" href="/items">View Items</a>
       </li>
-      <% } %>
-      <% } %>
+      <li class="nav-item rounded">
+          <a class="nav-link rounded" href="/cart">Cart</a>
+      </li>
+      <li class="nav-item rounded">
+          <a class="nav-link rounded" href="/history">Orders</a>
+      </li>
+    <% } %>
     </ul>
   </div>
   </div>

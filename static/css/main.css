@@ -10,7 +10,6 @@ body {
 
 .navbar {
   background: #5488c0;
-  overflow: hidden;
   min-width: 100vw;
   min-height: 50px;
   margin-bottom: 10px;
@@ -31,15 +30,33 @@ body {
 }
 
 .nav-link {
-  height: 100%;
   padding: 11px 15px 11px 15px;
   vertical-align: middle;
   text-shadow: 0 1px 0 rgba(0,0,0,0.25);
 }
 
-.nav-item:hover, .nav-item:visited:hover, .nav-item:focus, .nav-item:visited:focus {
+.dropdown-menu {
+  width: 100%;
+  padding-left: 10px;
+}
+
+.dropdown-menu .nav-link {
+  color: #5488c0;
+}
+
+.dropdown-menu .nav-link {
+  text-shadow: none;
+}
+
+.nav-link:hover, .nav-link:visited:hover, .nav-link:focus, .nav-link:visited:focus {
   background: rgba(255, 255, 255, 0.5);
   transition: all .3s ease-in-out;
+}
+
+a:active, a:focus, a:hover {
+  outline: 0;
+  border: none;
+  -moz-outline-style: none;
 }
 
 .navbar-toggler-icon {
