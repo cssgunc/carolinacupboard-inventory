@@ -6,7 +6,7 @@ let express = require("express"),
     exceptionHandler = require("../exceptions/exception-handler");
 
 router.get("/", async function(req, res) {
-    let onyen = req.header("uid");
+    let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
     if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
     
@@ -14,7 +14,7 @@ router.get("/", async function(req, res) {
 });
 
 router.get("/quick", async function(req, res) {
-    let onyen = req.header("uid");
+    let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
     if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
 
@@ -22,7 +22,7 @@ router.get("/quick", async function(req, res) {
 });
   
 router.get("/search", async function(req, res) {
-    let onyen = req.header("uid");
+    let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
     if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
 
@@ -37,7 +37,7 @@ router.get("/search", async function(req, res) {
 });
 
 router.post('/search', async function(req, res, next) {
-    let onyen = req.header("uid");
+    let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
     if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
 
@@ -65,7 +65,7 @@ router.post('/search', async function(req, res, next) {
 });
   
 router.get("/manual", async function(req, res) {
-    let onyen = req.header("uid");
+    let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
     if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
     let foundItem = {
@@ -78,8 +78,8 @@ router.get("/manual", async function(req, res) {
 });
 
 router.post("/add", async function(req, res) {
-    let onyen = req.header("uid");
-    let userType = await authService.getUserType(onyen);
+    let volunteer_onyen = await authService.getOnyen(req);
+    let userType = await authService.getUserType(volunteer_onyen);
     if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
     
     let id  = req.body.id;
@@ -88,31 +88,32 @@ router.post("/add", async function(req, res) {
     let quantity = req.body.quantity;
 
     if(quantity > 0) {
-        itemService.addItems(id, quantity, onyen, onyen);
+        itemService.addItems(id, quantity, volunteer_onyen, volunteer_onyen);
     }
 
     res.redirect('back');
 });
 
 router.post("/remove", async function(req, res) {
-    let onyen = req.header("uid");
-    let userType = await authService.getUserType(onyen);
+    let volunteer_onyen = await authService.getOnyen(req);
+    let userType = await authService.getUserType(volunteer_onyen);
     if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
-    
+
     let id  = req.body.id;
     let name = req.body.name;
     let barcode = req.body.barcode;
+    let onyen = req.body.onyen;
     let quantity = req.body.quantity;
 
     if(quantity > 0) {
-        itemService.removeItems(id, quantity, onyen, onyen);
+        itemService.removeItems(id, quantity, onyen, volunteer_onyen);
     }
 
     res.redirect('back');
 });
 
 router.post("/found", async function(req, res) {
-    let onyen = req.header("uid");
+    let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
     if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
     

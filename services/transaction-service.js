@@ -13,6 +13,23 @@ exports.getAllTransactions = async function () {
             throw e;
         }
         // throw e;
-        throw new InternalErrorException("A problem occurred when retrieving the transaction",e);
+        throw new InternalErrorException("A problem occurred when retrieving the transaction", e);
+    }
+}
+
+exports.getUserHistory = async function(onyen) {
+    try {
+        let trans = await Transaction.findAll({
+            where: {
+                onyen: onyen
+            }
+        });
+        return trans;
+    } catch(e) {
+        if(e instanceof CarolinaCupboardException) {
+            throw e;
+        }
+
+        throw new InternalErrorException("A problem occurred when retrieving the transaction", e);
     }
 }
