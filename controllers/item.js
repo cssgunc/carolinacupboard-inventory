@@ -5,7 +5,7 @@ let express = require("express"),
     exceptionHandler = require("../exceptions/exception-handler");
 
 router.post('/', async function(req, res, next) {
-    let onyen = req.header("uid");
+    let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
     let response = {};
     try {
@@ -23,7 +23,7 @@ router.post('/', async function(req, res, next) {
 });
 
 router.get('/', async function(req, res, next) {
-    let onyen = req.header("uid");
+    let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
     let response = {};
     try {
@@ -36,7 +36,7 @@ router.get('/', async function(req, res, next) {
 });
 
 router.post('/search', async function(req, res, next) {
-    let onyen = req.header("uid");
+    let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
     let response = {};
     try {

@@ -4,6 +4,15 @@ const   User = require("../db/sequelize").users,
         InternalErrorException = require("../exceptions/internal-error-exception"),
         CarolinaCupboardException = require("../exceptions/carolina-cupboard-exception");
 
+exports.getOnyen = async function(req) {
+    if(process.env.NODE_ENV === "dev") {
+        if(process.env.DEV_ONYEN) {
+            return process.env.DEV_ONYEN;
+        }
+        else return req.header("uid");
+    }
+}
+
 exports.getUserType = async function (onyen) {
     if(process.env.NODE_ENV === "dev") {
         if(process.env.DEV_USERTYPE === "admin" || process.env.DEV_USERTYPE === "volunteer") {

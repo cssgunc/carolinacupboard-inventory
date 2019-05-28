@@ -35,7 +35,7 @@ exports.getItems = async function (name, barcode) {
 
         if(name) {
             orStatement.push({
-                name: name
+                name: {[Sequelize.Op.iLike]: '%'+name+'%'}
             });
         }
         if(barcode) {
@@ -100,8 +100,8 @@ exports.createTransaction = async function (itemId, quantity, onyen, volunteerId
             status: 'complete'
         });
         // await item.save();
-        item.increment('count', {by: quantity});
         await transaction.save();
+        item.increment('count', {by: quantity});
     } catch (e) {
         throw e;
         // throw new InternalErrorException("A problem occurred when adding the transaction",e);

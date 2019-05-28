@@ -6,7 +6,7 @@ let express = require("express"),
     exceptionHandler = require("../exceptions/exception-handler");
 
 router.get('/', async function(req, res, next) {
-    let onyen = req.header("uid");
+    let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
     if(userType !== "admin") res.sendStatus(403);
     else {
@@ -15,7 +15,7 @@ router.get('/', async function(req, res, next) {
 });
 
 router.get('/users', async function(req, res, next) {
-    let onyen = req.header("uid");
+    let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
     // if(!onyen) res.sendStatus(403);
     if(userType !== "admin") res.sendStatus(403);
@@ -33,7 +33,7 @@ router.get('/users', async function(req, res, next) {
 });
 
 router.post('/users/create', async function(req, res, next) {
-    let onyen = req.header("uid");
+    let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
     // if(!onyen) res.sendStatus(403);
     if(userType !== "admin") res.sendStatus(403);
@@ -54,7 +54,7 @@ router.post('/users/create', async function(req, res, next) {
 
 
 router.post('/users/edit', async function(req, res, next) {
-    let onyen = req.header("uid");
+    let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
     // if(!onyen) res.sendStatus(403);
     if(userType !== "admin") res.sendStatus(403);
@@ -83,7 +83,7 @@ router.post('/users/edit', async function(req, res, next) {
 });
 
 router.post('/users/delete', async function(req, res, next) {
-    let onyen = req.header("uid");
+    let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
     // if(!onyen) res.sendStatus(403);
     if(userType !== "admin") res.sendStatus(403);
@@ -111,7 +111,7 @@ router.post('/users/delete', async function(req, res, next) {
 });
 
 router.get('/history', async function(req, res, next) {
-    let onyen = req.header("uid");
+    let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
     if(userType !== "admin") res.sendStatus(403);
     else {

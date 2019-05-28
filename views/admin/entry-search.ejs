@@ -25,35 +25,37 @@
         </div>
       </div>
     </form>
-    <table class="table">
-			<thead>
-				<tr>
-					<th scope="col">Item Name</th>
-					<th scope="col">Barcode</th>
-					<th scope="col">Count</th>
-					<th scope="col">Description</th>
-          <th scope="col"></th>
-				</tr>
-			</thead>
-			<tbody>
-				<% if (response && response.items) {%>
-				<% response.items.forEach((item) => {%>
-				<tr>
-					<th scope="row"><%= item.name%></th>
-					<td><%= item.barcode%></td>
-					<td><%= item.count%></td>
-          <td><%= item.description%></td>
-          <td class="text-right pr-0">
-            <div class="btn-group" role="group">
-              <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addModal" data-id="<%= item.id %>" data-name="<%= item.name %>" data-barcode="<%= item.barcode %>" data-count="<%= item.count %>"><i class="fas fa-plus"></i></button>
-              <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#removeModal" data-id="<%= item.id %>" data-name="<%= item.name %>" data-barcode="<%= item.barcode %>" data-count="<%= item.count %>"><i class="fas fa-minus"></i></button>
-            </div>
-          </td>
-				</tr>
-				<% }); %>
-				<% } %>
-			</tbody>
-		</table>
+    <div class="table-responsive">
+      <table class="table">
+        <thead class="thead-light"> 
+          <tr>
+            <th scope="col">Item Name</th>
+            <th scope="col">Barcode</th>
+            <th scope="col">Count</th>
+            <th scope="col">Description</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (response && response.items) {%>
+          <% response.items.forEach((item) => {%>
+          <tr>
+            <th scope="row"><%= item.name%></th>
+            <td><%= item.barcode%></td>
+            <td><%= item.count%></td>
+            <td><%= item.description%></td>
+            <td class="text-right pr-0">
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addModal" data-id="<%= item.id %>" data-name="<%= item.name %>" data-barcode="<%= item.barcode %>" data-count="<%= item.count %>"><i class="fas fa-plus"></i></button>
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#removeModal" data-id="<%= item.id %>" data-name="<%= item.name %>" data-barcode="<%= item.barcode %>" data-count="<%= item.count %>"><i class="fas fa-minus"></i></button>
+              </div>
+            </td>
+          </tr>
+          <% }); %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
 		<% if (response && response.error) {%>
 		<div class="alert alert-danger">
 			<%= response.error%>
@@ -118,6 +120,10 @@
               <input class="form-control" type="text" name="barcode" id="removeModalBarcode" placeholder="Barcode" readonly>
             </div>
             <div class="form-group">
+              <label for="removeModalQuantity">Visitor's ONYEN</label>
+              <input class="form-control" type="text" name="onyen" id="removeModalOnyen" placeholder="Who is taking this item?">
+            </div>
+            <div class="form-group">
               <label for="removeModalQuantity">Quantity to remove</label>
               <input class="form-control" type="number" name="quantity" id="removeModalQuantity" min="1">
             </div>
@@ -145,7 +151,7 @@
             <div class="form-group">
               <label for="foundModalName">Item Name</label>
               <input class="form-control" type="text" name="name" id="foundModalName" placeholder="Item Name" readonly
-              value="<%= response.scanResult.name %>">
+              value="<%- response.scanResult.brand_name %> <%- response.scanResult.name %>">
             </div>
             <div class="form-group">
               <label for="foundModalBarcode">Barcode</label>
@@ -173,7 +179,7 @@
   <script type="text/javascript">
     $(window).on('load',function(){
         $('#foundModal').modal('show');
-        $('#foundModalName').val("<%= response.scanResult.name %>");
+        $('#foundModalName').val("<%- response.scanResult.brand_name %> <%- response.scanResult.name %>");
         $('#foundModalBarcode').val("<%= response.scanResult.gtin14 %>");
         $('#foundModalDesc').val("<%= response.scanResult.desc %>");
     });
