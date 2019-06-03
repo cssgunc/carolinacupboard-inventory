@@ -13,10 +13,9 @@
                   <thead class="thead-light">
                       <tr>
                           <th scope="col">ID</th>
-                          <th scope="col">Item ID</th>
+                          <th scope="col">Time</th>
+                          <th scope="col">Item Name</th>
                           <th scope="col">Count</th>
-                          <th scope="col">Customer ID</th>
-                          <th scope="col">Volunteer ID</th>
                           <th scope="col">Status</th>
                       </tr>
                   </thead>
@@ -25,10 +24,9 @@
                       <% response.transactions.forEach((trans) => {%>
                       <tr>
                           <td><%= trans.id %></td>
-                          <td><%= trans.item_id %></td>
+                          <td><%= trans.createdAt.toLocaleString() %></td>
+                          <td><%= trans.item_name %></td>
                           <td><%= trans.count %></td>
-                          <td><%= trans.onyen %></td>
-                          <td><%= trans.volunteer_id %></td>
                           <td><%= trans.status %></td>
                       </tr>
                       <% }); %>
