@@ -1,6 +1,6 @@
 let express = require("express"),
     router  = express.Router(),
-    item = require("./item"),
+    item = require("./items"),
     history = require("./history"),
     entry = require("./entry"),
     scan = require("./scan"),

@@ -51,4 +51,8 @@ router.post('/search', async function(req, res, next) {
     res.render("user/view-items.ejs",{response: response, onyen: onyen, userType: userType});
 });
 
+router.post('/add', async function(req, res, next) {
+    req.session.newItem = {};
+});
+
 module.exports = router;
