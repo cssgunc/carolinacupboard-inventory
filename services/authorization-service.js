@@ -9,8 +9,9 @@ exports.getOnyen = async function(req) {
         if(process.env.DEV_ONYEN) {
             return process.env.DEV_ONYEN;
         }
-        else return req.header("uid");
+        return "ONYEN";
     }
+    return req.header("uid");
 }
 
 exports.getUserType = async function (onyen) {
@@ -18,7 +19,7 @@ exports.getUserType = async function (onyen) {
         if(process.env.DEV_USERTYPE === "admin" || process.env.DEV_USERTYPE === "volunteer") {
             return process.env.DEV_USERTYPE;
         }
-        else return "user";
+        return "user";
     }
     try {
         let user = await User.findOne({ where: { onyen: onyen } });

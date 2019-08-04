@@ -13,3 +13,7 @@ $('#addModal').on('show.bs.modal', function (event) {
     modal.find('#addModalQuantity').val(1);
     modal.find('#addModalQuantity').attr('max', maxCount);
 });
+
+$('#submitAddToCart').on('click', function(event) {
+    $('#addToCartForm').submit();
+});
