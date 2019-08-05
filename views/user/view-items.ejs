@@ -75,7 +75,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <form name="addToCartForm" id="addToCartForm" action="/item/add" method="POST">
+          <form name="addToCartForm" id="addToCartForm" action="/items/add" method="POST">
             <div class="form-group">
               <input class="form-control" type="text" name="id" id="addToCartModalId" readonly hidden>
             </div>
@@ -88,7 +88,7 @@
               <input class="form-control" type="text" name="barcode" id="addToCartModalBarcode" placeholder="Barcode" readonly>
             </div>
             <div class="form-group">
-              <label for="addToCartModalQuantity">Quantity to addToCart</label>
+              <label for="addToCartModalQuantity">Quantity to add</label>
               <input class="form-control" type="number" name="quantity" id="addToCartModalQuantity" min="1">
             </div>
           </form>
