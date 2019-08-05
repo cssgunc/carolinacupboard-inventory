@@ -23,6 +23,7 @@ router.post('/', async function(req, res, next) {
 });
 
 router.get('/', async function(req, res, next) {
+    // delete req.session.cart;
     let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
     let response = {};
@@ -52,7 +53,35 @@ router.post('/search', async function(req, res, next) {
 });
 
 router.post('/add', async function(req, res, next) {
-    req.session.newItem = {};
+    let onyen = await authService.getOnyen(req);
+    let userType = await authService.getUserType(onyen);
+
+    let itemId = req.body.id;
+    let itemName = req.body.name;
+    let quantity = req.body.quantity;
+
+    if(req.session.cart) {
+        req.session.cart.set(itemId, req.session.cart.get(itemId) + quantity);
+    } else {
+        req.session.cart = new itemService.CartMap();
+        req.session.cart.set(itemId, quantity);
+    }
+
+    // Check if quantity in cart is less than inventory count
+    let item = await itemService.getItem(itemId);
+    if(req.session.cart.get(itemId) > item.count) {
+        req.session.cart.set(itemId, req.session.cart.get(itemId) - quantity);
+    }
+
+    if (req.session.cart.get(itemId) === 0) {
+        req.session.cart.delete(itemId);
+    }
+
+    console.log(req.session.cart);
+
+    let response = {"itemName": itemName, "quantity": quantity, "success": true};
+
+    res.render("user/add-confirm.ejs",{response, onyen: onyen, userType: userType});
 });
 
 module.exports = router;

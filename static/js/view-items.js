@@ -1,4 +1,4 @@
-$('#addModal').on('show.bs.modal', function (event) {
+$('#addToCartModal').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget); // Button that triggered the modal
     var id = button.data('id');
     var name = button.data('name');
@@ -7,11 +7,11 @@ $('#addModal').on('show.bs.modal', function (event) {
     // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
     // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
     var modal = $(this);
-    modal.find('#addModalId').val(id);
-    modal.find('#addModalName').val(name);
-    modal.find('#addModalBarcode').val(barcode);
-    modal.find('#addModalQuantity').val(1);
-    modal.find('#addModalQuantity').attr('max', maxCount);
+    modal.find('#addToCartModalId').val(id);
+    modal.find('#addToCartModalName').val(name);
+    modal.find('#addToCartModalBarcode').val(barcode);
+    modal.find('#addToCartModalQuantity').attr('max', maxCount);
+    modal.find('#addToCartModalQuantity').val(1);
 });
 
 $('#submitAddToCart').on('click', function(event) {

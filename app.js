@@ -11,7 +11,7 @@ app.engine("html", ejs.renderFile);
 
 let sess = session({
     name: 'sessionId',
-    secret: 'secret',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -20,10 +20,13 @@ let sess = session({
     }
 });
 
+var expiryDate = new Date(Date.now() + 60 * 60 * 1000 * 2) // 2 hours
+
 if (process.env.NODE_ENV === 'prod') {
     app.set('trust proxy', 1);
     sess.cookie.secure = true;
     sess.cookie.httpOnly = true;
+    sess.cookie.expires = expiryDate;
 }
 
 /*
@@ -50,30 +53,6 @@ app.get("/", async function(req, res) {
     if(process.env.NODE_ENV === "dev")
         console.log(req.headers);
     res.render("index.ejs", {onyen: onyen, userType: userType});
-});
-  
-app.get("/approve", async function(req, res) {
-    let onyen = await authService.getOnyen(req);
-    let userType = await authService.getUserType(onyen);
-    res.render("admin/approve.ejs", {onyen: onyen, userType: userType});
-});
-  
-app.get("/preorder", async function(req, res) {
-    let onyen = await authService.getOnyen(req);
-    let userType = await authService.getUserType(onyen);
-    res.render("user/preorder.ejs", {onyen: onyen, userType: userType});
-});
-  
-app.get("/cart", async function(req, res) {
-    let onyen = await authService.getOnyen(req);
-    let userType = await authService.getUserType(onyen);
-    res.render("user/cart.ejs", {onyen: onyen, userType: userType});
-});
-  
-app.get("/history", async function(req, res) {
-    let onyen = await authService.getOnyen(req);
-    let userType = await authService.getUserType(onyen);
-    res.render("user/history.ejs", {onyen: onyen, userType: userType});
 });
 
 module.exports = app;

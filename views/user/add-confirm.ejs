@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<%- include("../baselinks") -%>
+</head>
+
+<body>
+	<%- include("../header") -%>
+	<div class="container">
+    <% if(response.success && response.itemName && response.quantity) { %>
+      <div class="alert alert-success" role="alert">
+        <p>Success! We've added <b><%= response.quantity %></b> count(s) of <b><%= response.itemName %></b> to your cart.</p>
+      </div>
+      <a href="/items/" type="button" class="btn btn-primary">Back to Catalog</a>
+    <% } %>
+  </div>
+  <%- include("../scripts") -%>
+</body>
+
+</html>
