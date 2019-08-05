@@ -17,11 +17,12 @@ exports.getAllTransactions = async function () {
     }
 }
 
-exports.getUserHistory = async function(onyen) {
+exports.getUserPurchaseHistory = async function(onyen) {
     try {
         let trans = await Transaction.findAll({
             where: {
-                onyen: onyen
+                onyen: onyen,
+                count: {[Sequelize.Op.lt]: 0}
             }
         });
         return trans;
@@ -29,7 +30,7 @@ exports.getUserHistory = async function(onyen) {
         if(e instanceof CarolinaCupboardException) {
             throw e;
         }
-
+        
         throw new InternalErrorException("A problem occurred when retrieving the transaction", e);
     }
 }
