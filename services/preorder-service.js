@@ -1,6 +1,6 @@
 const   Preorder = require("../db/sequelize").preorders,
         Transaction = require("../db/sequelize").transactions,
-        Item = require("../db/seqelize").items,
+        Item = require("../db/sequelize").items,
         Sequelize = require("sequelize"),
         BadRequestException = require("../exceptions/bad-request-exception"),
         InternalErrorException = require("../exceptions/internal-error-exception"),
@@ -27,5 +27,18 @@ exports.createPreorder = async function (itemId, quantity, onyen) {
     } catch (e) {
         throw e;
         // throw new InternalErrorException("A problem occurred when adding the transaction",e);
+    }
+}
+
+exports.getAllPreorders = async function () {
+    try {
+        let preorders = await Transaction.findAll({
+            where: {
+                volunteer_id: "PREORDER"
+            }
+        });
+        return preorders;
+    } catch (e) {
+        throw new InternalErrorException("A problem occurred when retrieving items",e);
     }
 }

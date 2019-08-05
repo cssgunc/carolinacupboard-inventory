@@ -1,6 +1,7 @@
 let express = require("express"),
     router = express.Router(),
     itemService = require("../services/item-service"),
+    preorderService = require("../services/preorder-service"),
     authService = require("../services/authorization-service")
     exceptionHandler = require("../exceptions/exception-handler");
 
@@ -23,7 +24,6 @@ router.post('/', async function(req, res, next) {
 });
 
 router.get('/', async function(req, res, next) {
-    // delete req.session.cart;
     let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
     let response = {};
@@ -60,28 +60,11 @@ router.post('/add', async function(req, res, next) {
     let itemName = req.body.name;
     let quantity = req.body.quantity;
 
-    if(req.session.cart) {
-        req.session.cart.set(itemId, req.session.cart.get(itemId) + quantity);
-    } else {
-        req.session.cart = new itemService.CartMap();
-        req.session.cart.set(itemId, quantity);
-    }
-
-    // Check if quantity in cart is less than inventory count
-    let item = await itemService.getItem(itemId);
-    if(req.session.cart.get(itemId) > item.count) {
-        req.session.cart.set(itemId, req.session.cart.get(itemId) - quantity);
-    }
-
-    if (req.session.cart.get(itemId) === 0) {
-        req.session.cart.delete(itemId);
-    }
-
-    console.log(req.session.cart);
+    preorderService.createPreorder(itemId, quantity, onyen);
 
     let response = {"itemName": itemName, "quantity": quantity, "success": true};
 
-    res.render("user/add-confirm.ejs",{response, onyen: onyen, userType: userType});
+    res.render("user/preorder-confirm.ejs",{response, onyen: onyen, userType: userType});
 });
 
 module.exports = router;

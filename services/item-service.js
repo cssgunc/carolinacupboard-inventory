@@ -97,7 +97,7 @@ exports.createTransaction = async function (itemId, quantity, onyen, volunteerId
             count: quantity,
             onyen: onyen,
             volunteer_id: volunteerId,
-            status: 'complete'
+            status: "complete"
         });
         // await item.save();
         await transaction.save();
@@ -105,18 +105,5 @@ exports.createTransaction = async function (itemId, quantity, onyen, volunteerId
     } catch (e) {
         throw e;
         // throw new InternalErrorException("A problem occurred when adding the transaction",e);
-    }
-}
-
-exports.CartMap = class CartMap extends Map {
-    constructor(iterable=[]) {
-        super(iterable);
-        this.defVal = 0;
-    }
-
-    get(key) {
-        if(!this.has(key))
-            this.set(key, this.defVal);
-        return super.get(key);
     }
 }
