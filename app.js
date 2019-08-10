@@ -4,29 +4,12 @@ let express     = require("express"),
     morgan      = require("morgan"),
     config      = require("./config/server"),
     ejs         = require("ejs"),
-    session     = require('express-session'),
     authService = require("./services/authorization-service");
 
 app.engine("html", ejs.renderFile);
 
-let sess = session({
-    name: 'sessionId',
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        secure: false,
-        httpOnly: false
-    }
-});
-
-var expiryDate = new Date(Date.now() + 60 * 60 * 1000 * 2) // 2 hours
-
 if (process.env.NODE_ENV === 'prod') {
     app.set('trust proxy', 1);
-    sess.cookie.secure = true;
-    sess.cookie.httpOnly = true;
-    sess.cookie.expires = expiryDate;
 }
 
 /*
@@ -36,8 +19,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
    
 app.use(morgan(config.logging));
-
-app.use(sess);
 
 app.use(express.static('/views'));
 app.use("/static", express.static("static"));
