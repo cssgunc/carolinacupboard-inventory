@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("../baselinks") -%>
+</head>
+<body>
+  <%- include("../header") -%>
+  <div class="container">
+      <h2>Manage Preorders</h2>
+      <form>
+          <div class="table-responsive">
+              <table class="table">
+                  <thead class="thead-light">
+                      <tr>
+                          <th scope="col">ID</th>
+                          <th scope="col">Time</th>
+                          <th scope="col">Item Name</th>
+                          <th scope="col">Count</th>
+                          <th scope="col">ONYEN</th>
+                          <th scope="col">Status</th>
+                          <th scope="col"></th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <% if (response && response.preorders) {%>
+                      <% response.preorders.forEach((trans) => {%>
+                      <tr>
+                          <td><%= trans.id %></td>
+                          <td><%= trans.createdAt.toLocaleString() %></td>
+                          <td><%= trans.item_name %></td>
+                          <td><%= trans.count %></td>
+                          <td><%= trans.onyen %></td>
+                          <td><%= trans.status %></td>
+                          <td class="text-right pr-1">
+                            <div class="btn-group" role="group">
+                              <button style="width:40px" type="button" class="btn btn-success" data-toggle="modal"
+                                data-target="#completeModal" data-id="<%= trans.id %>" data-name="<%= trans.item_name %>"
+                                data-count="<%= trans.count %>" data-onyen="<%= trans.onyen %>">
+                                <i class="fas fa-check"></i></button>
+                              <button style="width:40px" type="button" class="btn btn-danger" data-toggle="modal"
+                                data-target="#cancelModal" data-id="<%= trans.id%>" data-name="<%= trans.item_name %>"
+                                data-count="<%= trans.count %>" data-onyen="<%= trans.onyen %>">
+                                <i class="fas fa-times"></i></button>
+                            </div>
+                          </td>
+                      </tr>
+                      <% }); %>
+                      <% } %>
+                  </tbody>
+              </table>
+              <% if (response && response.error) {%>
+              <div class="alert alert-danger">
+                  <%= response.error%>
+              </div>
+              <% } %>
+          </div>
+      </form>
+  </div>
+  <div class="modal fade" id="completeModal" tabindex="-1" role="dialog" aria-labelledby="completeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="completeModalLabel">Complete this preorder?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form name="completeForm" id="completeForm" action="/preorders/complete" method="POST">
+            <div class="form-group">
+              <input class="form-control" type="text" name="id" id="completeModalId" readonly hidden>
+            </div>
+            <div class="form-group">
+              <label for="completeModalName">Item Name</label>
+              <input class="form-control" type="text" name="name" id="completeModalName" placeholder="Item Name" readonly>
+            </div>
+            <div class="form-group">
+              <label for="completeModalBarcode">ONYEN</label>
+              <input class="form-control" type="text" name="onyen" id="completeModalOnyen" placeholder="ONYEN" readonly>
+            </div>
+            <div class="form-group">
+              <label for="completeModalQuantity">Count</label>
+              <input class="form-control" type="number" name="count" id="completeModalCount" min="1" readonly>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="submitComplete">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="cancelModalLabel">Cancel this preorder?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form name="cancelForm" id="cancelForm" action="/preorders/cancel" method="POST">
+            <div class="form-group">
+              <input class="form-control" type="text" name="id" id="cancelModalId" readonly hidden>
+            </div>
+            <div class="form-group">
+              <label for="cancelModalName">Item Name</label>
+              <input class="form-control" type="text" name="name" id="cancelModalName" placeholder="Item Name" readonly>
+            </div>
+            <div class="form-group">
+              <label for="cancelModalBarcode">ONYEN</label>
+              <input class="form-control" type="text" name="onyen" id="cancelModalOnyen" placeholder="ONYEN" readonly>
+            </div>
+            <div class="form-group">
+              <label for="cancelModalQuantity">Count</label>
+              <input class="form-control" type="number" name="count" id="cancelModalCount" min="1" readonly>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="submitCancel">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%- include("../scripts") -%>
+  <script src="/static/js/preorders.js"></script>
+</body>
+</html>

@@ -41,7 +41,7 @@ exports.init_table = function (sequelize) {
             allowNull: false,
             require: true,
             validate: {
-                isIn: [['pending', 'complete']]
+                isIn: [['pending', 'complete', 'cancelled']]
             }
         }
     });

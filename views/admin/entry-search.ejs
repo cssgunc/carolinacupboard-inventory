@@ -44,7 +44,7 @@
             <td><%= item.barcode%></td>
             <td><%= item.count%></td>
             <td><%= item.description%></td>
-            <td class="text-right pr-0">
+            <td class="text-right pr-1">
               <div class="btn-group" role="group">
                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addModal" data-id="<%= item.id %>" data-name="<%= item.name %>" data-barcode="<%= item.barcode %>" data-count="<%= item.count %>"><i class="fas fa-plus"></i></button>
                 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#removeModal" data-id="<%= item.id %>" data-name="<%= item.name %>" data-barcode="<%= item.barcode %>" data-count="<%= item.count %>"><i class="fas fa-minus"></i></button>

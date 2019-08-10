@@ -13,6 +13,11 @@
         <p>Success! We've added <b><%= response.quantity %></b> count(s) of <b><%= response.itemName %></b> to your cart.</p>
       </div>
       <a href="/items/" type="button" class="btn btn-primary">Back to Catalog</a>
+    <% } else {%>
+      <div class="alert alert-danger" role="alert">
+        <p>Sorry, there was an error with your request. Please try again later or contact us.</p>
+      </div>
+      <a href="/items/" type="button" class="btn btn-primary">Back to Catalog</a>
     <% } %>
   </div>
   <%- include("../scripts") -%>
