@@ -23,10 +23,14 @@
                         <tr>
                             <td><%= user.onyen %></td>
                             <td><%= user.type %></td>
-                            <td class="text-right pr-0">
+                            <td class="text-right pr-1">
                                 <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal" data-onyen="<%= user.onyen %>" data-type="<%= user.type %>">Edit</button>
-                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" data-onyen="<%= user.onyen %>" data-type="<%= user.type %>">Delete</button>
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" 
+                                        data-target="#editModal" data-onyen="<%= user.onyen %>" data-type="<%= user.type %>">
+                                        Edit</button>
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" 
+                                        data-target="#deleteModal" data-onyen="<%= user.onyen %>" data-type="<%= user.type %>">
+                                        Delete</button>
                                 </div>
                             </td>
                         </tr>

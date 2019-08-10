@@ -17,7 +17,36 @@ router.get('/', async function(req, res, next) {
         t['count'] = -t['count'];
     }
 
-    res.render('admin/approve.ejs', {response: response, onyen: onyen, userType: userType});
+    res.render('admin/preorders.ejs', {response: response, onyen: onyen, userType: userType});
+});
+
+router.post('/complete', async function(req, res, next) {
+    let onyen = await authService.getOnyen(req);
+    let userType = await authService.getUserType(onyen);
+    let response = {};
+
+    let id = req.body.id;
+
+    await preorderService.completePreorder(id, onyen);
+
+    response.success = true;
+
+    res.render('admin/preorders-result.ejs', {response: response, onyen: onyen, userType: userType});
+});
+
+router.post('/cancel', async function(req, res, next) {
+    let onyen = await authService.getOnyen(req);
+    let userType = await authService.getUserType(onyen);
+    let response = {};
+
+    let id = req.body.id;
+    let count = req.body.count;
+
+    await preorderService.cancelPreorder(id, onyen, count);
+
+    response.success = true;;
+
+    res.render('admin/preorders-result.ejs', {response: response, onyen: onyen, userType: userType});
 });
 
 module.exports = router;
