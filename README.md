@@ -11,8 +11,8 @@ This is an inventory management app developed by UNC-CH CS+Social Good for Carol
     * Edit the environment variables for your dev setup
     * See the section on environment variables for more info
 1. Run the bootstrap.sh file (scripts/bootstrap.sh) to create the tables
-    * If you're on Windows and you a shell installed, try "sh ./scripts/bootstrap.sh" in PowerShell
-    * You can also just copy the line in bootstrap.sh and paste it into PowerShell/terminal
+    * If you're on Windows, try "sh ./scripts/bootstrap.sh" in PowerShell
+    * You can also copy the line in bootstrap.sh and paste it into PowerShell/terminal
 1. Run `npm run dev`
 1. Go to `localhost:8080` in your web browser
 
