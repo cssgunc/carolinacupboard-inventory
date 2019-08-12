@@ -15,7 +15,7 @@ exports.getOnyen = async function(req) {
 }
 
 exports.getUserType = async function (onyen) {
-    if(process.env.NODE_ENV === "dev") {
+    if(process.env.NODE_ENV === "dev" && !process.env.DEV_ONYEN) {
         if(process.env.DEV_USERTYPE === "admin" || process.env.DEV_USERTYPE === "volunteer") {
             return process.env.DEV_USERTYPE;
         }
