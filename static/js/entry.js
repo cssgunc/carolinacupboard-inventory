@@ -28,15 +28,3 @@ $('#removeModal').on('show.bs.modal', function (event) {
     modal.find('#removeModalQuantity').attr('max', maxCount);
     modal.find('#removeModalQuantity').val(1);
 });
-
-$('#submitAdd').on('click', function(event) {
-    $('#addForm').submit();
-});
-
-$('#submitRemove').on('click', function(event) {
-    $('#removeForm').submit();
-});
-
-$('#submitFound').on('click', function(event) {
-    $('#foundForm').submit();
-});

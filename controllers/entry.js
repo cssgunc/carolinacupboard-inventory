@@ -104,6 +104,7 @@ router.post("/remove", async function(req, res) {
     let barcode = req.body.barcode;
     let onyen = req.body.onyen;
     let quantity = req.body.quantity;
+    console.log(onyen);
 
     if(quantity > 0) {
         itemService.removeItems(id, quantity, onyen, volunteer_onyen);

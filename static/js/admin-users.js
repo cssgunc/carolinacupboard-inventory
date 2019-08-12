@@ -19,15 +19,3 @@ $('#deleteModal').on('show.bs.modal', function (event) {
     modal.find('#deleteModalOnyen').val(onyen);
     modal.find('#deleteModalType').val(type);
 });
-
-$('#submitCreate').on('click', function(event) {
-    $('#createForm').submit();
-});
-
-$('#submitEdit').on('click', function(event) {
-    $('#editForm').submit();
-});
-
-$('#submitDelete').on('click', function(event) {
-    $('#deleteForm').submit();
-});
