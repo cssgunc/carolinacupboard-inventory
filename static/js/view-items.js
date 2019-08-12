@@ -13,7 +13,3 @@ $('#reserveModal').on('show.bs.modal', function (event) {
     modal.find('#reserveModalQuantity').attr('max', maxCount);
     modal.find('#reserveModalQuantity').val(1);
 });
-
-$('#submitreserve').on('click', function(event) {
-    $('#reserveForm').submit();
-});

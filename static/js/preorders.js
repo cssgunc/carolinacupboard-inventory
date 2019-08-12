@@ -27,12 +27,3 @@ $('#cancelModal').on('show.bs.modal', function (event) {
     modal.find('#cancelModalOnyen').val(onyen);
     modal.find('#cancelModalCount').val(count);
 });
-
-$('#submitComplete').on('click', function(event) {
-    console.log(event);
-    $('#completeForm').submit();
-});
-
-$('#submitCancel').on('click', function(event) {
-    $('#cancelForm').submit();
-});

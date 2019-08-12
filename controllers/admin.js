@@ -64,10 +64,10 @@ router.post('/users/edit', async function(req, res, next) {
             let editOnyen = req.body.onyen;
             let type = req.body.type;
 
-            let currtype = await authService.getUserType(editOnyen);
-            if(currtype === "admin") {
+            let currType = await authService.getUserType(editOnyen);
+            if(currType === "admin") {
                 let adminCount = await adminService.countAllAdmins();
-                if(adminCount <= 1) {
+                if(adminCount <= 2) {
                     res.status(500).send('Cannot remove the last admin');
                     return;
                 }
@@ -95,7 +95,7 @@ router.post('/users/delete', async function(req, res, next) {
             if(await authService.getUserType(delOnyen) === "admin") {
                 let adminCount = await adminService.countAllAdmins();
                 console.log("Admin count: " + adminCount);
-                if(adminCount <= 1) {
+                if(adminCount <= 2) {
                     res.status(500).send('Cannot delete the last admin');
                     return;
                 }
