@@ -24,6 +24,7 @@
                             <td><%= user.onyen %></td>
                             <td><%= user.type %></td>
                             <td class="text-right pr-1">
+                                <% if (user.onyen !== "PREORDER") {%>
                                 <div class="btn-group" role="group">
                                     <button type="button" class="btn btn-primary" data-toggle="modal" 
                                         data-target="#editModal" data-onyen="<%= user.onyen %>" data-type="<%= user.type %>">
@@ -32,6 +33,7 @@
                                         data-target="#deleteModal" data-onyen="<%= user.onyen %>" data-type="<%= user.type %>">
                                         Delete</button>
                                 </div>
+                                <% } %>
                             </td>
                         </tr>
                         <% }); %>
