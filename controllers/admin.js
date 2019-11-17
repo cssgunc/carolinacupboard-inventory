@@ -62,6 +62,10 @@ router.post('/users/edit', async function(req, res, next) {
     else {
         try {
             let editOnyen = req.body.onyen;
+            if (editOnyen === "PREORDER") {
+                res.status(403).send("Cannot edit PREORDER admin");
+                return;
+            }
             let type = req.body.type;
 
             let currType = await authService.getUserType(editOnyen);
@@ -91,6 +95,10 @@ router.post('/users/delete', async function(req, res, next) {
     else {
         try {
             let delOnyen = req.body.onyen;
+            if (delOnyen === "PREORDER") {
+                res.status(403).send("Cannot delete PREORDER admin");
+                return;
+            }
             
             if(await authService.getUserType(delOnyen) === "admin") {
                 let adminCount = await adminService.countAllAdmins();

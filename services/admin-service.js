@@ -66,15 +66,17 @@ exports.changeUserType = async function(onyen, type) {
 }
 
 exports.deleteUser = async function(onyen) {
-    try {
-        User.destroy(
-            { where: { onyen: onyen } }
-        );
-    } catch (e) {
-        if(e instanceof CarolinaCupboardException) {
-            throw e;
-        }
+    if(onyen !== "PREORDER") {
+        try {
+            User.destroy(
+                { where: { onyen: onyen } }
+            );
+        } catch (e) {
+            if(e instanceof CarolinaCupboardException) {
+                throw e;
+            }
 
-        throw new InternalErrorException("A problem occurred when deleting the user",e);
+            throw new InternalErrorException("A problem occurred when deleting the user",e);
+        }
     }
 }
