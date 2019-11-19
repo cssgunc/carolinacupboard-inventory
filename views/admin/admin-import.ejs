@@ -12,13 +12,24 @@
       </div>
     <% } %>
     <h2>Import Items</h2>
-    <form method="POST" encType="multipart/form-data">
-      <label for="file">Upload a CSV file</label>
-      <div class="form-group">
-        <input type="file" class="form-control-file" id="file" name="file">
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="alert alert-secondary">
+          <p>Expected format: item name, barcode, quantity, item description</p>
+        </div>
       </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <form method="POST" encType="multipart/form-data">
+          <label for="file">Upload a CSV file</label>
+          <div class="form-group">
+            <input type="file" class="form-control-file" id="file" name="file">
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+    </div>
   <%- include("../scripts") -%>
 </body>
 </html>
