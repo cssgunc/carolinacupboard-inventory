@@ -192,6 +192,11 @@ router.get('/backup/items', async function(req, res, next) {
             user: process.env.DATABASE_USER,
             password: process.env.DATABASE_PASSWORD
         });
+
+        if(process.env.NODE_ENV === 'prod') {
+            client.host = POSTGRESQL_SERVICE_HOST;
+            client.port = POSTGRESQL_SERVICE_PORT;
+        }
         
         client.connect(function(pgErr, client, done) {
             if(pgErr) {
@@ -229,6 +234,11 @@ router.get('/backup/transactions', async function(req, res, next) {
             user: process.env.DATABASE_USER,
             password: process.env.DATABASE_PASSWORD
         });
+
+        if(process.env.NODE_ENV === 'prod') {
+            client.host = POSTGRESQL_SERVICE_HOST;
+            client.port = POSTGRESQL_SERVICE_PORT;
+        }
         
         client.connect(function(pgErr, client, done) {
             if(pgErr) {
