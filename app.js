@@ -4,6 +4,7 @@ let express     = require("express"),
     morgan      = require("morgan"),
     config      = require("./config/server"),
     ejs         = require("ejs"),
+    fileUpload = require('express-fileupload'),
     authService = require("./services/authorization-service");
 
 app.engine("html", ejs.renderFile);
@@ -22,6 +23,8 @@ app.use(morgan(config.logging));
 
 app.use(express.static('/views'));
 app.use("/static", express.static("static"));
+
+app.use(fileUpload());
 
 /*
  *Register routes on api 
