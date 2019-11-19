@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<%- include("../baselinks") -%>
+</head>
+
+<body>
+	<%- include("../header") -%>
+	<div class="container">
+    <% if(response.success && response.table) { %>
+      <div class="alert alert-success" role="alert">
+        <p>Success! All <b><%= response.table %></b> have been deleted.</p>
+      </div>
+      <a href="/admin/backup" type="button" class="btn btn-primary">Back to Backup & Delete page</a>
+    <% } else {%>
+      <div class="alert alert-danger" role="alert">
+        <p>Sorry, there was an error with your request. Please try again later or contact technical support.</p>
+      </div>
+      <a href="/admin/backup" type="button" class="btn btn-primary">Back to Backup & Delete page</a>
+    <% } %>
+  </div>
+  <%- include("../scripts") -%>
+</body>
+
+</html>

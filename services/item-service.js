@@ -4,9 +4,10 @@ const   Item = require("../db/sequelize").items,
         BadRequestException = require("../exceptions/bad-request-exception"),
         InternalErrorException = require("../exceptions/internal-error-exception"),
         CarolinaCupboardException = require("../exceptions/carolina-cupboard-exception"),
-        fs = require("fs"),
-        csv = require("csv"),
-        csvParser = require("csv-parse");
+        csvParser = require("csv-parse"),
+        copyTo = require('pg-copy-streams').to,
+        {Client} = require('pg'),
+        fs = require('fs');
 
 exports.createItem = async function (name, barcode, description, count) {
     if(barcode) barcode = barcode.padStart(14, '0');
@@ -140,4 +141,19 @@ exports.appendCsv = async function (data) {
             });
         }
     );
+}
+
+exports.deleteAllItems = async function() {
+    try {
+        await Item.destroy({
+            where: {},
+            truncate: false
+        });
+    } catch(e) {
+        if(e instanceof CarolinaCupboardException) {
+            throw e;
+        }
+        
+        throw new InternalErrorException("A problem occurred when deleting the items", e);
+    }
 }
