@@ -72,7 +72,7 @@ router.post('/users/edit', async function(req, res, next) {
             let type = req.body.type;
 
             let currType = await authService.getUserType(editOnyen);
-            if(currType === "admin") {
+            if(currType === "admin" && req.body.type !== "admin") {
                 let adminCount = await adminService.countAllAdmins();
                 if(adminCount <= 2) {
                     res.status(500).send('Cannot remove the last admin');
