@@ -21,7 +21,8 @@
     "express": "^4.16.4",
     "express-fileupload": "^1.1.6-alpha.6",
     "morgan": "^1.9.1",
-    "pg": "^7.7.1",
+    "pg": "^7.12.1",
+    "pg-copy-streams": "^2.2.2",
     "pg-hstore": "^2.3.2",
     "request": "^2.88.0",
     "sequelize": "^4.41.2"

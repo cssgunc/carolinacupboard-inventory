@@ -34,3 +34,18 @@ exports.getUserPurchaseHistory = async function(onyen) {
         throw new InternalErrorException("A problem occurred when retrieving the transaction", e);
     }
 }
+
+exports.deleteAllTransactions = async function() {
+    try {
+        await Transaction.destroy({
+            where: {},
+            truncate: true
+        });
+    } catch(e) {
+        if(e instanceof CarolinaCupboardException) {
+            throw e;
+        }
+        
+        throw new InternalErrorException("A problem occurred when deleting the transactions", e);
+    }
+}
