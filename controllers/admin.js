@@ -236,8 +236,8 @@ router.get('/backup/transactions', async function(req, res, next) {
         });
 
         if(process.env.NODE_ENV === 'prod') {
-            client.host = POSTGRESQL_SERVICE_HOST;
-            client.port = POSTGRESQL_SERVICE_PORT;
+            client.host = process.env.POSTGRESQL_SERVICE_HOST;
+            client.port = process.env.POSTGRESQL_SERVICE_PORT;
         }
         
         client.connect(function(pgErr, client, done) {
