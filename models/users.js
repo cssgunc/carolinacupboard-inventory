@@ -18,7 +18,7 @@ exports.init_table = function (sequelize) {
             require: true,
             validate: {
                 isIn: [['volunteer', 'admin']]
-            }
+            },
         }
     });
 }

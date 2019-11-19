@@ -3,7 +3,10 @@ const   Item = require("../db/sequelize").items,
         Sequelize = require("sequelize"),
         BadRequestException = require("../exceptions/bad-request-exception"),
         InternalErrorException = require("../exceptions/internal-error-exception"),
-        CarolinaCupboardException = require("../exceptions/carolina-cupboard-exception");
+        CarolinaCupboardException = require("../exceptions/carolina-cupboard-exception"),
+        fs = require("fs"),
+        csv = require("csv"),
+        csvParser = require("csv-parse");
 
 exports.createItem = async function (name, barcode, description, count) {
     if(barcode) barcode = barcode.padStart(14, '0');
@@ -106,4 +109,35 @@ exports.createTransaction = async function (itemId, quantity, onyen, volunteerId
         throw e;
         // throw new InternalErrorException("A problem occurred when adding the transaction",e);
     }
+}
+
+exports.appendCsv = async function (data) {
+    console.log(data);
+    csvParser(data.data, 
+        {
+            delimiter: ',', 
+            endLine: '\n', 
+            escapeChar: '"', 
+            enclosedChar: '"'
+        }, 
+        function(err, output) {
+            if (err) {
+                throw new InternalErrorException("A problem occurred when parsing CSV data");
+            }
+            console.log(output);
+            output.forEach(async function(entry) {
+                try {
+                    let item = await Item.build({
+                        name: entry[1],
+                        barcode: entry[2],
+                        description: entry[3],
+                        count: entry[4]
+                    });
+                    await item.save();
+                } catch (e) {
+                    throw e;
+                }
+            });
+        }
+    );
 }

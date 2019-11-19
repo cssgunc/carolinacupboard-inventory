@@ -134,8 +134,30 @@ router.get('/history', async function(req, res, next) {
         catch(e) {
             response.error = e;
         }
-        res.render('admin/admin-transactions.ejs', {response: response, onyen: onyen, userType: userType    });
+        res.render('admin/admin-transactions.ejs', {response: response, onyen: onyen, userType: userType});
     }
 });
+
+router.get('/import', async function(req, res, next) {
+    let onyen = await authService.getOnyen(req);
+    let userType = await authService.getUserType(onyen);
+    if(userType !== "admin") res.sendStatus(403);
+    else {
+        let response = {};
+        res.render('admin/admin-import.ejs', {response: response, onyen: onyen, userType: userType});
+    }
+});
+
+router.post('/import', async function(req, res, next) {
+    console.log(req.files);
+    let onyen = await authService.getOnyen(req);
+    let userType = await authService.getUserType(onyen);
+    if(userType !== "admin") res.sendStatus(403);
+    let response = {};
+    let file = req.files.file;
+    console.log(file);
+    await itemService.appendCsv(file);
+    res.render('admin/admin-import.ejs', {response: response, onyen: onyen, userType: userType});
+})
 
 module.exports = router;

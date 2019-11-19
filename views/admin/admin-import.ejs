@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("../baselinks") -%>
+</head>
+<body>
+  <%- include("../header") -%>
+  <div class="container">
+    <h2>Select Method</h2>
+    <form method="POST" encType="multipart/form-data">
+      <label for="file">Upload a CSV file:</label>
+      <input type="file" id="file" name="file">
+      <input type="submit" value="Submit">
+    </form>
+  <%- include("../scripts") -%>
+</body>
+</html>
