@@ -7,7 +7,7 @@ const   User = require("../db/sequelize").users,
 
 exports.createUser = async function(onyen, type) {
     try {
-        if(User.count({ where: {onyen : onyen } }) > 0) {
+        if(await User.count({ where: {onyen : onyen } }) > 0) {
             return;
         }
         let user = await User.build({
