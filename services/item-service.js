@@ -114,33 +114,43 @@ exports.createTransaction = async function (itemId, quantity, onyen, volunteerId
 
 exports.appendCsv = async function (data) {
     console.log(data);
-    csvParser(data.data, 
-        {
-            delimiter: ',', 
-            endLine: '\n', 
-            escapeChar: '"', 
-            enclosedChar: '"'
-        }, 
-        function(err, output) {
-            if (err) {
-                throw new InternalErrorException("A problem occurred when parsing CSV data");
-            }
-            console.log(output);
-            output.forEach(async function(entry) {
-                try {
-                    let item = await Item.build({
-                        name: entry[1],
-                        barcode: entry[2],
-                        description: entry[3],
-                        count: entry[4]
-                    });
-                    await item.save();
-                } catch (e) {
-                    throw e;
+    try {
+        csvParser(data.data, 
+            {
+                delimiter: ',', 
+                endLine: '\n', 
+                escapeChar: '"', 
+                enclosedChar: '"'
+            }, 
+            function(err, output) {
+                if (err) {
+                    throw new InternalErrorException("A problem occurred when parsing CSV data");
                 }
-            });
-        }
-    );
+                console.log(output);
+                output.forEach(async function(entry) {
+                    try {
+                        // let item = await Item.build({
+                        //     name: entry[0],
+                        //     barcode: entry[1],
+                        //     count: entry[2],
+                        //     description: entry[3],
+                        // });
+                        // await item.save();
+                        await Item.upsert({
+                            name: entry[0],
+                            barcode: entry[1],
+                            count: entry[2],
+                            description: entry[3],
+                        });
+                    } catch (e) {
+                        throw e;
+                    }
+                });
+            }
+        );
+    } catch(e) {
+        throw e;
+    }
 }
 
 exports.deleteAllItems = async function() {

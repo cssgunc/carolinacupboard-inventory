@@ -158,8 +158,14 @@ router.post('/import', async function(req, res, next) {
     else {
         let response = {};
         let file = req.files.file;
-        await itemService.appendCsv(file);
-        res.render('admin/admin-import.ejs', {response: response, onyen: onyen, userType: userType});
+        if(!file.name.match(/\.csv$/i)) {
+            response.message = "Please upload a valid CSV file";
+            res.render('admin/admin-import.ejs', {response: response, onyen: onyen, userType: userType});
+        }
+        else {
+            await itemService.appendCsv(file);
+            res.render('admin/admin-import.ejs', {response: response, onyen: onyen, userType: userType});
+        }
     }
 });
 

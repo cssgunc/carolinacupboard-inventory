@@ -6,6 +6,11 @@
 <body>
   <%- include("../header") -%>
   <div class="container">
+    <% if(response.message) { %>
+      <div class="alert alert-primary" role="alert">
+        <p><%= response.message %></p>
+      </div>
+    <% } %>
     <h2>Import Items</h2>
     <form method="POST" encType="multipart/form-data">
       <label for="file">Upload a CSV file</label>
