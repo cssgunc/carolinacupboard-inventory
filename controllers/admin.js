@@ -179,7 +179,7 @@ router.get('/backup', async function(req, res, next) {
     }
 });
 
-router.get('/backup/items', async function(req, res, next) {
+router.get('/backup/items.csv', async function(req, res, next) {
     let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
     if(userType !== "admin") res.sendStatus(403);
@@ -221,7 +221,7 @@ router.get('/backup/items', async function(req, res, next) {
     }
 });
 
-router.get('/backup/transactions', async function(req, res, next) {
+router.get('/backup/transactions.csv', async function(req, res, next) {
     let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
     if(userType !== "admin") res.sendStatus(403);
