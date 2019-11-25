@@ -12,7 +12,7 @@ exports.init_table = function (sequelize) {
             type: Sequelize.STRING,
             allowNull: false,
             require: true,
-            unique: true,
+            unique: false,
         },
 		barcode: {
             type: Sequelize.STRING,

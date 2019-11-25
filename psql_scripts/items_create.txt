@@ -49,12 +49,7 @@ ALTER TABLE ONLY public.items ALTER COLUMN id SET DEFAULT nextval('public.items_
                                                                                                                    
                                                                                                                    
 ALTER TABLE ONLY public.items                                                                                      
-    ADD CONSTRAINT items_barcode_key UNIQUE (barcode);                                                             
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-ALTER TABLE ONLY public.items                                                                                      
-    ADD CONSTRAINT items_name_key UNIQUE (name);                                                                   
+    ADD CONSTRAINT items_barcode_key UNIQUE (barcode);                                                                                                                             
                                                                                                                    
                                                                                                                    
                                                                                                                    
