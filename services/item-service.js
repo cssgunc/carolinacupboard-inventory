@@ -126,26 +126,26 @@ exports.appendCsv = async function (data) {
                 if (err) {
                     throw new InternalErrorException("A problem occurred when parsing CSV data");
                 }
-                console.log(output);
-                output.forEach(async function(entry) {
+                let newItems = [];
+                output.forEach(function(entry) {
                     try {
-                        // let item = await Item.build({
-                        //     name: entry[0],
-                        //     barcode: entry[1],
-                        //     count: entry[2],
-                        //     description: entry[3],
-                        // });
-                        // await item.save();
-                        await Item.upsert({
+                        let item = {
                             name: entry[0],
                             barcode: entry[1],
                             count: entry[2],
                             description: entry[3],
-                        });
+                        }
+                        
+                        if (entry[1] === "") {
+                            item.barcode = null;
+                        }
+
+                        newItems.push(item);
                     } catch (e) {
                         throw e;
                     }
                 });
+                Item.bulkCreate(newItems);
             }
         );
     } catch(e) {
