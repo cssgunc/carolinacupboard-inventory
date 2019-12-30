@@ -43,9 +43,9 @@ router.post('/search', async function(req, res, next) {
 
     let response = {};
     try {
-        let name = req.body.name === '' ? null : req.body.name;
+        let searchTerm = req.body.searchTerm === '' ? null : req.body.searchTerm;
         let barcode = req.body.barcode === '' ? null : req.body.barcode;
-        response.items = await itemService.getItems(name, barcode);
+        response.items = await itemService.getItems(searchTerm, barcode);
         console.log(barcode);
         if(barcode && (response.items === undefined || response.items.length == 0)) {
             const url = "https://www.datakick.org/api/items/" + barcode;

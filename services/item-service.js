@@ -31,15 +31,18 @@ exports.createItem = async function (name, barcode, description, count) {
     }
 }
 
-exports.getItems = async function (name, barcode) {
+exports.getItems = async function (searchTerm, barcode) {
     if(barcode) barcode = barcode.padStart(14, '0');
     try {
         let whereStatement = {};
         let orStatement = [];
 
-        if(name) {
+        if(searchTerm) {
             orStatement.push({
-                name: {[Sequelize.Op.iLike]: '%'+name+'%'}
+                name: {[Sequelize.Op.iLike]: '%'+searchTerm+'%'}
+            });
+            orStatement.push({
+                description: {[Sequelize.Op.iLike]: '%'+searchTerm+'%'}
             });
         }
         if(barcode) {
