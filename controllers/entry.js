@@ -1,6 +1,7 @@
 let express = require("express"),
     request = require('request'),
     router = express.Router(),
+    url = require('url'),
     itemService = require("../services/item-service"),
     authService = require("../services/authorization-service"),
     exceptionHandler = require("../exceptions/exception-handler");
@@ -27,6 +28,7 @@ router.get("/search", async function(req, res) {
     if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
 
     let response = {};
+    if(req.query.prevOnyen) response.prevOnyen = onyen;
     try {
         response.items = await itemService.getItems(null, null);
     } catch(e)  {
@@ -36,17 +38,17 @@ router.get("/search", async function(req, res) {
     res.render("admin/entry-search.ejs", {response: response, onyen: onyen, userType: userType});
 });
 
-router.post('/search', async function(req, res, next) {
+router.post('/search', async function (req, res) {
+    console.log("searchCTRL");
     let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
     if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
-
+    
     let response = {};
     try {
         let searchTerm = req.body.searchTerm === '' ? null : req.body.searchTerm;
         let barcode = req.body.barcode === '' ? null : req.body.barcode;
         response.items = await itemService.getItems(searchTerm, barcode);
-        console.log(barcode);
         if(barcode && (response.items === undefined || response.items.length == 0)) {
             const url = "https://www.datakick.org/api/items/" + barcode;
             console.log(url);
@@ -63,6 +65,8 @@ router.post('/search', async function(req, res, next) {
         response.error = exceptionHandler.retrieveException(e);
     }
 });
+
+// , searchCtrl);
   
 router.get("/manual", async function(req, res) {
     let onyen = await authService.getOnyen(req);
@@ -91,7 +95,7 @@ router.post("/add", async function(req, res) {
         itemService.addItems(id, quantity, volunteer_onyen, volunteer_onyen);
     }
 
-    res.redirect('back');
+    res.redirect('/entry/search');
 });
 
 router.post("/remove", async function(req, res) {
@@ -104,13 +108,17 @@ router.post("/remove", async function(req, res) {
     let barcode = req.body.barcode;
     let onyen = req.body.onyen;
     let quantity = req.body.quantity;
-    console.log(onyen);
 
     if(quantity > 0) {
         itemService.removeItems(id, quantity, onyen, volunteer_onyen);
     }
 
-    res.redirect('back');
+    res.redirect(url.format({
+        pathname:"/entry/search",
+        query: {
+           "prevOnyen": onyen
+        }
+    }));
 });
 
 router.post("/found", async function(req, res) {

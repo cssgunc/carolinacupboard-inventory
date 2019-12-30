@@ -7,13 +7,27 @@
   <%- include("../header") -%>
   <div class="container">
     <h2>Search for an item to add or remove</h2>
+    <div class="form-group">
+      <!-- <label for="customerOnyen"></label> -->
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon3">Quick Checkout ONYEN</span>
+        </div>
+        <input id="customerOnyen" type="text" class="form-control" name="customerOnyen" aria-label="Customer ONYEN" 
+          <% if (response && response.prevOnyen) {%>
+            value=<%= response.prevOnyen %>
+          <% } %>    
+        >
+      </div>
+
+    </div>
     <form action="/entry/search" method="post">
       <div class="form-group">
         <div class="row">
           <div class="input-group col-sm-6">
             <input type="text" class="form-control" name="searchTerm" placeholder="Search by item name/description" aria-label="Item Search Term" aria-describedby="button-searchTerm">
             <div class="input-group-append">
-                <button class="btn btn-outline-secondary btn-md form-control" type="action" value="Confirm">Search</button>
+              <button class="btn btn-outline-secondary btn-md form-control" type="action" value="Confirm">Search</button>
             </div>
           </div>
           <div class="input-group col-sm-6">
