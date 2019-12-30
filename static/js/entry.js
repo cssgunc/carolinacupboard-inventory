@@ -19,6 +19,7 @@ $('#removeModal').on('show.bs.modal', function (event) {
     var name = button.data('name');
     var barcode = button.data('barcode');
     var maxCount = button.data('count');
+    var customerOnyen = document.getElementById('customerOnyen').value;
     // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
     // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
     var modal = $(this);
@@ -27,4 +28,5 @@ $('#removeModal').on('show.bs.modal', function (event) {
     modal.find('#removeModalBarcode').val(barcode);
     modal.find('#removeModalQuantity').attr('max', maxCount);
     modal.find('#removeModalQuantity').val(1);
+    if(customerOnyen) modal.find('#removeModalOnyen').val(customerOnyen);
 });
