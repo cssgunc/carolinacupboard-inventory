@@ -141,34 +141,6 @@ router.get('/history', async function(req, res, next) {
     }
 });
 
-router.get('/import', async function(req, res, next) {
-    let onyen = await authService.getOnyen(req);
-    let userType = await authService.getUserType(onyen);
-    if(userType !== "admin") res.sendStatus(403);
-    else {
-        let response = {};
-        res.render('admin/admin-import.ejs', {response: response, onyen: onyen, userType: userType});
-    }
-});
-
-router.post('/import', async function(req, res, next) {
-    let onyen = await authService.getOnyen(req);
-    let userType = await authService.getUserType(onyen);
-    if(userType !== "admin") res.sendStatus(403);
-    else {
-        let response = {};
-        let file = req.files.file;
-        if(!file.name.match(/\.csv$/i)) {
-            response.message = "Please upload a valid CSV file";
-            res.render('admin/admin-import.ejs', {response: response, onyen: onyen, userType: userType});
-        }
-        else {
-            await itemService.appendCsv(file);
-            res.render('admin/admin-import.ejs', {response: response, onyen: onyen, userType: userType});
-        }
-    }
-});
-
 router.get('/backup', async function(req, res, next) {
     let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
