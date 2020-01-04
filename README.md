@@ -113,7 +113,7 @@ This file is the main file that is run when `npm run` is called. It starts the s
 
 This file configures the node app. It defines the main file, the dependencies, and npm run arguments.
 
-## whiteboard.jpg, whiteboard2electricboogaloo.jpg
+### `whiteboard.jpg, whiteboard2electricboogaloo.jpg`
 
 These are images drawn during the planning phase of the project and should be deleted.
 
@@ -124,3 +124,43 @@ This is meant for configuration of the Openshift platform which is used by Carol
 ### `helm, node_modules, package-lock.json`
 
 These files/folders are used by nodejs and npm.
+
+## Carolina CloudApps
+This section will go over setup and maintenance of services in CloudApps. There are 3 CloudApps services used for this app:
+
+1. Node.js 10
+2. PostgreSQL 9.6
+3. UNC Shibboleth Proxy
+
+You can only access the CloudApps web portal if you are on UNC network or using the UNC VPN.
+
+### Node.js 10
+
+This service runs our main application code. It is set up to automatically build from our Github repo. You can get the webhook for automatic builds by going to `Builds > ccinventory > Configuration`.
+
+The deployment's environment variables can be accessed through `Deployments > ccinventory > environments`. The deployment has the following environment variables:
+- `DATABASE_URL`: The url for the postgresql server
+- `DATABASE_USER`: The login username for the postgresql server
+- `DATABASE_PASSWORD`: The password for the postgresql login
+
+The deployment will run the app in `prod` mode.
+
+### PostgreSQL 9.6
+
+This service holds our database tables. The database name, username, and password are all chosen at provisioning. Please contact an admin of the CloudApps project if you need production details.
+
+To manage and modify tables, you can open a remote shell to the Postgres pod and run psql. See the section of [OpenShift CLI] for more info.
+
+### UNC Shibboleth Proxy
+
+This service gives our project access to UNC's Single Sign-On. It acts as a reverse proxy to our main application and passes the user's ONYEN as an HTTP header named `uid`.
+
+The route for the Shibboleth Proxy is chosen during provisioning and can be found in the `Routes` sectino in CloudApps.
+
+### OpenShift CLI
+
+Carolina CloudApps runs on the OpenShift platform. At times, it may be preferable to use a CLI interface to manage services. You can get started with the CLI by reading the guide [here](https://docs.openshift.com/enterprise/3.0/cli_reference/get_started_cli.html).
+
+### Getting Help
+
+If you need help with CloudApps, you can search [help.unc.edu](https://help.unc.edu) for CloudApps articles. If you need more specific help, or need more clarification, you can request service (againt at [help.unc.edu](https://help.unc.edu)) and write a ticket for CloudApps Services.
