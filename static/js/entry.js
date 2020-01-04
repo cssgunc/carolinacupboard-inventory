@@ -1,6 +1,5 @@
 $(document).ready(function () {
     $('#itemsTable').DataTable();
-    $('.dataTables_length').addClass('bs-select');
 
     $('#addModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); // Button that triggered the modal

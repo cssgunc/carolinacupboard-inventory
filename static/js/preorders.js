@@ -1,6 +1,5 @@
 $(document).ready(function () {
     $('#preordersTable').DataTable();
-    $('.dataTables_length').addClass('bs-select');
     
     $('#completeModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); // Button that triggered the modal
