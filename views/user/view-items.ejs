@@ -9,27 +9,9 @@
 	<%- include("../header") -%>
 	<div class="container">
 		<h2>Search for items to add to your cart</h2>
-		<form action="/items/search" method="post">
-			<div class="form-group">
-				<div class="row">
-				<div class="input-group col-sm-6">
-					<input type="text" class="form-control" name="searchTerm" placeholder="Search by item name/description" aria-label="Item Search Term" aria-describedby="button-searchTerm">
-					<div class="input-group-append">
-						<button class="btn btn-outline-secondary btn-md form-control" type="action" value="Confirm">Search</button>
-					</div>
-				</div>
-				<div class="input-group col-sm-6">
-					<input type="number" class="form-control" name="barcode" placeholder="Search by barcode" aria-label="Item Code" aria-describedby="button-code">
-					<div class="input-group-append">
-					<button class="btn btn-outline-secondary btn-md form-control" type="action" value="Confirm">Search</button>
-					</div>
-				</div>
-				</div>
-			</div>
-		</form>
-		<div class="table-responsive">
-			<table class="table">
-				<thead class="thead-light">
+		<div>
+			<table id="itemsTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+				<thead>
 					<tr>
 						<th scope="col">Item Name</th>
 						<th scope="col">Barcode</th>
