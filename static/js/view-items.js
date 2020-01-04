@@ -2,7 +2,6 @@ $(document).ready(function () {
     $('#itemsTable').DataTable({
         'order': [[2, 'desc']]
     });
-    $('.dataTables_length').addClass('bs-select');
 
     $('#reserveModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); // Button that triggered the modal
