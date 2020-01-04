@@ -6,55 +6,53 @@
 <body>
   <%- include("../header") -%>
   <div class="container">
-      <h2>Manage Preorders</h2>
-      <form>
-          <div class="table-responsive">
-              <table class="table">
-                  <thead class="thead-light">
-                      <tr>
-                          <th scope="col">ID</th>
-                          <th scope="col">Time</th>
-                          <th scope="col">Item Name</th>
-                          <th scope="col">Count</th>
-                          <th scope="col">ONYEN</th>
-                          <th scope="col">Status</th>
-                          <th scope="col"></th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <% if (response && response.preorders) {%>
-                      <% response.preorders.forEach((trans) => {%>
-                      <tr>
-                          <td><%= trans.id %></td>
-                          <td><%= trans.createdAt.toLocaleString() %></td>
-                          <td><%= trans.item_name %></td>
-                          <td><%= trans.count %></td>
-                          <td><%= trans.onyen %></td>
-                          <td><%= trans.status %></td>
-                          <td class="text-right pr-1">
-                            <div class="btn-group" role="group">
-                              <button style="width:40px" type="button" class="btn btn-success" data-toggle="modal"
-                                data-target="#completeModal" data-id="<%= trans.id %>" data-name="<%= trans.item_name %>"
-                                data-count="<%= trans.count %>" data-onyen="<%= trans.onyen %>">
-                                <i class="fas fa-check"></i></button>
-                              <button style="width:40px" type="button" class="btn btn-danger" data-toggle="modal"
-                                data-target="#cancelModal" data-id="<%= trans.id%>" data-name="<%= trans.item_name %>"
-                                data-count="<%= trans.count %>" data-onyen="<%= trans.onyen %>">
-                                <i class="fas fa-times"></i></button>
-                            </div>
-                          </td>
-                      </tr>
-                      <% }); %>
-                      <% } %>
-                  </tbody>
-              </table>
-              <% if (response && response.error) {%>
-              <div class="alert alert-danger">
-                  <%= response.error%>
-              </div>
-              <% } %>
-          </div>
-      </form>
+    <h2>Manage Preorders</h2>
+    <div class="table-responsive">
+      <table id="preordersTable" class="table table-striped table-bordered" cellspacing="0" width="80%">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Time</th>
+            <th scope="col">Item Name</th>
+            <th scope="col">Count</th>
+            <th scope="col">ONYEN</th>
+            <th scope="col">Status</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (response && response.preorders) {%>
+          <% response.preorders.forEach((trans) => {%>
+          <tr>
+            <td><%= trans.id %></td>
+            <td><%= trans.createdAt.toLocaleString() %></td>
+            <td><%= trans.item_name %></td>
+            <td><%= trans.count %></td>
+            <td><%= trans.onyen %></td>
+            <td><%= trans.status %></td>
+            <td class="text-right pr-1">
+            <div class="btn-group" role="group">
+              <button style="width:40px" type="button" class="btn btn-success" data-toggle="modal"
+              data-target="#completeModal" data-id="<%= trans.id %>" data-name="<%= trans.item_name %>"
+              data-count="<%= trans.count %>" data-onyen="<%= trans.onyen %>">
+              <i class="fas fa-check"></i></button>
+              <button style="width:40px" type="button" class="btn btn-danger" data-toggle="modal"
+              data-target="#cancelModal" data-id="<%= trans.id%>" data-name="<%= trans.item_name %>"
+              data-count="<%= trans.count %>" data-onyen="<%= trans.onyen %>">
+              <i class="fas fa-times"></i></button>
+            </div>
+            </td>
+          </tr>
+          <% }); %>
+          <% } %>
+        </tbody>
+      </table>
+      <% if (response && response.error) {%>
+      <div class="alert alert-danger">
+        <%= response.error%>
+      </div>
+      <% } %>
+    </div>
   </div>
   <div class="modal fade" id="completeModal" tabindex="-1" role="dialog" aria-labelledby="completeModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
