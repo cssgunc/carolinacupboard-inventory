@@ -98,8 +98,6 @@ This folder contains EJS templates that are pre-processed and rendered as HTML t
 
 The EJS files are split into root, user, and admin folders. Consider adding a volunteer folder in the future because some files in the admin folder are accessible to volunteers.
 
-`index-ui.css` is unused and should be removed.
-
 ### `.env, .env-example`
 The `.env` file used for environment variables. Please see [the above section](#environment-variables) for more information.
 
@@ -113,10 +111,6 @@ This file is the main file that is run when `npm run` is called. It starts the s
 
 This file configures the node app. It defines the main file, the dependencies, and npm run arguments.
 
-### `whiteboard.jpg, whiteboard2electricboogaloo.jpg`
-
-These are images drawn during the planning phase of the project and should be deleted.
-
 ### `openshift`
 
 This is meant for configuration of the Openshift platform which is used by Carolina CloudApps. Please do not change files in this folder unless you know what you're doing.
@@ -124,6 +118,26 @@ This is meant for configuration of the Openshift platform which is used by Carol
 ### `helm, node_modules, package-lock.json`
 
 These files/folders are used by nodejs and npm.
+
+## Functionality Quirks and Issues
+
+This section will go over functionality of the app that is not obvious, not explicitly stated, and/or needs to be fixed.
+
+### CSV Import
+
+CSV import currently uses [`bulkCreate`](https://sequelize.org/master/class/lib/model.js~Model.html#static-method-bulkCreate) to insert items. The `bulkCreate` function has an option for `updateOnDuplicate`, but this option requires a unique field. The only unique field is `id`, which may not be accessible to the person importing items. So, currently, CSV import inserts all items as new entries into the table, even if there already exists entries which share the same names and descriptions as those being imported.
+
+### Deleting Items/Transactions
+
+The `Transactions` table has a foreign key from the `Items` table for `item_id` to record which item was transacted. In order to delete items from the `Items` table, all transactions with that `item_id` must be deleted from the `Transactions` table. 
+
+In the Backup and Delete Data view, we allow an admin to clear both the `Items` and `Transactions` tables. Deletion for the `Items` table does not cascade deletions to the `Transactions` table. If there are any entries in the `Transactions` table, you cannot clear the `Items` table. We decided to do this because, unaware admins may not understand the cascading delete, and delete Transactions accidentally.
+
+### Deleting Users
+
+The `Users` table contains admins and volunteers. The `Transactions` table has a foreign key from the `Users` table for `volunteer_id` to record which volunteer checked out items. In order to delete users from the `Users` table, all transactions with that `volunteer_id` must be deleted from the `Transactions` table.
+
+Currently, there is no language that notifies an admin about this restriction. If they try to delete a user, they may encounter an unexpected error.
 
 ## Carolina CloudApps
 This section will go over setup and maintenance of services in CloudApps. There are 3 CloudApps services used for this app:
@@ -160,6 +174,12 @@ The route for the Shibboleth Proxy is chosen during provisioning and can be foun
 ### OpenShift CLI
 
 Carolina CloudApps runs on the OpenShift platform. At times, it may be preferable to use a CLI interface to manage services. You can get started with the CLI by reading the guide [here](https://docs.openshift.com/enterprise/3.0/cli_reference/get_started_cli.html).
+
+### Known Issues
+
+#### Cold Starts
+
+After a certain period of inactivity in a service, OpenShift will shutdown the pods used to host that service. When the service is accessed again after a shutdown, it takes a few minutes to start the pods. Typically the PostgreSQL pod will take longer to start than the Node.js pod.
 
 ### Getting Help
 
