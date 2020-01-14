@@ -28,7 +28,7 @@ router.get("/search", async function(req, res) {
     if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
 
     let response = {};
-    if(req.query.prevOnyen) response.prevOnyen = onyen;
+    if(req.query.prevOnyen) response.prevOnyen = req.query.prevOnyen;
     try {
         response.items = await itemService.getItems(null, null);
     } catch(e)  {
