@@ -6,9 +6,14 @@
 <body>
   <%- include("../header") -%>
   <div class="container">
-    <% if(response.message) { %>
-      <div class="alert alert-primary" role="alert">
-        <p><%= response.message %></p>
+    <% if(response.successMessage) { %>
+      <div class="alert alert-success" role="alert">
+        <p><%= response.successMessage %></p>
+      </div>
+    <% } %>
+    <% if(response.failMessage) { %>
+      <div class="alert alert-danger" role="alert">
+        <p><%= response.failMessage %></p>
       </div>
     <% } %>
     <h2>Import Items</h2>

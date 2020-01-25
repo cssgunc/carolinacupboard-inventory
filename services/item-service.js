@@ -148,7 +148,10 @@ exports.appendCsv = async function (data) {
                         throw e;
                     }
                 });
-                Item.bulkCreate(newItems);
+                Item.bulkCreate(newItems).catch(function(error) {
+                    console.log(error);
+                    return null; // returns null to represent a rejected promise
+                });
             }
         );
     } catch(e) {
