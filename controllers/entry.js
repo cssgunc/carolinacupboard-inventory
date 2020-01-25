@@ -151,11 +151,16 @@ router.post('/import', async function(req, res, next) {
         let response = {};
         let file = req.files.file;
         if(!file.name.match(/\.csv$/i)) {
-            response.message = "Please upload a valid CSV file";
+            response.failMessage = "Please upload a valid CSV file";
             res.render('admin/entry-import.ejs', {response: response, onyen: onyen, userType: userType});
         }
         else {
-            await itemService.appendCsv(file);
+            promise = await itemService.appendCsv(file);
+            if (promise == null) {
+                response.failMessage = "An error occurred with the CSV file. The error message can be found in the console.";
+            } else {
+                response.successMessage = "Success!";
+            }
             res.render('admin/entry-import.ejs', {response: response, onyen: onyen, userType: userType});
         }
     }
