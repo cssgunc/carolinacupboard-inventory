@@ -1,6 +1,7 @@
 const   Item = require("../db/sequelize").items,
         Transaction = require("../db/sequelize").transactions,
         Sequelize = require("sequelize"),
+        sequelize = require("../db/sequelize"),
         BadRequestException = require("../exceptions/bad-request-exception"),
         InternalErrorException = require("../exceptions/internal-error-exception"),
         CarolinaCupboardException = require("../exceptions/carolina-cupboard-exception"),
@@ -125,11 +126,10 @@ exports.appendCsv = async function (data) {
                 escapeChar: '"', 
                 enclosedChar: '"'
             }, 
-            function(err, output) {
+            async function(err, output) {
                 if (err) {
                     throw new InternalErrorException("A problem occurred when parsing CSV data");
                 }
-                let newItems = [];
                 output.forEach(function(entry) {
                     try {
                         let item = {
@@ -143,12 +143,11 @@ exports.appendCsv = async function (data) {
                             item.barcode = null;
                         }
 
-                        newItems.push(item);
+                        Item.upsert(item);
                     } catch (e) {
                         throw e;
                     }
                 });
-                Item.bulkCreate(newItems);
             }
         );
     } catch(e) {
