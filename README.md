@@ -37,7 +37,7 @@ This is an inventory management app developed by UNC-CH CS+Social Good for Carol
 
 **NOTE**:  In local development, you must either set `DEV_USERTYPE` OR you must create an admin/volunteer in the `USERS` table and set `DEV_ONYEN` to that user.
 
-You may add more environment variable is you would like. You can access them through `process.env.ENV_VAR_NAME`
+You may add more environment variables if you would like. You can access them through `process.env.ENV_VAR_NAME`
 
 ## Project Structure
 This section will go over the project structure and what functionality is contained at each level.
