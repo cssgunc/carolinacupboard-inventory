@@ -115,7 +115,7 @@ exports.createTransaction = async function (itemId, quantity, onyen, volunteerId
     }
 }
 
-exports.appendCsv = async function (data) {
+exports.appendCsv = async function (data, response) {
     console.log(data);
     try {
         csvParser(data.data, 
@@ -150,7 +150,7 @@ exports.appendCsv = async function (data) {
                 });
                 Item.bulkCreate(newItems).catch(function(error) {
                     console.log(error);
-                    return null; // returns null to represent a rejected promise
+                    throw error; // throw error back to entry to handle
                 });
             }
         );
