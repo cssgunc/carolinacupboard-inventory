@@ -154,7 +154,7 @@ router.post('/import', async function(req, res, next) {
             response.failMessage = "Please upload a valid CSV file";
         }
         else {
-            await itemService.appendCsv(file, response).then(function() {
+            await itemService.appendCsv(file).then(function() {
                 response.successMessage = "Success!";
             }).catch(function(error) { // FIXME: this catch block isn't catching the error
                 response.failMessage = "An error occurred with the CSV file. The error message can be found in the console.";
