@@ -115,7 +115,7 @@ exports.createTransaction = async function (itemId, quantity, onyen, volunteerId
     }
 }
 
-exports.appendCsv = async function (data, response) {
+exports.appendCsv = async function (data) {
     console.log(data);
     try {
         csvParser(data.data, 
