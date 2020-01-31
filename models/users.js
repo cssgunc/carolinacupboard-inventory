@@ -15,7 +15,8 @@ exports.init_table = function (sequelize) {
 		type: {
             type: Sequelize.ENUM([
                 'volunteer', 
-                'admin'
+                'admin',
+                'disabled'
             ]),
             allowNull: false,
             require: true,

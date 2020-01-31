@@ -22,7 +22,7 @@ router.get('/', [userIsAuthenticated, userIsAdmin], async function (req, res, ne
 // Shows a list of all admins and volunteers
 router.get('/users', [userIsAuthenticated, userIsAdmin], async function (req, res, next) {
     let response = {};
-    let types = ["admin", "volunteer"];
+    let types = ["admin", "volunteer", "disabled"];
 
     try {
         response.users = await adminService.getAllUsers();
@@ -38,6 +38,11 @@ router.post('/users/create', [userIsAuthenticated, userIsAdmin], async function 
     try {
         let newOnyen = req.body.onyen;
         let type = req.body.type;
+
+        if (type === "disabled") {
+            res.status(400).send("Can't create a new user that's disabled");
+            return;
+        }
 
         await adminService.createUser(newOnyen, type);
     } catch (e) {
