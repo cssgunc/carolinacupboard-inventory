@@ -25,7 +25,7 @@ router.get('/users', async function(req, res, next) {
     if(userType !== "admin") res.sendStatus(403);
     else {
         let response = {};
-        let types = ["admin","volunteer"];
+        let types = ["admin","volunteer", "disabled"];
 
         try {
             response.users = await adminService.getAllUsers();
@@ -45,6 +45,11 @@ router.post('/users/create', async function(req, res, next) {
         try {
             let newOnyen = req.body.onyen;
             let type = req.body.type;
+
+            if (type === "disabled") {
+                res.status(400).send("Can't create a new user that's disabled");
+                return;
+            }
 
             await adminService.createUser(newOnyen, type);
         } catch(e) {
