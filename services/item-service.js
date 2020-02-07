@@ -130,7 +130,7 @@ exports.appendCsv = async function (data) {
                     throw new InternalErrorException("A problem occurred when parsing CSV data");
                 }
                 let newItems = [];
-                for(let i = 1; i < output.length; i++) {
+                for(let i = 0; i < output.length; i++) {
                     let entry = output[i];
                     if (entry.length === 7 && i === 0) continue;
                     try {
