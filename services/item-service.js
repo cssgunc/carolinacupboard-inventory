@@ -152,13 +152,13 @@ exports.appendCsv = async function (data) {
                                 reject(e);
                             }
                         });
-                        try {
-                            let result = Item.bulkCreate(newItems);
+
+                        Item.bulkCreate(newItems).then(function(result) {
                             resolve(result);
-                        } catch (e) {
+                        }).catch(function(e) {
                             console.error(e);
                             reject(e);
-                        }
+                        });
                     }
                 );
         } catch(e) {
