@@ -137,30 +137,30 @@ exports.appendCsv = async function (data) {
                         try {
                             let item = {
                                 name: entry[0],
-                                    barcode: entry[1],
-                                    count: entry[2],
-                                    description: entry[3],
-                                }
-                                
-                                if (entry[1] === "") {
-                                    item.barcode = null;
-                                }
-
-                                newItems.push(item);
-                            } catch (e) {
-                                console.error(e);
-                                reject(e);
+                                barcode: entry[1],
+                                count: entry[2],
+                                description: entry[3],
                             }
-                        });
+                                
+                            if (entry[1] === "") {
+                                item.barcode = null;
+                            }
 
-                        Item.bulkCreate(newItems).then(function(result) {
-                            resolve(result);
-                        }).catch(function(e) {
+                            newItems.push(item);
+                        } catch (e) {
                             console.error(e);
                             reject(e);
-                        });
-                    }
-                );
+                        }
+                    });
+
+                    Item.bulkCreate(newItems).then(function(result) {
+                        resolve(result);
+                    }).catch(function(e) {
+                        console.error(e);
+                        reject(e);
+                    });
+                }
+            );
         } catch(e) {
             console.error(e);
             reject(e);
