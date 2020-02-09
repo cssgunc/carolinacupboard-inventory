@@ -149,18 +149,22 @@ router.post('/import', async function(req, res, next) {
     if(userType !== "admin") res.sendStatus(403);
     else {
         let response = {};
-        let file = req.files.file;
-        if(!file.name.match(/\.csv$/i)) {
-            response.failMessage = "Please upload a valid CSV file";
-        }
-        else {
-            await itemService.appendCsv(file).then((result) => {
+
+        if (req.files != null) {
+            let file = req.files.file;
+            if(!file.name.match(/\.csv$/i)) {
+                response.failMessage = "Please upload a valid CSV file";
+            }
+            else {
+                await itemService.appendCsv(file).then((result) => {
                 if(result) response.successMessage = "Success!";
                 else response.failMessage = "An error occurred with the CSV file. The error message can be found in the console.";
-            }).catch((e) => {
-                response.failMessage = "An error occurred with the CSV file. The error message can be found in the console.";
-            }); 
+                }).catch((e) => {
+                    response.failMessage = "An error occurred with the CSV file. The error message can be found in the console.";
+                });
+            }
         }
+        else response.failMessage = "Please select a CSV file to upload"; // user never selected a file
 
         res.render('admin/entry-import.ejs', {response: response, onyen: onyen, userType: userType});
     }
