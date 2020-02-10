@@ -136,7 +136,7 @@ router.post("/found", async function(req, res) {
 router.get('/import', async function(req, res, next) {
     let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
-    if(userType !== "admin") res.sendStatus(403);
+    if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
     else {
         let response = {};
         res.render('admin/entry-import.ejs', {response: response, onyen: onyen, userType: userType});
@@ -146,7 +146,7 @@ router.get('/import', async function(req, res, next) {
 router.post('/import', async function(req, res, next) {
     let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
-    if(userType !== "admin") res.sendStatus(403);
+    if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
     else {
         let response = {};
 
