@@ -133,15 +133,29 @@ exports.appendCsv = async function (data) {
                         throw new InternalErrorException("A problem occurred when parsing CSV data");
                     }
                     let newItems = [];
-                    output.forEach(function(entry) {
+                    for(let i = 0; i < output.length; i++) {
+                        let entry = output[i];
+                        if (entry.length === 7 && i === 0) continue;
                         try {
-                            let item = {
-                                name: entry[0],
-                                barcode: entry[1],
-                                count: entry[2],
-                                description: entry[3],
+                            let item = {};
+                            if (entry.length === 4) {
+                                item = {
+                                    name: entry[0],
+                                    barcode: entry[1],
+                                    count: entry[2],
+                                    description: entry[3],
+                                }
                             }
-                                
+                            // Expects a file with the same format as an exported file
+                            else if (entry.length === 7) {
+                                item = {
+                                    name: entry[1],
+                                    barcode: entry[2],
+                                    count: entry[3],
+                                    description: entry[4],
+                                }
+                            }
+
                             if (entry[1] === "") {
                                 item.barcode = null;
                             }
@@ -151,7 +165,7 @@ exports.appendCsv = async function (data) {
                             console.error(e);
                             reject(e);
                         }
-                    });
+                    }
 
                     Item.bulkCreate(newItems).then(function(result) {
                         resolve(result);
