@@ -117,57 +117,69 @@ exports.createTransaction = async function (itemId, quantity, onyen, volunteerId
 
 exports.appendCsv = async function (data) {
     console.log(data);
-    try {
-        csvParser(data.data, 
-            {
-                delimiter: ',', 
-                endLine: '\n', 
-                escapeChar: '"', 
-                enclosedChar: '"'
-            }, 
-            function(err, output) {
-                if (err) {
-                    throw new InternalErrorException("A problem occurred when parsing CSV data");
-                }
-                let newItems = [];
-                for(let i = 0; i < output.length; i++) {
-                    let entry = output[i];
-                    if (entry.length === 7 && i === 0) continue;
-                    try {
-                        let item = {};
-                        if (entry.length === 4) {
-                            item = {
-                                name: entry[0],
-                                barcode: entry[1],
-                                count: entry[2],
-                                description: entry[3],
-                            }
-                        }
-                        // Expects a file with the same format as an exported file
-                        else if (entry.length === 7) {
-                            item = {
-                                name: entry[1],
-                                barcode: entry[2],
-                                count: entry[3],
-                                description: entry[4],
-                            }
-                        }
-                            
-                        if (entry[1] === "") {
-                            item.barcode = null;
-                        }
-
-                        newItems.push(item);
-                    } catch (e) {
-                        throw e;
+    // wrapping everything in a Promise, so we can return exceptions from the csvParser callback
+    // this will allow the caller to tell when the Item table creation fails
+    return new Promise((resolve, reject) => {
+        try {
+            csvParser(data.data, 
+                {
+                    delimiter: ',', 
+                    endLine: '\n', 
+                    escapeChar: '"', 
+                    enclosedChar: '"'
+                }, 
+                function(err, output) {
+                    if (err) {
+                        throw new InternalErrorException("A problem occurred when parsing CSV data");
                     }
+                    let newItems = [];
+                    for(let i = 0; i < output.length; i++) {
+                        let entry = output[i];
+                        if (entry.length === 7 && i === 0) continue;
+                        try {
+                            let item = {};
+                            if (entry.length === 4) {
+                                item = {
+                                    name: entry[0],
+                                    barcode: entry[1],
+                                    count: entry[2],
+                                    description: entry[3],
+                                }
+                            }
+                            // Expects a file with the same format as an exported file
+                            else if (entry.length === 7) {
+                                item = {
+                                    name: entry[1],
+                                    barcode: entry[2],
+                                    count: entry[3],
+                                    description: entry[4],
+                                }
+                            }
+
+                            if (entry[1] === "") {
+                                item.barcode = null;
+                            }
+
+                            newItems.push(item);
+                        } catch (e) {
+                            console.error(e);
+                            reject(e);
+                        }
+                    }
+
+                    Item.bulkCreate(newItems).then(function(result) {
+                        resolve(result);
+                    }).catch(function(e) {
+                        console.error(e);
+                        reject(e);
+                    });
                 }
-                Item.bulkCreate(newItems);
-            }
-        );
-    } catch(e) {
-        throw e;
-    }
+            );
+        } catch(e) {
+            console.error(e);
+            reject(e);
+        }
+    });
 }
 
 exports.deleteAllItems = async function() {
