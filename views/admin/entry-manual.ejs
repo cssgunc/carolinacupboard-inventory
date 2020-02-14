@@ -21,7 +21,7 @@
 				<label for="Barcode">Barcode: </label>
 				<div class="input-group">
 					<input name="barcode" class="form-control form-control-lg" type="text" placeholder="Ex. 123456789098"
-						required <% if(locals.foundItem && foundItem && foundItem.barcode) {%>value="<%= foundItem.barcode %>"<% } %>>
+						<% if(locals.foundItem && foundItem && foundItem.barcode) {%>value="<%= foundItem.barcode %>"<% } %>>
 				</div>
 			</div>
 			<div class="form-group">
@@ -34,7 +34,7 @@
 				<label for="Description">Short Description:</label>
 				<div class="input-group">
 					<input name="description" class="form-control form-control-lg" type="text"
-						placeholder="Ex. Gluten-free soup expiring 4/20/19" required
+						placeholder="Ex. Gluten-free soup expiring 4/20/19"
 						<% if(locals.foundItem && foundItem && foundItem.desc) {%>value="<%= foundItem.desc %>"<% } %>>
 				</div>
 			</div>
