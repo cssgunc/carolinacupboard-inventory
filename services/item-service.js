@@ -248,6 +248,10 @@ exports.deleteAllItems = async function() {
             truncate: false
         });
     } catch(e) {
+        if (e.name === "SequelizeForeignKeyConstraintError") {
+            throw e;
+        }
+
         if(e instanceof CarolinaCupboardException) {
             throw e;
         }
@@ -256,7 +260,7 @@ exports.deleteAllItems = async function() {
     }
 }
 
-exports.deleteOutOfStock = async function() {
+exports.deleteOutOfStock = async function() {   
     try {
         await Item.destroy({
             where: {

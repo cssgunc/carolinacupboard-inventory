@@ -274,15 +274,35 @@ router.get('/backup/volunteers.csv', [userIsAuthenticated, userIsAdmin], async f
 
 router.post('/delete/items/all', [userIsAuthenticated, userIsAdmin], async function (req, res, next) {
     let response = { 'table': 'items' };
-    await itemService.deleteAllItems();
-    response.success = true;
+    try {
+        await itemService.deleteAllItems();
+        response.success = true;
+    } catch (e) {
+        if (e.name === "SequelizeForeignKeyConstraintError") {
+            response.success = false;
+            response.error = "You tried to delete an item that exists in a transaction! You must backup and delete the transactions first.";
+        } else {
+            response.success = false;
+            response.error = "Unknown Error!";
+        }
+    }
     res.render('admin/admin-delete-confirm.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 router.post('/delete/items/outofstock', [userIsAuthenticated, userIsAdmin], async function (req, res, next) {
     let response = { 'table': 'out of stock items' };
-    await itemService.deleteOutOfStock();
-    response.success = true;
+    try {
+        await itemService.deleteOutOfStock();
+        response.success = true;
+    } catch (e) {
+        if (e.name === "SequelizeForeignKeyConstraintError") {
+            response.success = false;
+            response.error = "You tried to delete an item that exists in a transaction! You must backup and delete the transactions first.";
+        } else {
+            response.success = false;
+            response.error = "Unknown Error!";
+        }
+    }
     res.render('admin/admin-delete-confirm.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
@@ -295,7 +315,18 @@ router.post('/delete/transactions', [userIsAuthenticated, userIsAdmin], async fu
 
 router.post('/delete/users', [userIsAuthenticated, userIsAdmin], async function (req, res, next) {
     let response = { 'table': 'users' };
-    await adminService.deleteAllUsers();
+    try {
+        await adminService.deleteAllUsers();
+        response.success = true;
+    } catch (e) {
+        if (e.name === "SequelizeForeignKeyConstraintError") {
+            response.success = false;
+            response.error = "You tried to delete a user that exists in a transaction! You must backup and delete the transactions first.";
+        } else {
+            response.success = false;
+            response.error = "Unknown Error!";
+        }
+    }
     response.success = true;
     res.render('admin/admin-delete-confirm.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });

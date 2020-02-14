@@ -15,7 +15,7 @@ exports.getAllTransactions = async function () {
         // throw e;
         throw new InternalErrorException("A problem occurred when retrieving the transaction", e);
     }
-}
+};
 
 exports.getUserPurchaseHistory = async function(onyen) {
     try {
@@ -33,7 +33,7 @@ exports.getUserPurchaseHistory = async function(onyen) {
         
         throw new InternalErrorException("A problem occurred when retrieving the transaction", e);
     }
-}
+};
 
 exports.deleteAllTransactions = async function() {
     try {
@@ -48,4 +48,4 @@ exports.deleteAllTransactions = async function() {
         
         throw new InternalErrorException("A problem occurred when deleting the transactions", e);
     }
-}
+};
