@@ -14,6 +14,7 @@ $(document).ready(function () {
         modal.find('#addModalName').val(name);
         modal.find('#addModalBarcode').val(barcode);
         modal.find('#addModalQuantity').val(1);
+        alert("modal")
     });
 
     $('#removeModal').on('show.bs.modal', function (event) {

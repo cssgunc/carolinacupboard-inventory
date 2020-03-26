@@ -19,6 +19,7 @@ router.get('/', [userIsAuthenticated, userIsVolunteer], async function (req, res
 
 router.post('/complete', [userIsAuthenticated, userIsVolunteer], async function (req, res, next) {
     let id = req.body.id;
+    console.log("preorder ID: " + id);
 
     await preorderService.completePreorder(id, res.locals.onyen);
 
