@@ -2,7 +2,8 @@ let Sequelize       = require("sequelize"),
     Items           = require("../models/items"),
     Preorders       = require("../models/preorders"),
     Transactions    = require("../models/transactions"),
-    Users           = require("../models/users");
+    Users           = require("../models/users"),
+    Visitors        = require("../models/visitors");
 
 if (!process.env.DATABASE_URL) {
     require("dotenv").config()
@@ -35,6 +36,7 @@ sequelize.items = Items.init_table(sequelize);
 sequelize.preorders = Preorders.init_table(sequelize);
 sequelize.transactions = Transactions.init_table(sequelize);
 sequelize.users = Users.init_table(sequelize);
+sequelize.visitors = Visitors.init_table(sequelize);
 
 //define relationships
 sequelize.transactions.belongsTo(sequelize.users, {foreignKey: 'volunteer_id'});

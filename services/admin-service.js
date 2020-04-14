@@ -1,4 +1,5 @@
 const   User = require("../db/sequelize").users,
+        Visitor = require("../db/sequelize").visitors,
         Sequelize = require("sequelize"),
         BadRequestException = require("../exceptions/bad-request-exception"),
         InternalErrorException = require("../exceptions/internal-error-exception"),
