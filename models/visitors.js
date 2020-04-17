@@ -13,13 +13,10 @@ exports.init_table = function (sequelize) {
             }
         },
 		PID: {
-            type: Sequelize.INTEGER,
+            type: Sequelize.STRING,
             allowNull: false,
             require: true,
             unique: true,
-            validate: {
-                isNumeric: true,
-            }
         },
         name: {
             type: Sequelize.STRING,
