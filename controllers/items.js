@@ -5,9 +5,24 @@ let express = require("express"),
     authService = require("../services/authorization-service")
     exceptionHandler = require("../exceptions/exception-handler");
 
-router.post('/', async function(req, res, next) {
+router.get('/', async function(req, res, next) {
     let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
+    let response = {};
+    try {
+        response.items = await itemService.getItems(null, null);
+    } catch(e)  {
+        response.error = exceptionHandler.retrieveException(e);
+    }
+
+    res.render("user/view-items.ejs",{response: response, onyen: onyen, userType: userType});
+});
+
+router.post('/', async function(req, res) {
+    let onyen = await authService.getOnyen(req);
+    let userType = await authService.getUserType(onyen);
+    if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
+
     let response = {};
     try {
         let name = req.body.name;
@@ -21,19 +36,6 @@ router.post('/', async function(req, res, next) {
     }
 
     res.render("admin/entry-manual.ejs", {response: response, onyen: onyen, userType: userType});
-});
-
-router.get('/', async function(req, res, next) {
-    let onyen = await authService.getOnyen(req);
-    let userType = await authService.getUserType(onyen);
-    let response = {};
-    try {
-        response.items = await itemService.getItems(null, null);
-    } catch(e)  {
-        response.error = exceptionHandler.retrieveException(e);
-    }
-
-    res.render("user/view-items.ejs",{response: response, onyen: onyen, userType: userType});
 });
 
 router.post('/search', async function(req, res, next) {
