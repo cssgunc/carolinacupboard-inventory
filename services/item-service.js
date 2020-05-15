@@ -82,6 +82,46 @@ exports.getItem = async function (itemId) {
     }
 }
 
+/*
+Looks for an item, first by barcode, then by name and decription
+Returns the item found or null if nothing is found
+*/
+exports.getItemByBarcodeThenNameDesc = async function (barcode, name, desc) {
+    try {
+        let item = await getItemByBarcode(barcode);
+        if(!item) item = await getItemByNameDesc(name, desc);
+        return item;
+    } catch (e) {
+        throw new InternalErrorException("A problem occurred when retrieving the item by barcode, or name and description",e);
+    }
+}
+
+/*
+Looks for an item by barcode
+Returns the item fround or null if nothing is found
+*/
+let getItemByBarcode = async function (barcode) {
+    try {
+        let item = await Item.findOne({ where: { barcode: barcode }});
+        return item;
+    } catch (e) {
+        throw new InternalErrorException("A problem occurred when retrieving the item by barcode",e);
+    }
+}
+
+/*
+Looks for an item by name and description
+Returns the item fround or null if nothing is found
+*/
+let getItemByNameDesc = async function (name, desc) {
+    try {
+        let item = await Item.findOne({ where: { name: name, description: desc }});
+        return item;
+    } catch (e) {
+        throw new InternalErrorException("A problem occurred when retrieving the item by name and description",e);
+    }
+}
+
 exports.addItems = async function (itemId, quantity, onyen, volunteerId) {
     await this.createTransaction(itemId, quantity, onyen, volunteerId);
 }
