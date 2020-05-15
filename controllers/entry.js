@@ -10,8 +10,10 @@ router.get("/", async function(req, res) {
     let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
     if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
+
+    let response = {};
     
-    res.render("admin/entry.ejs", {onyen: onyen, userType: userType});
+    res.render("admin/entry.ejs", {response: response, onyen: onyen, userType: userType});
 });
 
 router.get("/quick", async function(req, res) {
@@ -65,20 +67,99 @@ router.post('/search', async function (req, res) {
         response.error = exceptionHandler.retrieveException(e);
     }
 });
-
-// , searchCtrl);
   
 router.get("/manual", async function(req, res) {
     let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
     if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
+    
+    response = {};
+    if(req.query.success) {
+        response.success = req.query.success;
+        if (response.success === "0") {
+            response.infoMessage = "Error updating item."
+        } else if (response.success === "1") {
+            response.infoMessage = "Item successfully updated!"
+        }
+    }
+    console.log(response);
     let foundItem = {
         name: req.query.name,
         barcode: req.query.barcode,
         desc: req.query.decr
     };
 
-    res.render("admin/entry-manual.ejs", {response: null, foundItem: foundItem, onyen: onyen, userType: userType});
+    res.render("admin/entry-manual.ejs", {response: response, foundItem: foundItem, onyen: onyen, userType: userType});
+});
+
+router.post('/manual', async function(req, res) {
+    let onyen = await authService.getOnyen(req);
+    let userType = await authService.getUserType(onyen);
+    if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
+
+    let response = {};
+    try {
+        let name = req.body.name;
+        let barcode = req.body.barcode;
+        let description = req.body.description;
+        let count = req.body.count;
+
+        if(barcode || name) {
+            console.log(barcode);
+            // try searching by barcode, then by name and desc
+            let item = await itemService.getItemByBarcodeThenNameDesc(barcode, name, description);
+            console.log(item);
+
+            // if the item is found, we send back a message and the found item
+            if (item) {
+                response.itemFound = item;
+                res.render("admin/entry-manual.ejs", {response: response, onyen: onyen, userType: userType});
+                return;
+            }
+        }
+
+        await itemService.createItem(name, barcode, description, count);
+    } catch(e)  {
+        response.error = exceptionHandler.retrieveException(e);
+    }
+
+    res.render("admin/entry-manual.ejs", {response: response, onyen: onyen, userType: userType});
+});
+
+router.post("/manual/update", async function(req, res) {
+    let onyen = await authService.getOnyen(req);
+    let userType = await authService.getUserType(onyen);
+    if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
+    
+    let id  = req.body.id;
+    let quantity = req.body.quantity;
+
+    console.log("Updating");
+    
+    try {
+        if(quantity > 0) {
+            console.log("Add");
+            itemService.addItems(id, quantity, onyen, onyen);
+        } else if (quantity < 0) {
+            console.log("Remove");
+            itemService.removeItems(id, quantity, onyen, onyen);
+        }
+        console.log("Updated");
+        res.redirect(url.format({
+            pathname:"/entry/manual",
+            query: {
+            "success": "1"
+            }
+        }));
+    } catch(e) {
+        console.log(e);
+        res.redirect(url.format({
+            pathname:"/entry/manual",
+            query: {
+            "success": "0"
+            }
+        }));
+    }
 });
 
 router.post("/add", async function(req, res) {
@@ -95,7 +176,12 @@ router.post("/add", async function(req, res) {
         itemService.addItems(id, quantity, volunteer_onyen, volunteer_onyen);
     }
 
-    res.redirect('/entry/search');
+    res.redirect(url.format({
+        pathname:"/entry/search",
+        query: {
+           "prevOnyen": onyen
+        }
+    }));
 });
 
 router.post("/remove", async function(req, res) {
