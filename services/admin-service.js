@@ -80,3 +80,20 @@ exports.deleteUser = async function(onyen) {
         }
     }
 }
+
+exports.deleteAllUsers = async function() {
+    try {
+        await User.destroy({
+            where: {},
+            truncate: false
+        });
+        this.createUser(process.env.DEFAULT_ADMIN, "admin");
+        this.createUser("PREORDER", "admin");
+    } catch(e) {
+        if(e instanceof CarolinaCupboardException) {
+            throw e;
+        }
+        
+        throw e;
+    }
+}

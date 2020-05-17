@@ -8,30 +8,45 @@
   <div class="container">
     <h2>Backup Data</h2>
     <div class="row">
-      <div class="col-sm-12 col-md-3">
+      <div class="col-sm-12">
         <form method="GET" action="/admin/backup/transactions.csv">
           <div class="form-group">
             <input class="btn btn-primary btn-lg" type="submit" value="Download Transactions">
           </div>
         </form>
       </div>
-      <div class="col-sm-12 col-md-3">
+      <div class="col-sm-12">
         <form method="GET" action="/admin/backup/items.csv">
           <div class="form-group">
             <input class="btn btn-primary btn-lg" type="submit" value="Download Items">
           </div>
         </form>
       </div>
+      <div class="col-sm-12">
+        <form method="GET" action="/admin/backup/volunteers.csv">
+          <div class="form-group">
+            <input class="btn btn-primary btn-lg" type="submit" value="Download Volunteers">
+          </div>
+        </form>
+      </div>
     </div>
     <h2>Delete Data</h2>
     <div class="row">
-      <div class="col-sm-12 col-md-3">
+      <div class="col-sm-12">
         <button type="button" class="btn btn-danger btn-lg" data-toggle="modal" 
           data-target="#delTransModal">Delete Transactions</button>
       </div>
-      <div class="col-sm-12 col-md-3">
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
         <button type="button" class="btn btn-danger btn-lg" data-toggle="modal" 
           data-target="#delItemsModal">Delete Items</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <button type="button" class="btn btn-danger btn-lg" data-toggle="modal" 
+          data-target="#delUsersModal">Delete Volunteers</button>
       </div>
     </div>
     <div class="modal fade" id="delTransModal" tabindex="-1" role="dialog" aria-labelledby="delTransModalLabel" aria-hidden="true">
@@ -67,12 +82,35 @@
           </div>
           <div class="modal-body">
             <p><b>Please backup items before you delete them.</b> Once deleted, they will not be recoverable.</p>
-            <p><b>You must delete all transactions before deleting items.</b></p>
+            <p><b>You must delete all transactions before deleting items, otherwise you will get an error.</b></p>
             <p>Are you sure you want to delete all items?</p>
             <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Cancel</button>
             <form method="POST" action="/admin/delete/items">
               <div class="form-group">
                 <button class="btn btn-danger float-right" type="submit">Delete Items</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="delUsersModal" tabindex="-1" role="dialog" aria-labelledby="delUsersModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="delTransModalLabel">Request a hold</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p><b>Please backup volunteers before you delete them.</b> Once deleted, they will not be recoverable.</p>
+            <p><b>You must delete all transactions before deleting volunteers, otherwise you will get an error.</b></p>
+            <p>Are you sure you want to delete all volunteers?</p>
+            <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Cancel</button>
+            <form method="POST" action="/admin/delete/users">
+              <div class="form-group">
+                <button class="btn btn-danger float-right" type="submit">Delete Volunteers</button>
               </div>
             </form>
           </div>
