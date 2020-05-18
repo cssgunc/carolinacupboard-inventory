@@ -6,46 +6,57 @@
 <body>
     <%- include("../header") -%>
     <div class="container">
-        <h2>Manage Users</h2>
-        <div class="table-responsive">
-            <table id="usersTable" class="table table-striped table-bordered" cellspacing="0" width="99%">
-                <thead>
-                    <tr>
-                        <th scope="col">ONYEN</th>
-                        <th scope="col">Volunteer Type</th>
-                        <th scope="col" class="text-right"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% if (response && response.users) {%>
-                    <% response.users.forEach((user) => {%>
-                    <tr>
-                        <td><%= user.onyen %></td>
-                        <td><%= user.type %></td>
-                        <td class="text-right pr-1">
-                            <% if (user.onyen !== "PREORDER") {%>
-                            <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-primary" data-toggle="modal" 
-                                    data-target="#editModal" data-onyen="<%= user.onyen %>" data-type="<%= user.type %>">
-                                    Edit</button>
-                                <button type="button" class="btn btn-danger" data-toggle="modal" 
-                                    data-target="#deleteModal" data-onyen="<%= user.onyen %>" data-type="<%= user.type %>">
-                                    Delete</button>
-                            </div>
-                            <% } %>
-                        </td>
-                    </tr>
-                    <% }); %>
-                    <% } %>
-                </tbody>
-            </table>
-            <% if (response && response.error) {%>
-            <div class="alert alert-danger">
-                <%= response.error%>
-            </div>
-            <% } %>
+        <div class="row">
+            <h2>Manage Volunteers</h2>
         </div>
-        <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#createModal">Add new user</button>
+        <div class="row">
+            <div class="table-responsive">
+                <table id="usersTable" class="table table-striped table-bordered" cellspacing="0" width="99%">
+                    <thead>
+                        <tr>
+                            <th scope="col">ONYEN</th>
+                            <th scope="col">Volunteer Type</th>
+                            <th scope="col" class="text-right"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (response && response.users) {%>
+                        <% response.users.forEach((user) => {%>
+                        <tr>
+                            <td><%= user.onyen %></td>
+                            <td><%= user.type %></td>
+                            <td class="text-right pr-1">
+                                <% if (user.onyen !== "PREORDER") {%>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" 
+                                        data-target="#editModal" data-onyen="<%= user.onyen %>" data-type="<%= user.type %>">
+                                        Edit</button>
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" 
+                                        data-target="#deleteModal" data-onyen="<%= user.onyen %>" data-type="<%= user.type %>">
+                                        Delete</button>
+                                </div>
+                                <% } %>
+                            </td>
+                        </tr>
+                        <% }); %>
+                        <% } %>
+                    </tbody>
+                </table>
+                <% if (response && response.error) {%>
+                <div class="alert alert-danger">
+                    <%= response.error%>
+                </div>
+                <% } %>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <a role="button" class="btn btn-primary float-left" href="/admin/users/import">Import CSV</a>
+            </div>
+            <div class="col-sm-6">
+                <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#createModal">Add new user</button>
+            </div>
+        </div>
     </div>
     <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
