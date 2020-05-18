@@ -2,7 +2,8 @@ const   User = require("../db/sequelize").users,
         Sequelize = require("sequelize"),
         BadRequestException = require("../exceptions/bad-request-exception"),
         InternalErrorException = require("../exceptions/internal-error-exception"),
-        CarolinaCupboardException = require("../exceptions/carolina-cupboard-exception");
+        CarolinaCupboardException = require("../exceptions/carolina-cupboard-exception"),
+        csvParser = require("csv-parse");
 
 
 exports.createUser = async function(onyen, type) {
@@ -63,6 +64,59 @@ exports.changeUserType = async function(onyen, type) {
         }
         throw new InternalErrorException("A problem occurred when editting the user",e);
     }
+}
+
+// Takes a CSV file and appends it to the Users table
+exports.appendCsvUsers = async function (data) {
+    console.log(data);
+    // wrapping everything in a Promise, so we can return exceptions from the csvParser callback
+    // this will allow the caller to tell when the Users table creation fails
+    return new Promise((resolve, reject) => {
+        try {
+            csvParser(data.data, 
+                {
+                    delimiter: ',', 
+                    endLine: '\n', 
+                    escapeChar: '"', 
+                    enclosedChar: '"'
+                }, 
+                function(err, output) {
+                    if (err) {
+                        throw new InternalErrorException("A problem occurred when parsing CSV data");
+                    }
+                    let newUsers = [];
+                    for(let i = 0; i < output.length; i++) {
+                        let entry = output[i];
+                        if (i === 0 && entry[0] === "onyen" && entry[1] === "type") continue; // skip optional headers
+                        try {
+                            let user = {
+                                onyen: entry[0],
+                                type: entry[1]
+                            }
+                            newUsers.push(user);
+                        } catch (e) {
+                            console.error(e);
+                            reject(e);
+                        }
+                    }
+
+                    User.bulkCreate(newUsers,
+                        {
+                            updateOnDuplicate: ["type"]
+                        }
+                    ).then(function(result) {
+                        resolve(result);
+                    }).catch(function(e) {
+                        console.error(e);
+                        reject(e);
+                    });
+                }
+            );
+        } catch(e) {
+            console.error(e);
+            reject(e);
+        }
+    });
 }
 
 exports.deleteUser = async function(onyen) {
