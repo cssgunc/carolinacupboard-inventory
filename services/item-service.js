@@ -156,7 +156,6 @@ exports.createTransaction = async function (itemId, quantity, onyen, volunteerId
 }
 
 exports.appendCsv = async function (data) {
-    console.log(data);
     // wrapping everything in a Promise, so we can return exceptions from the csvParser callback
     // this will allow the caller to tell when the Item table creation fails
     return new Promise((resolve, reject) => {
