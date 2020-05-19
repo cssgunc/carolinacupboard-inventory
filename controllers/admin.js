@@ -5,6 +5,7 @@ let express = require("express"),
     tranService = require("../services/transaction-service"),
     itemService = require("../services/item-service"),
     exceptionHandler = require("../exceptions/exception-handler"),
+    dbUtil = require("../db/db-util"),
     copyTo = require('pg-copy-streams').to,
     {Client} = require('pg'),
     fs = require('fs');
@@ -93,6 +94,7 @@ router.post('/users/edit', async function(req, res, next) {
             await adminService.changeUserType(editOnyen, type);
 
         } catch(e) {
+            console.error(e);
             res.status(500).send("Internal server error");
             return;
         }
@@ -368,6 +370,35 @@ router.post('/delete/users', async function(req, res, next) {
         await adminService.deleteAllUsers();
         response.success = true;
         res.render('admin/admin-delete-confirm.ejs', {response: response, onyen: onyen, userType: userType});
+    }
+});
+
+router.get('/database', async function(req, res, next) {
+    let onyen = await authService.getOnyen(req);
+    let userType = await authService.getUserType(onyen);
+    if(userType !== "admin") res.sendStatus(403);
+    else {
+        let response = {};
+        res.render('admin/admin-database.ejs', {response: response, onyen: onyen, userType: userType});
+    }
+});
+
+router.post('/database', async function(req, res, next) {
+    let onyen = await authService.getOnyen(req);
+    let userType = await authService.getUserType(onyen);
+    if(userType !== "admin") res.sendStatus(403);
+    else {
+        let response = {};
+        try {
+            dbUtil.dropTables();
+            dbUtil.createTables();
+            dbUtil.initAdmin();
+            response.success = 1;
+        } catch (e) {
+            console.error(e);
+            response.success = 0; 
+        }
+        res.render('admin/admin-database.ejs', {response: response, onyen: onyen, userType: userType});
     }
 });
 

@@ -7,7 +7,10 @@
     "start": "npm run prod",
     "dev": "cross-env NODE_ENV=dev nodemon index.js",
     "prod": "cross-env NODE_ENV=prod node index.js",
-    "bootstrap": "cross-env NODE_ENV=dev sh scripts/bootstrap.sh;"
+    "dropdb": "node -e 'require(\"./db/db-util\").dropTables()'",
+    "createdb": "node -e 'require(\"./db/db-util\").createTables()'",
+    "initdb": "node -e 'require(\"./db/db-util\").initAdmin()'",
+    "bootstrap": "cross-env NODE_ENV=dev npm run dropdb && npm run createdb && npm run initdb"
   },
   "author": "",
   "license": "ISC",

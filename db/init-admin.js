@@ -8,4 +8,6 @@ const initAdmin = async() => {
     process.exit(0);
 }
 
+module.exports = initAdmin();
+
 initAdmin();
