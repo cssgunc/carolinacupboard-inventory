@@ -10,4 +10,6 @@ async function dropTables() {
     }
 }
 
+module.exports = dropTables();
+
 dropTables();

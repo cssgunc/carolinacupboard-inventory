@@ -3,20 +3,20 @@
 This is an inventory management app developed by UNC-CH CS+Social Good for Carolina Cupboard.
 
 ## Development Setup
-1. Install [nodejs and npm](https://nodejs.org)
-1. Download PostgreSQL and setup a local PostgreSQL server OR use a remote PostgreSQL server for development
-    1. CloudApps currently uses PostgreSQL 9.6
-    1. [ElephantSQL](https://www.elephantsql.com/) was used by some members during the original development of this app
-1. Clone this repo
-1. `cd` into the cloned directory and run `npm install`
-1. Make a copy of `.env-example` and name it `.env`
-    * Edit the environment variables for your dev setup
-    * See the section on [environment variables](#environment-variables) for more info
-1. Run the bootstrap.sh file (scripts/bootstrap.sh) to create the tables
-    * If you're on Windows, try "sh ./scripts/bootstrap.sh" in PowerShell
-    * You can also copy the line in bootstrap.sh and paste it into PowerShell/terminal
-1. Run `npm run dev` to start the server in development mode
-1. Go to `localhost:8080` in your web browser
+1. Install [nodejs and npm](https://nodejs.org).
+1. Download PostgreSQL and setup a local PostgreSQL server OR use a remote PostgreSQL server for development.
+    1. CloudApps currently uses PostgreSQL 9.6.
+    1. [ElephantSQL](https://www.elephantsql.com/) was used by some members during the original development of this app.
+1. Clone this repo.
+1. `cd` into the cloned directory and run `npm install`.
+1. Make a copy of `.env-example` and name it `.env`.
+    * Edit the environment variables for your dev setup.
+    * See the section on [environment variables](#environment-variables) for more info.
+1. Run the `npm run bootstrap`. 
+    * You can also run the bootstrap.sh file (scripts/bootstrap.sh) to create the tables. If you're on Windows, try "sh ./scripts/bootstrap.sh" in PowerShell.
+    * You can also copy the line in bootstrap.sh and paste it into PowerShell/terminal.
+1. Run `npm run dev` to start the server in development mode.
+1. Go to `localhost:8080` in your web browser.
 
 ## Environment Variables
 `DATABASE_URL`: The url for your postgresql server
@@ -82,7 +82,7 @@ If you change the table schemas, you should also update these scripts. This can 
 
 ### `scripts`
 
-This folder contains the `bootstrap.sh` script which runs the table deletion and initialization scripts in `db`. Consider refactoring this in the future.
+This folder contains the `bootstrap.sh` script which runs the table deletion and initialization scripts in `db`.
 
 ### `services`
 
