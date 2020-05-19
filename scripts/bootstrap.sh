@@ -1,2 +1,2 @@
 #!/usr/bin/sh
-node db/drop-tables.js && node db/init-db.js && node db/init-admin.js
+node -e 'require("./db/db-util").dropTables(true)' && node -e 'require("./db/db-util").createTables(true)' && node -e 'require("./db/db-util").initAdmin(true)'

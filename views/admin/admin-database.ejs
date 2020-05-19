@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("../baselinks") -%>
+</head>
+<body>
+  <%- include("../header") -%>
+  <div class="container">
+    <% if(response.success && response.success === 1) { %>
+      <div class="alert alert-success" role="alert">
+        <p>Success! All data has been deleted.</p>
+      </div>
+    <% } else if(response.success && response.success === 0) {%>
+      <div class="alert alert-danger" role="alert">
+        <p>Sorry, there was an error with your request. Please try again later or contact technical support.</p>
+      </div>
+    <% } %>
+    <h2>Factory Reset</h2>
+    <p>Warning this will delete all data in your database and reset it to a clean slate. Please backup any data you want to keep before doing this.</p>
+    <div class="row">
+      <div class="col-sm-12">
+        <button type="button" class="btn btn-danger btn-lg" data-toggle="modal" 
+          data-target="#delDataModal">Delete All Data</button>
+      </div>
+    </div>
+    <div class="modal fade" id="delDataModal" tabindex="-1" role="dialog" aria-labelledby="delDataModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="delDataModalLabel">Request a hold</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p><b>Please backup data before you delete them.</b> Once deleted, the data will not be recoverable.</p>
+            <p>Are you sure you want to delete all data?</p>
+            <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Cancel</button>
+            <form method="POST" action="/admin/database">
+              <div class="form-group">
+                <button class="btn btn-danger float-right" type="submit">Delete All Data</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  <%- include("../scripts") -%>
+</body>
+</html>
