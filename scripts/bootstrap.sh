@@ -1,2 +1,2 @@
 #!/usr/bin/sh
-node -e 'require("./db/db-util").dropTables()' && node -e 'require("./db/db-util").createTables()' && node -e 'require("./db/db-util").initAdmin()'
+node -e 'require("./db/db-util").dropTables(true)' && node -e 'require("./db/db-util").createTables(true)' && node -e 'require("./db/db-util").initAdmin(true)'

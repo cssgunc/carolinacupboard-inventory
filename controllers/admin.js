@@ -390,9 +390,9 @@ router.post('/database', async function(req, res, next) {
     else {
         let response = {};
         try {
-            dbUtil.dropTables();
-            dbUtil.createTables();
-            dbUtil.initAdmin();
+            await dbUtil.dropTables(false);
+            await dbUtil.createTables(false);
+            await dbUtil.initAdmin(false);
             response.success = 1;
         } catch (e) {
             console.error(e);

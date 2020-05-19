@@ -1,32 +1,36 @@
 const sequelize         = require("./sequelize");
 const adminService      = require("../services/admin-service");
 
-async function dropTables() {
+// exit param is passed to determine whether or not to exit after running the function
+// for scripts, exit should be true
+// when called by the server, exit should be false
+
+async function dropTables(exit) {
     try {
         await sequelize.drop();
-        process.exit(0);
+        if (exit) process.exit(0);
     } catch (e) {
         console.error(e);
-        process.exit(1);
+        if (exit) process.exit(1);
     }
 }
 
-async function createTables() {
+async function createTables(exit) {
     try {
         await sequelize.sync();
-        process.exit(0);
+        if (exit) process.exit(0);
     } catch (e) {
         console.error(e);
-        process.exit(1);
+        if (exit) process.exit(1);
     }
 }
 
-const initAdmin = async() => {
+async function initAdmin(exit) {
     await adminService.createUser("PREORDER", "admin");
     if(process.env.DEFAULT_ADMIN) {
         await adminService.createUser(process.env.DEFAULT_ADMIN, "admin");
     }
-    process.exit(0);
+    if (exit) process.exit(0);
 }
 
 exports.dropTables = dropTables;
