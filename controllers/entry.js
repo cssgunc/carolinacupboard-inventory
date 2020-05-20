@@ -82,7 +82,7 @@ router.get("/manual", async function(req, res) {
             response.infoMessage = "Item successfully updated!"
         }
     }
-    console.log(response);
+ 
     let foundItem = {
         name: req.query.name,
         barcode: req.query.barcode,
@@ -100,12 +100,11 @@ router.post('/manual', async function(req, res) {
     let response = {};
     try {
         let name = req.body.name;
-        let barcode = req.body.barcode;
+        let barcode = req.body.barcode === "" ? null : req.body.barcode;
         let description = req.body.description;
         let count = req.body.count;
 
         if(barcode || name) {
-            console.log(barcode);
             // try searching by barcode, then by name and desc
             let item = await itemService.getItemByBarcodeThenNameDesc(barcode, name, description);
             console.log(item);
