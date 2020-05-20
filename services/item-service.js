@@ -176,7 +176,6 @@ exports.appendCsv = async function (data) {
                         throw new InternalErrorException("A problem occurred when parsing CSV data");
                     }
 
-                    let newItems = [];
                     for(let i = 0; i < output.length; i++) {
                         let entry = output[i];
 
@@ -208,23 +207,21 @@ exports.appendCsv = async function (data) {
                             reject(e);
                         }
 
-                        newItems.push(item);
+                        // Execute query, on conflict with name/desc composite primary key, add existing and new counts
+                        sequelize.query(`INSERT INTO items (name, barcode, count, description, "createdAt", "updatedAt") 
+                        VALUES ${item}
+                        ON CONFLICT (name, description)
+                        DO UPDATE
+                        SET count = items.count + EXCLUDED.count`
+                        ).then(function(result) {
+                            resolve(result);
+                        }).catch(function(e) {
+                            console.error(e);
+                            reject(e);
+                        });
                     }
 
-                    // Execute query, on conflict with name/desc composite primary key, add existing and new counts
-                    sequelize.query(`INSERT INTO items (name, barcode, count, description, "createdAt", "updatedAt") 
-                                    VALUES ${newItems}
-                                    ON CONFLICT (name, description)
-                                    DO UPDATE
-                                    SET count = items.count + EXCLUDED.count`,
-                                    {
-                                        replacements: newItems
-                                    }).then(function(result) {
-                                        resolve(result);
-                                    }).catch(function(e) {
-                                        console.error(e);
-                                        reject(e);
-                                    });
+                    
                 }
             );
         } catch(e) {
