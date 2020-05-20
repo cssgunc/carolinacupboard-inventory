@@ -6,13 +6,14 @@ exports.init_table = function (sequelize) {
             type: Sequelize.INTEGER,
             autoIncrement: true,
             require: true,
-            primaryKey: true
+            unique: true,
         },
         name: {
             type: Sequelize.STRING,
             allowNull: false,
             require: true,
-            unique: false,
+            unique: "nameDescConstraint",
+            primaryKey: true,
         },
 		barcode: {
             type: Sequelize.STRING,
@@ -34,7 +35,8 @@ exports.init_table = function (sequelize) {
             type: Sequelize.STRING,
             allowNull: true,
             require: false,
-            unique: false,
+            unique: "nameDescConstraint",
+            primaryKey: true,
         }
     });
 }
