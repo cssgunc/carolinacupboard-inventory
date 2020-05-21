@@ -193,14 +193,16 @@ exports.appendCsv = async function (data) {
                             // Empty barcode maps to NULL for our Postgres model, pre-wrap with single quotes
                             let barcode = entry[1] === "" ? "NULL" : "'" + entry[1] + "'";
                             // Prep values for query by enclosing in paren, wrapping in single quotes (except barcode), and joining by comma
-                            item = "(" + [entry[0], barcode, entry[2], entry[3], date, date].map((s,i) => { return i === 1 ? s : "'"+s+"'" }).join(",") + ")";
+                            // Postgres uses double single quotes to escape single quotes in strings, so we do a replace
+                            item = "(" + [entry[0], barcode, entry[2], entry[3], date, date].map((s,i) => { return i === 1 ? s : "'"+s.replace(/'/g, "''")+"'" }).join(",") + ")";
                         }
                         // Expects a file with the same format as an exported file
                         else if (entry.length === 7) {
                             // Empty barcode maps to NULL for our Postgres model, pre-wrap with single quotes
                             let barcode = entry[2] === "" ? "NULL" : "'" + entry[2] + "'";
                             // Prep values for query by enclosing in paren, wrapping in single quotes (except barcode), and joining by comma
-                            item = "(" + [entry[1], barcode, entry[3], entry[4], date, date].map((s,i) => { return i === 1 ? s : "'"+s+"'" }).join(",") + ")";
+                            // Postgres uses double single quotes to escape single quotes in strings, so we do a replace
+                            item = "(" + [entry[1], barcode, entry[3], entry[4], date, date].map((s,i) => { return i === 1 ? s : "'"+s.replace(/'/g, "''")+"'" }).join(",") + ")";
                         }
                         else {
                             console.error("File not in the expected format, see line " + (i+1));
