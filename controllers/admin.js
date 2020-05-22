@@ -337,13 +337,25 @@ router.get('/backup/volunteers.csv', async function(req, res, next) {
     }
 });
 
-router.post('/delete/items', async function(req, res, next) {
+router.post('/delete/items/all', async function(req, res, next) {
     let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
     if(userType !== "admin") res.sendStatus(403);
     else {
         let response = {'table': 'items'};
         await itemService.deleteAllItems();
+        response.success = true;
+        res.render('admin/admin-delete-confirm.ejs', {response: response, onyen: onyen, userType: userType});
+    }
+});
+
+router.post('/delete/items/outofstock', async function(req, res, next) {
+    let onyen = await authService.getOnyen(req);
+    let userType = await authService.getUserType(onyen);
+    if(userType !== "admin") res.sendStatus(403);
+    else {
+        let response = {'table': 'out of stock items'};
+        await itemService.deleteOutOfStock();
         response.success = true;
         res.render('admin/admin-delete-confirm.ejs', {response: response, onyen: onyen, userType: userType});
     }
