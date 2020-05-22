@@ -235,3 +235,20 @@ exports.deleteAllItems = async function() {
         throw new InternalErrorException("A problem occurred when deleting the items", e);
     }
 }
+
+exports.deleteOutOfStock = async function() {
+    try {
+        await Item.destroy({
+            where: {
+                count: {[Sequelize.Op.lte]: 0}
+            },
+            truncate: false
+        });
+    } catch(e) {
+        if(e instanceof CarolinaCupboardException) {
+            throw e;
+        }
+        
+        throw new InternalErrorException("A problem occurred when deleting the out of stock items", e);
+    }
+}
