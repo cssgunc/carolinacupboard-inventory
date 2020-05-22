@@ -190,6 +190,7 @@ exports.appendCsv = async function (data) {
 
                         // Expects a file with only the necessary data
                         if (entry.length === 4) {
+                            if (parseInt(entry[2]) < 1) continue;
                             // Empty barcode maps to NULL for our Postgres model, pre-wrap with single quotes
                             let barcode = entry[1] === "" ? "NULL" : "'" + entry[1] + "'";
                             // Prep values for query by enclosing in paren, wrapping in single quotes (except barcode), and joining by comma
@@ -198,6 +199,7 @@ exports.appendCsv = async function (data) {
                         }
                         // Expects a file with the same format as an exported file
                         else if (entry.length === 7) {
+                            if (parseInt(entry[3]) < 1) continue;
                             // Empty barcode maps to NULL for our Postgres model, pre-wrap with single quotes
                             let barcode = entry[2] === "" ? "NULL" : "'" + entry[2] + "'";
                             // Prep values for query by enclosing in paren, wrapping in single quotes (except barcode), and joining by comma
@@ -205,8 +207,9 @@ exports.appendCsv = async function (data) {
                             item = "(" + [entry[1], barcode, entry[3], entry[4], date, date].map((s,i) => { return i === 1 ? s : "'"+s.replace(/'/g, "''")+"'" }).join(",") + ")";
                         }
                         else {
-                            console.error("File not in the expected format, see line " + (i+1));
-                            reject(e);
+                            let error = "File not in the expected format, see line " + (i+1);
+                            console.error(error);
+                            reject(error);
                         }
 
                         // Execute query, on conflict with name/desc composite primary key, add existing and new counts
