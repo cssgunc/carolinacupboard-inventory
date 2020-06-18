@@ -1,6 +1,7 @@
 const   Item = require("../db/sequelize").items,
         Transaction = require("../db/sequelize").transactions,
         Sequelize = require("sequelize"),
+        sequelize = require("../db/sequelize"),
         BadRequestException = require("../exceptions/bad-request-exception"),
         InternalErrorException = require("../exceptions/internal-error-exception"),
         CarolinaCupboardException = require("../exceptions/carolina-cupboard-exception"),
@@ -98,9 +99,10 @@ exports.getItemByBarcodeThenNameDesc = async function (barcode, name, desc) {
 
 /*
 Looks for an item by barcode
-Returns the item fround or null if nothing is found
+Returns the item found or null if nothing is found
 */
 let getItemByBarcode = async function (barcode) {
+    if (!barcode || barcode === "") return null;
     try {
         let item = await Item.findOne({ where: { barcode: barcode }});
         return item;
@@ -155,6 +157,8 @@ exports.createTransaction = async function (itemId, quantity, onyen, volunteerId
     }
 }
 
+// Appends a given CSV to the item table
+// On duplicate, adds the existing count and the new count together
 exports.appendCsv = async function (data) {
     // wrapping everything in a Promise, so we can return exceptions from the csvParser callback
     // this will allow the caller to tell when the Item table creation fails
@@ -171,47 +175,58 @@ exports.appendCsv = async function (data) {
                     if (err) {
                         throw new InternalErrorException("A problem occurred when parsing CSV data");
                     }
-                    let newItems = [];
+
                     for(let i = 0; i < output.length; i++) {
                         let entry = output[i];
+
+                        // Skip row headers
                         if (entry.length === 7 && i === 0) continue;
-                        try {
-                            let item = {};
-                            if (entry.length === 4) {
-                                item = {
-                                    name: entry[0],
-                                    barcode: entry[1],
-                                    count: entry[2],
-                                    description: entry[3],
-                                }
-                            }
-                            // Expects a file with the same format as an exported file
-                            else if (entry.length === 7) {
-                                item = {
-                                    name: entry[1],
-                                    barcode: entry[2],
-                                    count: entry[3],
-                                    description: entry[4],
-                                }
-                            }
 
-                            if (entry[1] === "") {
-                                item.barcode = null;
-                            }
+                        let item = "";
 
-                            newItems.push(item);
-                        } catch (e) {
+                        // Generate date for createdAt and updatedAt fields and strip timezone for Postgres
+                        let date = new Date();
+                        date = date.toLocaleDateString() + " " + date.toLocaleTimeString();
+
+                        // Expects a file with only the necessary data
+                        if (entry.length === 4) {
+                            if (parseInt(entry[2]) < 1) continue;
+                            // Empty barcode maps to NULL for our Postgres model, pre-wrap with single quotes
+                            let barcode = entry[1] === "" ? "NULL" : "'" + entry[1] + "'";
+                            // Prep values for query by enclosing in paren, wrapping in single quotes (except barcode), and joining by comma
+                            // Postgres uses double single quotes to escape single quotes in strings, so we do a replace
+                            item = "(" + [entry[0], barcode, entry[2], entry[3], date, date].map((s,i) => { return i === 1 ? s : "'"+s.replace(/'/g, "''")+"'" }).join(",") + ")";
+                        }
+                        // Expects a file with the same format as an exported file
+                        else if (entry.length === 7) {
+                            if (parseInt(entry[3]) < 1) continue;
+                            // Empty barcode maps to NULL for our Postgres model, pre-wrap with single quotes
+                            let barcode = entry[2] === "" ? "NULL" : "'" + entry[2] + "'";
+                            // Prep values for query by enclosing in paren, wrapping in single quotes (except barcode), and joining by comma
+                            // Postgres uses double single quotes to escape single quotes in strings, so we do a replace
+                            item = "(" + [entry[1], barcode, entry[3], entry[4], date, date].map((s,i) => { return i === 1 ? s : "'"+s.replace(/'/g, "''")+"'" }).join(",") + ")";
+                        }
+                        else {
+                            let error = "File not in the expected format, see line " + (i+1);
+                            console.error(error);
+                            reject(error);
+                        }
+
+                        // Execute query, on conflict with name/desc composite primary key, add existing and new counts
+                        sequelize.query(`INSERT INTO items (name, barcode, count, description, "createdAt", "updatedAt") 
+                        VALUES ${item}
+                        ON CONFLICT (name, description)
+                        DO UPDATE
+                        SET count = items.count + EXCLUDED.count`
+                        ).then(function(result) {
+                            resolve(result);
+                        }).catch(function(e) {
                             console.error(e);
                             reject(e);
-                        }
+                        });
                     }
 
-                    Item.bulkCreate(newItems).then(function(result) {
-                        resolve(result);
-                    }).catch(function(e) {
-                        console.error(e);
-                        reject(e);
-                    });
+                    
                 }
             );
         } catch(e) {
