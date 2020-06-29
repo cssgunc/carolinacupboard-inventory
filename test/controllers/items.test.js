@@ -2,18 +2,15 @@ const supertest = require('supertest');
 const app = require('../../app');
 const dbUtil = require('../../db/db-util.js');
 const ItemService = require('../../services/item-service');
-const matchResponseText = require('../util/test-utils').matchResponseText;
+const testUtil = require('../util/test-util');
 require('dotenv').config();
 
-const userAuthHeaders = {
-    uid: "userOnyen"
-};
 
 describe('Items Routes - Item Preorder Workflow', () => {
     describe('GET /items - items main page', () => {
         it('expect success HTTP 200 status', (done) => {
             supertest(app).get('/items')
-                .set(userAuthHeaders)
+                .set(testUtil.userAuthHeaders)
                 .expect(200, done);
         });
     });
@@ -27,7 +24,7 @@ describe('Items Routes - Item Preorder Workflow', () => {
                     quantity: 5
                 };
                 supertest(app).post('/items/add')
-                    .set(userAuthHeaders)
+                    .set(testUtil.userAuthHeaders)
                     .send(requestBody)
                     .expect(200, done);
             });
@@ -43,7 +40,7 @@ describe('Items Routes - Item Preorder Workflow', () => {
                 quantity: 5
             };
             supertest(app).post('/items/add')
-                .set(userAuthHeaders)
+                .set(testUtil.userAuthHeaders)
                 .send(requestBody)
                 .expect(200)
                 .end(async (err, res) => {

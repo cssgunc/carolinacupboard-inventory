@@ -3,24 +3,16 @@ const app = require('../../app');
 const dbUtil = require('../../db/db-util.js');
 const ItemService = require('../../services/item-service');
 const PreorderService = require('../../services/preorder-service');
-const matchResponseText = require('../util/test-utils').matchResponseText;
+const testUtil = require('../util/test-util');
 require('dotenv').config();
-
-const adminAuthHeaders = {
-    uid: process.env.DEFAULT_ADMIN
-};
-
-const userAuthHeaders = {
-    uid: "userOnyen"
-};
 
 describe('Preorder Routes - Preorder Management Workflow', () => {
     describe('GET /preorders - get all preorders', () => {
         it('expect success HTTP 200 status', (done) => {
             ItemService.createItem('chicken', '', '', 5).then(() => {
-                PreorderService.createPreorder(1, 1, userAuthHeaders.uid).then(() => {
+                PreorderService.createPreorder(1, 1, testUtil.userAuthHeaders.uid).then(() => {
                     supertest(app).get('/preorders')
-                    .set(adminAuthHeaders)
+                    .set(testUtil.adminAuthHeaders)
                     .expect(200, done);
                 });
             });
@@ -33,7 +25,7 @@ describe('Preorder Routes - Preorder Management Workflow', () => {
                 id: 1
             };
             supertest(app).post('/preorders/complete')
-                .set(userAuthHeaders)
+                .set(testUtil.adminAuthHeaders)
                 .send(requestBody)
                 .expect(200, done);
         });
@@ -41,12 +33,12 @@ describe('Preorder Routes - Preorder Management Workflow', () => {
 
     describe('POST /preorders/cancel - cancel a preorder', () => {
         it('expect success HTTP 200 status', (done) => {
-            PreorderService.createPreorder(1, 1, userAuthHeaders.uid).then(() => {
+            PreorderService.createPreorder(1, 1, testUtil.userAuthHeaders.uid).then(() => {
                 const requestBody = {
                     id: 2
                 };
                 supertest(app).post('/preorders/cancel')
-                    .set(userAuthHeaders)
+                    .set(testUtil.adminAuthHeaders)
                     .send(requestBody)
                     .expect(200, done);
             });

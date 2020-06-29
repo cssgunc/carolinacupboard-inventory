@@ -2,11 +2,8 @@ const supertest = require('supertest');
 const app = require('../../app');
 const ItemService = require('../../services/item-service');
 const dbUtil = require('../../db/db-util.js');
+const testUtil = require('../util/test-util');
 require('dotenv').config();
-
-const userAuthHeaders = {
-    uid: "userOnyen"
-};
 
 describe('History Routes - GET pages', () => {
     describe('GET /get - create item and transaction, get user history', () => {
@@ -15,7 +12,7 @@ describe('History Routes - GET pages', () => {
             ItemService.createItem('chicken', '', '', 5).then(() => {
                 ItemService.removeItems(1, 1, 'userOnyen', process.env.DEFAULT_ADMIN).then(() => {
                     supertest(app).get('/history')
-                        .set(userAuthHeaders)
+                        .set(testUtil.userAuthHeaders)
                         .expect(200)
                         .end(async (err, res) => {
                             // Clear imported volunteers
