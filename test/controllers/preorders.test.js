@@ -9,11 +9,13 @@ require('dotenv').config();
 describe('Preorder Routes - Preorder Management Workflow', () => {
     describe('GET /preorders - get all preorders', () => {
         it('expect success HTTP 200 status', (done) => {
-            ItemService.createItem('chicken', '', '', 5).then(() => {
-                PreorderService.createPreorder(1, 1, testUtil.userAuthHeaders.uid).then(() => {
-                    supertest(app).get('/preorders')
-                    .set(testUtil.adminAuthHeaders)
-                    .expect(200, done);
+            ItemService.deleteAllItems().then(() => {
+                ItemService.createItem('chicken', '', '', 5).then(() => {
+                    PreorderService.createPreorder(1, 1, testUtil.userAuthHeaders.uid).then(() => {
+                        supertest(app).get('/preorders')
+                        .set(testUtil.adminAuthHeaders)
+                        .expect(200, done);
+                    });
                 });
             });
         });

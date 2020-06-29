@@ -218,9 +218,7 @@ router.get('/backup/items.csv', async function(req, res, next) {
         let data = '';
 
         let client = new Client({
-            database: process.env.DATABASE_URL,
-            user: process.env.DATABASE_USER,
-            password: process.env.DATABASE_PASSWORD
+            connectionString: process.env.DATABASE_URL,
         });
 
         if(process.env.NODE_ENV === 'prod') {
@@ -260,9 +258,7 @@ router.get('/backup/transactions.csv', async function(req, res, next) {
         let data = '';
 
         let client = new Client({
-            database: process.env.DATABASE_URL,
-            user: process.env.DATABASE_USER,
-            password: process.env.DATABASE_PASSWORD
+            connectionString: process.env.DATABASE_URL,
         });
 
         if(process.env.NODE_ENV === 'prod') {
@@ -302,9 +298,7 @@ router.get('/backup/volunteers.csv', async function(req, res, next) {
         let data = '';
 
         let client = new Client({
-            database: process.env.DATABASE_URL,
-            user: process.env.DATABASE_USER,
-            password: process.env.DATABASE_PASSWORD
+            connectionString: process.env.DATABASE_URL,
         });
 
         if(process.env.NODE_ENV === 'prod') {
