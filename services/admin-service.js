@@ -51,7 +51,7 @@ exports.getAllUsers = async function () {
 
 exports.changeUserType = async function(onyen, type) {
     try {
-        User.update(
+        await User.update(
             { type: type },
             { where: { onyen: onyen } }
         );

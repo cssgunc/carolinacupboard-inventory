@@ -48,7 +48,7 @@ router.post('/users/create', async function(req, res, next) {
     let userType = await authService.getUserType(onyen);
     // if(!onyen) res.sendStatus(403);
     if(userType !== "admin") res.sendStatus(403);
-    if(true) {
+    else {
         try {
             let newOnyen = req.body.onyen;
             let type = req.body.type;
@@ -94,7 +94,6 @@ router.post('/users/edit', async function(req, res, next) {
             await adminService.changeUserType(editOnyen, type);
 
         } catch(e) {
-            console.error(e);
             res.status(500).send("Internal server error");
             return;
         }
@@ -125,7 +124,6 @@ router.post('/users/delete', async function(req, res, next) {
             let delType =  await authService.getUserType(delOnyen);
             if(delType === "admin") {
                 let adminCount = await adminService.countAllAdmins();
-                console.log("Admin count: " + adminCount);
                 if(adminCount <= 2) {
                     res.status(500).send('Cannot delete the last admin');
                     return;
@@ -407,7 +405,6 @@ router.post('/database', async function(req, res, next) {
             await dbUtil.initAdmin(false);
             response.success = 1;
         } catch (e) {
-            console.error(e);
             response.success = 0; 
         }
         res.render('admin/admin-database.ejs', {response: response, onyen: onyen, userType: userType});
