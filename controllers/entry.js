@@ -9,25 +9,23 @@ let express = require("express"),
 router.get("/", async function(req, res) {
     let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
-    if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
+    if(userType !== "admin" && userType !== "volunteer") {
+        res.sendStatus(403);
+        return;
+    }
 
     let response = {};
     
     res.render("admin/entry.ejs", {response: response, onyen: onyen, userType: userType});
 });
-
-router.get("/quick", async function(req, res) {
-    let onyen = await authService.getOnyen(req);
-    let userType = await authService.getUserType(onyen);
-    if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
-
-    res.render("admin/entry-quick.ejs", {onyen: onyen, userType: userType});
-});
   
 router.get("/search", async function(req, res) {
     let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
-    if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
+    if(userType !== "admin" && userType !== "volunteer") {
+        res.sendStatus(403);
+        return;
+    }
 
     let response = {};
     if(req.query.prevOnyen) response.prevOnyen = req.query.prevOnyen;
@@ -44,7 +42,10 @@ router.post('/search', async function (req, res) {
     console.log("searchCTRL");
     let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
-    if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
+    if(userType !== "admin" && userType !== "volunteer") {
+        res.sendStatus(403);
+        return;
+    }
     
     let response = {};
     try {
@@ -71,7 +72,10 @@ router.post('/search', async function (req, res) {
 router.get("/manual", async function(req, res) {
     let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
-    if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
+    if(userType !== "admin" && userType !== "volunteer") {
+        res.sendStatus(403);
+        return;
+    }
     
     response = {};
     if(req.query.success) {
@@ -95,7 +99,10 @@ router.get("/manual", async function(req, res) {
 router.post('/manual', async function(req, res) {
     let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
-    if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
+    if(userType !== "admin" && userType !== "volunteer") {
+        res.sendStatus(403);
+        return;
+    }
 
     let response = {};
     try {
@@ -128,7 +135,10 @@ router.post('/manual', async function(req, res) {
 router.post("/manual/update", async function(req, res) {
     let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
-    if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
+    if(userType !== "admin" && userType !== "volunteer") {
+        res.sendStatus(403);
+        return;
+    }
     
     let id  = req.body.id;
     let quantity = req.body.quantity;
@@ -164,7 +174,10 @@ router.post("/manual/update", async function(req, res) {
 router.post("/add", async function(req, res) {
     let volunteer_onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(volunteer_onyen);
-    if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
+    if(userType !== "admin" && userType !== "volunteer") {
+        res.sendStatus(403);
+        return;
+    }
     
     let id  = req.body.id;
     let name = req.body.name;
@@ -186,7 +199,10 @@ router.post("/add", async function(req, res) {
 router.post("/remove", async function(req, res) {
     let volunteer_onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(volunteer_onyen);
-    if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
+    if(userType !== "admin" && userType !== "volunteer") {
+        res.sendStatus(403);
+        return;
+    }
 
     let id  = req.body.id;
     let name = req.body.name;
@@ -209,7 +225,10 @@ router.post("/remove", async function(req, res) {
 router.post("/found", async function(req, res) {
     let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
-    if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
+    if(userType !== "admin" && userType !== "volunteer") {
+        res.sendStatus(403);
+        return;
+    }
     
     let name = req.body.name;
     let barcode = req.body.barcode;
@@ -221,7 +240,10 @@ router.post("/found", async function(req, res) {
 router.get('/import', async function(req, res, next) {
     let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
-    if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
+    if(userType !== "admin" && userType !== "volunteer") {
+        res.sendStatus(403);
+        return;
+    }
     else {
         let response = {};
         res.render('admin/entry-import.ejs', {response: response, onyen: onyen, userType: userType});
@@ -231,7 +253,10 @@ router.get('/import', async function(req, res, next) {
 router.post('/import', async function(req, res, next) {
     let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
-    if(userType !== "admin" && userType !== "volunteer") res.sendStatus(403);
+    if(userType !== "admin" && userType !== "volunteer") {
+        res.sendStatus(403);
+        return;
+    }
     else {
         let response = {};
 
