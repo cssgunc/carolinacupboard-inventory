@@ -137,8 +137,6 @@ exports.removeItems = async function (itemId, quantity, onyen, volunteerId) {
 exports.createTransaction = async function (itemId, quantity, onyen, volunteerId) {
     let item = await this.getItem(itemId);
 
-    console.log(item.count, quantity);
-
     if(quantity < 0 && item.count < Math.abs(quantity)) {
         throw new BadRequestException("The amount requested is larger than the quantity in the system");
     }
@@ -182,7 +180,12 @@ exports.appendCsv = async function (data) {
                         let entry = output[i];
 
                         // Skip row headers
-                        if (entry.length === 7 && i === 0) continue;
+                        if ((entry.length === 7 && i === 0) ||
+                            (entry.length === 4 
+                            && entry[0] === 'name'
+                            && entry[1] === 'barcode'
+                            && entry[2] === 'count'
+                            && entry[3] === 'description')) continue;
 
                         let item = "";
 
@@ -215,11 +218,13 @@ exports.appendCsv = async function (data) {
                         }
 
                         // Execute query, on conflict with name/desc composite primary key, add existing and new counts
-                        sequelize.query(`INSERT INTO items (name, barcode, count, description, "createdAt", "updatedAt") 
-                        VALUES ${item}
-                        ON CONFLICT (name, description)
-                        DO UPDATE
-                        SET count = items.count + EXCLUDED.count`
+                        sequelize.query(
+                            `INSERT INTO items 
+                            (name, barcode, count, description, "createdAt", "updatedAt") 
+                            VALUES ${item}
+                            ON CONFLICT (name, description)
+                            DO UPDATE
+                            SET count = items.count + EXCLUDED.count`
                         ).then(function(result) {
                             resolve(result);
                         }).catch(function(e) {
@@ -227,8 +232,6 @@ exports.appendCsv = async function (data) {
                             reject(e);
                         });
                     }
-
-                    
                 }
             );
         } catch(e) {

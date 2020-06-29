@@ -278,8 +278,8 @@ router.post('/import', async function(req, res, next) {
             }
             else {
                 await itemService.appendCsv(file).then((result) => {
-                if(result) response.successMessage = "Success!";
-                else response.failMessage = "An error occurred with the CSV file. The error message can be found in the console.";
+                    if(result) response.successMessage = "Success!";
+                    else response.failMessage = "An error occurred with the CSV file. The error message can be found in the console.";
                 }).catch((e) => {
                     response.failMessage = "An error occurred with the CSV file. The error message can be found in the console.";
                 });

@@ -20,6 +20,11 @@ const MANUAL_UPDATE_SUCCESS = /Item successfully updated/;
 const MANUAL_UPDATE_ERROR = /Error updating item/;
 const SUCCESS_QUERY_PARAM = /success=1/;
 const ERROR_QUERY_PARAM = /success=0/;
+const CSV_SUCCESS_MESSAGE = /Success!/;
+const CSV_FAIL_MESSAGE = /An error occurred with the CSV file/;
+const CSV_FILETYPE_MESSAGE = /Please upload a valid CSV file/;
+const CSV_NOFILE_MESSAGE = /Please select a CSV file to upload/;
+
 // Checks response body for a match to the fail message on invalid CSV import
 let matchResponseText = (res, pattern) => {
     res.text.should.match(pattern);
@@ -233,6 +238,101 @@ describe('Entry Routes - Entry Workflow', () => {
                 .set(adminAuthHeaders)
                 .send(requestBody)
                 .expect(302, done);
+        });
+    });
+});
+
+describe('Entry Routes - Import CSV', () => {
+    describe('POST /entry/import - upload items CSV short format', () => {
+        it('expect success 200 status and success message in request body', (done) => {
+            const filePath = 'test/_files/testItemsShort.csv'
+            supertest(app).post('/entry/import')
+                .set(adminAuthHeaders)
+                .attach('file', filePath)
+                .expect((res) => matchResponseText(res, CSV_SUCCESS_MESSAGE)) // checks for success message in response html body
+                .expect(200)
+                .end(async (err, res) => {
+                    // Clear imported volunteers
+                    await dbUtil.dropTables(false);
+                    await dbUtil.createTables(false);
+                    await dbUtil.initAdmin(false);
+                    if (err) done(err);
+                    else done();
+                });
+        });
+    });
+
+    describe('POST /entry/import - upload items CSV long format', () => {
+        it('expect success 200 status and success message in request body', (done) => {
+            const filePath = 'test/_files/testItemsLong.csv'
+            supertest(app).post('/entry/import')
+                .set(adminAuthHeaders)
+                .attach('file', filePath)
+                .expect((res) => matchResponseText(res, CSV_SUCCESS_MESSAGE)) // checks for success message in response html body
+                .expect(200)
+                .end(async (err, res) => {
+                    // Clear imported volunteers
+                    await dbUtil.dropTables(false);
+                    await dbUtil.createTables(false);
+                    await dbUtil.initAdmin(false);
+                    if (err) done(err);
+                    else done();
+                });
+        });
+    });
+
+    describe('POST /entry/import - upload invalid items CSV', () => {
+        it('expect success 200 status and error message in request body', (done) => {
+            const filePath = 'test/_files/testItemsInvalid.csv'
+            supertest(app).post('/entry/import')
+                .set(adminAuthHeaders)
+                .attach('file', filePath)
+                .expect((res) => matchResponseText(res, CSV_FAIL_MESSAGE)) // checks for success message in response html body
+                .expect(200)
+                .end(async (err, res) => {
+                    // Clear imported volunteers
+                    await dbUtil.dropTables(false);
+                    await dbUtil.createTables(false);
+                    await dbUtil.initAdmin(false);
+                    if (err) done(err);
+                    else done();
+                });
+        });
+    });
+
+    describe('POST /entry/import - invalid filetype for CSV upload', () => {
+        it('expect success 200 status and filetype error message in request body', (done) => {
+            const filePath = 'test/_files/test.txt'
+            supertest(app).post('/entry/import')
+                .set(adminAuthHeaders)
+                .attach('file', filePath)
+                .expect((res) => matchResponseText(res, CSV_FILETYPE_MESSAGE)) // checks for success message in response html body
+                .expect(200)
+                .end(async (err, res) => {
+                    // Clear imported volunteers
+                    await dbUtil.dropTables(false);
+                    await dbUtil.createTables(false);
+                    await dbUtil.initAdmin(false);
+                    if (err) done(err);
+                    else done();
+                });
+        });
+    });
+
+    describe('POST /entry/import - no file attached for CSV upload', () => {
+        it('expect success 200 status and no file message in request body', (done) => {
+            supertest(app).post('/entry/import')
+                .set(adminAuthHeaders)
+                .expect((res) => matchResponseText(res, CSV_NOFILE_MESSAGE)) // checks for success message in response html body
+                .expect(200)
+                .end(async (err, res) => {
+                    // Clear imported volunteers
+                    await dbUtil.dropTables(false);
+                    await dbUtil.createTables(false);
+                    await dbUtil.initAdmin(false);
+                    if (err) done(err);
+                    else done();
+                });
         });
     });
 });
