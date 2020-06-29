@@ -13,12 +13,12 @@ exports.init_table = function (sequelize) {
             }
         },
 		type: {
-            type: Sequelize.STRING,
+            type: Sequelize.ENUM([
+                'volunteer', 
+                'admin'
+            ]),
             allowNull: false,
             require: true,
-            validate: {
-                isIn: [['volunteer', 'admin']]
-            },
         }
     });
 }
