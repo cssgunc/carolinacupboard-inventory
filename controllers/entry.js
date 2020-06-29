@@ -54,20 +54,10 @@ router.post('/search', async function (req, res) {
         let searchTerm = req.body.searchTerm === '' ? null : req.body.searchTerm;
         let barcode = req.body.barcode === '' ? null : req.body.barcode;
         response.items = await itemService.getItems(searchTerm, barcode);
-        if(barcode && (response.items === undefined || response.items.length == 0)) {
-            const url = "https://www.datakick.org/api/items/" + barcode;
-            console.log(url);
-            await request.get(url, (error, result, body) => {
-                if (!error && result && result.statusCode === 200) {
-                    response.scanResult = JSON.parse(body);
-                    console.log(response.scanResult);
-                }
-                res.render("admin/entry-search.ejs",{response: response, onyen: onyen, userType: userType});
-            });
-        }
-        else res.render("admin/entry-search.ejs",{response: response, onyen: onyen, userType: userType});
+        res.render("admin/entry-search.ejs",{response: response, onyen: onyen, userType: userType});
     } catch(e)  {
         response.error = exceptionHandler.retrieveException(e);
+        res.render("admin/entry-search.ejs",{response: response, onyen: onyen, userType: userType});
     }
 });
   
@@ -231,21 +221,6 @@ router.post("/remove", async function(req, res) {
            "prevOnyen": onyen
         }
     }));
-});
-
-router.post("/found", async function(req, res) {
-    let onyen = await authService.getOnyen(req);
-    let userType = await authService.getUserType(onyen);
-    if(userType !== "admin" && userType !== "volunteer") {
-        res.sendStatus(403);
-        return;
-    }
-    
-    let name = req.body.name;
-    let barcode = req.body.barcode;
-    let description = req.body.description;
-
-    res.redirect("/entry/manual/?name=" + name + "&barcode=" + barcode + "&desc=" + description);
 });
 
 router.get('/import', async function(req, res, next) {

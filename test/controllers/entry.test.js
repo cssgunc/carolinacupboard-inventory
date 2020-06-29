@@ -402,14 +402,6 @@ describe('Entry Routes - Not Authorized', () => {
         });
     });
 
-    describe('POST /entry/found - scanned item found in Datakick', () => {
-        it('expect HTTP 403 status', (done) => {
-            supertest(app).post('/entry/found')
-                .set(userAuthHeaders)
-                .expect(403, done);
-        });
-    });
-
     describe('GET /entry/import - items CSV import page', () => {
         it('expect HTTP 403 status', (done) => {
             supertest(app).get('/entry/import')
