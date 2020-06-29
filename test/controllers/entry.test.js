@@ -1,7 +1,7 @@
 const supertest = require('supertest');
-const should = require('should');
 const app = require('../../app');
 const dbUtil = require('../../db/db-util.js');
+const matchResponseText = require('../util/test-utils').matchResponseText;
 require('dotenv').config();
 
 const adminAuthHeaders = {
@@ -24,11 +24,6 @@ const CSV_SUCCESS_MESSAGE = /Success!/;
 const CSV_FAIL_MESSAGE = /An error occurred with the CSV file/;
 const CSV_FILETYPE_MESSAGE = /Please upload a valid CSV file/;
 const CSV_NOFILE_MESSAGE = /Please select a CSV file to upload/;
-
-// Checks response body for a match to the fail message on invalid CSV import
-let matchResponseText = (res, pattern) => {
-    res.text.should.match(pattern);
-}
 
 describe('Entry Routes - GET pages', () => {
     describe('GET /entry - entry main page', () => {

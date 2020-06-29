@@ -1,18 +1,13 @@
 const supertest = require('supertest');
-const should = require('should');
 const app = require('../../app');
 const dbUtil = require('../../db/db-util.js');
 const ItemService = require('../../services/item-service');
+const matchResponseText = require('../util/test-utils').matchResponseText;
 require('dotenv').config();
 
 const userAuthHeaders = {
     uid: "userOnyen"
 };
-
-// Checks response body for a match to the fail message on invalid CSV import
-let matchResponseText = (res, pattern) => {
-    res.text.should.match(pattern);
-}
 
 describe('Items Routes - Item Preorder Workflow', () => {
     describe('GET /items - items main page', () => {
