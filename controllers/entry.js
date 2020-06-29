@@ -6,6 +6,9 @@ let express = require("express"),
     authService = require("../services/authorization-service"),
     exceptionHandler = require("../exceptions/exception-handler");
 
+const MANUAL_UPDATE_SUCCESS_MESSAGE = "Item successfully updated!";
+const MANUAL_UPDATE_ERROR_MESSAGE = "Error updating item.";
+
 router.get("/", async function(req, res) {
     let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
@@ -39,7 +42,6 @@ router.get("/search", async function(req, res) {
 });
 
 router.post('/search', async function (req, res) {
-    console.log("searchCTRL");
     let onyen = await authService.getOnyen(req);
     let userType = await authService.getUserType(onyen);
     if(userType !== "admin" && userType !== "volunteer") {
@@ -55,8 +57,8 @@ router.post('/search', async function (req, res) {
         if(barcode && (response.items === undefined || response.items.length == 0)) {
             const url = "https://www.datakick.org/api/items/" + barcode;
             console.log(url);
-            await request.get(url, (error, response, body) => {
-                if (!error && response.statusCode === 200) {
+            await request.get(url, (error, result, body) => {
+                if (!error && result && result.statusCode === 200) {
                     response.scanResult = JSON.parse(body);
                     console.log(response.scanResult);
                 }
@@ -78,12 +80,15 @@ router.get("/manual", async function(req, res) {
     }
     
     response = {};
+
+    // this success field is passed back by a redirect from /entry/manual/update
+    // allows us to give the user feedback for their update
     if(req.query.success) {
         response.success = req.query.success;
         if (response.success === "0") {
-            response.infoMessage = "Error updating item."
+            response.infoMessage = MANUAL_UPDATE_ERROR_MESSAGE;
         } else if (response.success === "1") {
-            response.infoMessage = "Item successfully updated!"
+            response.infoMessage = MANUAL_UPDATE_SUCCESS_MESSAGE;
         }
     }
  
@@ -109,12 +114,11 @@ router.post('/manual', async function(req, res) {
         let name = req.body.name;
         let barcode = req.body.barcode === "" ? null : req.body.barcode;
         let description = req.body.description;
-        let count = req.body.count;
+        let count = parseInt(req.body.count);
 
         if(barcode || name) {
             // try searching by barcode, then by name and desc
             let item = await itemService.getItemByBarcodeThenNameDesc(barcode, name, description);
-            console.log(item);
 
             // if the item is found, we send back a message and the found item
             if (item) {
@@ -124,7 +128,14 @@ router.post('/manual', async function(req, res) {
             }
         }
 
-        await itemService.createItem(name, barcode, description, count);
+        let item = await itemService.createItem(name, barcode, description, count);
+        if (item) {
+            response.success = '1';
+            response.infoMessage = 'New item successfully created, id: ' + item.id;
+        } else {
+            response.success = '0';
+            response.infoMessage = 'Failed to create new item. Please try again later.'
+        }
     } catch(e)  {
         response.error = exceptionHandler.retrieveException(e);
     }
@@ -141,19 +152,25 @@ router.post("/manual/update", async function(req, res) {
     }
     
     let id  = req.body.id;
-    let quantity = req.body.quantity;
+    let quantity = parseInt(req.body.quantity);
 
-    console.log("Updating");
-    
     try {
         if(quantity > 0) {
             console.log("Add");
-            itemService.addItems(id, quantity, onyen, onyen);
+            await itemService.addItems(id, quantity, onyen, onyen);
         } else if (quantity < 0) {
             console.log("Remove");
-            itemService.removeItems(id, quantity, onyen, onyen);
+            await itemService.removeItems(id, -quantity, onyen, onyen);
         }
-        console.log("Updated");
+        else {
+            res.redirect(url.format({
+                pathname:"/entry/manual",
+                query: {
+                    "success": "0"
+                }
+            }));
+            return;
+        }
         res.redirect(url.format({
             pathname:"/entry/manual",
             query: {
@@ -161,11 +178,11 @@ router.post("/manual/update", async function(req, res) {
             }
         }));
     } catch(e) {
-        console.log(e);
+        console.error(e);
         res.redirect(url.format({
             pathname:"/entry/manual",
             query: {
-            "success": "0"
+                "success": "0"
             }
         }));
     }
@@ -180,19 +197,15 @@ router.post("/add", async function(req, res) {
     }
     
     let id  = req.body.id;
-    let name = req.body.name;
-    let barcode = req.body.barcode;
-    let quantity = req.body.quantity;
+    let onyen = req.body.onyen;
+    let quantity = parseInt(req.body.quantity);
 
     if(quantity > 0) {
-        itemService.addItems(id, quantity, volunteer_onyen, volunteer_onyen);
+        await itemService.addItems(id, quantity, volunteer_onyen, volunteer_onyen);
     }
 
     res.redirect(url.format({
-        pathname:"/entry/search",
-        query: {
-           "prevOnyen": onyen
-        }
+        pathname:"/entry/search"
     }));
 });
 
@@ -205,13 +218,11 @@ router.post("/remove", async function(req, res) {
     }
 
     let id  = req.body.id;
-    let name = req.body.name;
-    let barcode = req.body.barcode;
     let onyen = req.body.onyen;
-    let quantity = req.body.quantity;
+    let quantity = parseInt(req.body.quantity);
 
     if(quantity > 0) {
-        itemService.removeItems(id, quantity, onyen, volunteer_onyen);
+        await itemService.removeItems(id, quantity, onyen, volunteer_onyen);
     }
 
     res.redirect(url.format({
