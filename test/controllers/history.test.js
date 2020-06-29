@@ -1,6 +1,7 @@
 const supertest = require('supertest');
 const app = require('../../app');
 const ItemService = require('../../services/item-service');
+const dbUtil = require('../../db/db-util.js');
 require('dotenv').config();
 
 const userAuthHeaders = {
@@ -15,7 +16,15 @@ describe('History Routes - GET pages', () => {
                 ItemService.removeItems(1, 1, 'userOnyen', process.env.DEFAULT_ADMIN).then(() => {
                     supertest(app).get('/history')
                         .set(userAuthHeaders)
-                        .expect(200, done);
+                        .expect(200)
+                        .end(async (err, res) => {
+                            // Clear imported volunteers
+                            await dbUtil.dropTables(false);
+                            await dbUtil.createTables(false);
+                            await dbUtil.initAdmin(false);
+                            if (err) done(err);
+                            else done();
+                        });
                 });
             });                
         });
