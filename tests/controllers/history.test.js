@@ -1,11 +1,18 @@
-const supertest = require('supertest');
-const app = require('../../app');
-const ItemService = require('../../services/item-service');
-const dbUtil = require('../../db/db-util.js');
-const testUtil = require('../util/test-util');
+const supertest = require('supertest'),
+    app = require('../../app'),
+    ItemService = require('../../services/item-service'),
+    dbUtil = require('../../db/db-util.js'),
+    testUtil = require('../util/test-util');
+
 require('dotenv').config();
 
 describe('History Routes - GET pages', () => {
+    before(async () => {
+        await dbUtil.dropTables(false);
+        await dbUtil.createTables(false);
+        await dbUtil.initAdmin(false);
+    });
+    
     describe('GET /get - create item and transaction, get user history', () => {
         it('expect success HTTP 200 status', (done) => {
             // Create new item and transaction for user
@@ -23,7 +30,7 @@ describe('History Routes - GET pages', () => {
                             else done();
                         });
                 });
-            });                
+            });
         });
     });
 });

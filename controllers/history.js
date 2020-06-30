@@ -1,27 +1,25 @@
-let express = require("express"),
+const express = require("express"),
     router = express.Router(),
-    authService = require("../services/authorization-service"),
     tranService = require("../services/transaction-service"),
     itemService = require("../services/item-service"),
-    exceptionHandler = require("../exceptions/exception-handler");
+    exceptionHandler = require("../exceptions/exception-handler"),
+    userIsAuthenticated = require("./util/auth.js").userIsAuthenticated;
 
-router.get('/', async function(req, res, next) {
-    let onyen = await authService.getOnyen(req);
-    let userType = await authService.getUserType(onyen);
+router.get('/', [userIsAuthenticated], async function (req, res, next) {
     let response = {};
     try {
-        response.transactions = await tranService.getUserPurchaseHistory(onyen);
-        for(const t of response.transactions) {
+        response.transactions = await tranService.getUserPurchaseHistory(res.locals.onyen);
+        for (const t of response.transactions) {
             t['item_name'] = (await itemService.getItem(t['item_id']))['name'];
             t['count'] = -t['count'];
         }
 
     }
-    catch(e) {
+    catch (e) {
         response.error = e;
         throw e;
     }
-    res.render('user/history.ejs', {response: response, onyen: onyen, userType: userType    });
+    res.render('user/history.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 module.exports = router;

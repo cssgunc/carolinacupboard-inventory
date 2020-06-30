@@ -1,12 +1,17 @@
-const supertest = require('supertest');
-const app = require('../../app');
-const dbUtil = require('../../db/db-util.js');
-const ItemService = require('../../services/item-service');
-const testUtil = require('../util/test-util');
+const supertest = require('supertest'),
+    app = require('../../app'),
+    dbUtil = require('../../db/db-util.js'),
+    ItemService = require('../../services/item-service'),
+    testUtil = require('../util/test-util');
+
 require('dotenv').config();
 
-
 describe('Items Routes - Item Preorder Workflow', () => {
+    before(async () => {
+        await dbUtil.dropTables(false);
+        await dbUtil.createTables(false);
+        await dbUtil.initAdmin(false);
+    });
     describe('GET /items - items main page', () => {
         it('expect success HTTP 200 status', (done) => {
             supertest(app).get('/items')
@@ -42,15 +47,7 @@ describe('Items Routes - Item Preorder Workflow', () => {
             supertest(app).post('/items/add')
                 .set(testUtil.userAuthHeaders)
                 .send(requestBody)
-                .expect(200)
-                .end(async (err, res) => {
-                    // Clear imported volunteers
-                    await dbUtil.dropTables(false);
-                    await dbUtil.createTables(false);
-                    await dbUtil.initAdmin(false);
-                    if (err) done(err);
-                    else done();
-                });
+                .expect(200, done);
         });
     });
 });

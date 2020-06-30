@@ -1,21 +1,28 @@
-const supertest = require('supertest');
-const app = require('../../app');
-const dbUtil = require('../../db/db-util.js');
-const testUtil = require('../util/test-util');
+const supertest = require('supertest'),
+    app = require('../../app'),
+    dbUtil = require('../../db/db-util.js'),
+    testUtil = require('../util/test-util');
+
 require('dotenv').config();
 
-const MANUAL_CREATE_SUCCESS = /New item successfully created, id:/;
-const ITEM_FOUND_MESSAGE = /Item already found in database, do you want to update this entry/;
-const MANUAL_UPDATE_SUCCESS = /Item successfully updated/;
-const MANUAL_UPDATE_ERROR = /Error updating item/;
-const SUCCESS_QUERY_PARAM = /success=1/;
-const ERROR_QUERY_PARAM = /success=0/;
-const CSV_SUCCESS_MESSAGE = /Success!/;
-const CSV_FAIL_MESSAGE = /An error occurred with the CSV file/;
-const CSV_FILETYPE_MESSAGE = /Please upload a valid CSV file/;
-const CSV_NOFILE_MESSAGE = /Please select a CSV file to upload/;
+const MANUAL_CREATE_SUCCESS = /New item successfully created, id:/,
+    ITEM_FOUND_MESSAGE = /Item already found in database, do you want to update this entry/,
+    MANUAL_UPDATE_SUCCESS = /Item successfully updated/,
+    MANUAL_UPDATE_ERROR = /Error updating item/,
+    SUCCESS_QUERY_PARAM = /success=1/,
+    ERROR_QUERY_PARAM = /success=0/,
+    CSV_SUCCESS_MESSAGE = /Success!/,
+    CSV_FAIL_MESSAGE = /An error occurred with the CSV file/,
+    CSV_FILETYPE_MESSAGE = /Please upload a valid CSV file/,
+    CSV_NOFILE_MESSAGE = /Please select a CSV file to upload/;
 
 describe('Entry Routes - GET pages', () => {
+    before(async () => {
+        await dbUtil.dropTables(false);
+        await dbUtil.createTables(false);
+        await dbUtil.initAdmin(false);
+    });
+    
     describe('GET /entry - entry main page', () => {
         it('expect success HTTP 200 status', (done) => {
             supertest(app).get('/entry')
