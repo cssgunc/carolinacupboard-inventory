@@ -270,7 +270,7 @@ describe('Admin Routes - Volunteer Management Workflow', () => {
 describe('Admin Routes - Import CSV', () => {
     describe('POST /admin/users/import - upload volunteers CSV with headers', () => {
         it('expect success HTTP 200 status and success message in return body', (done) => {
-            const filePath = 'test/_files/testVolunteersHeaders.csv'
+            const filePath = 'tests/_files/testVolunteersHeaders.csv'
             supertest(app).post('/admin/users/import')
                 .set(testUtil.commonHeaders)
                 .set(testUtil.adminAuthHeaders)
@@ -290,7 +290,7 @@ describe('Admin Routes - Import CSV', () => {
 
     describe('POST /admin/users/import - upload volunteers CSV without headers', () => {
         it('expect success HTTP 200 status and success message in return body', (done) => {
-            const filePath = 'test/_files/testVolunteersNoHeaders.csv'
+            const filePath = 'tests/_files/testVolunteersNoHeaders.csv'
             supertest(app).post('/admin/users/import')
                 .set(testUtil.commonHeaders)
                 .set(testUtil.adminAuthHeaders)
@@ -310,7 +310,7 @@ describe('Admin Routes - Import CSV', () => {
 
     describe('POST /admin/users/import - upload invalid volunteers CSV', () => {
         it('expect success HTTP 200 status and faliure message in return body', (done) => {
-            const filePath = 'test/_files/testVolunteersInvalid.csv'
+            const filePath = 'tests/_files/testVolunteersInvalid.csv'
             supertest(app).post('/admin/users/import')
                 .set(testUtil.commonHeaders)
                 .set(testUtil.adminAuthHeaders)
@@ -330,7 +330,7 @@ describe('Admin Routes - Import CSV', () => {
 
     describe('POST /admin/users/import - upload non CSV file', () => {
         it('expect success HTTP 200 status and faliure message in return body', (done) => {
-            const filePath = 'test/_files/test.txt'
+            const filePath = 'tests/_files/test.txt'
             supertest(app).post('/admin/users/import')
                 .set(testUtil.commonHeaders)
                 .set(testUtil.adminAuthHeaders)
