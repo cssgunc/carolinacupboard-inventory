@@ -1,15 +1,22 @@
-const supertest = require('supertest');
-const app = require('../../app');
-const dbUtil = require('../../db/db-util.js');
-const testUtil = require('../util/test-util');
+const supertest = require('supertest'),
+    app = require('../../app'),
+    dbUtil = require('../../db/db-util.js'),
+    testUtil = require('../util/test-util');
+
 require('dotenv').config();
 
-const CSV_SUCCESS_MESSAGE = /Success!/;
-const CSV_FAIL_MESSAGE = /An error occurred with the CSV file/;
-const CSV_FILETYPE_MESSAGE = /Please upload a valid CSV file/;
-const CSV_NOFILE_MESSAGE = /Please select a CSV file to upload/;
+const CSV_SUCCESS_MESSAGE = /Success!/,
+    CSV_FAIL_MESSAGE = /An error occurred with the CSV file/,
+    CSV_FILETYPE_MESSAGE = /Please upload a valid CSV file/,
+    CSV_NOFILE_MESSAGE = /Please select a CSV file to upload/;
 
 describe('Admin Routes - GET pages', () => {
+    before(async () => {
+        await dbUtil.dropTables(false);
+        await dbUtil.createTables(false);
+        await dbUtil.initAdmin(false);
+    });
+    
     describe('GET /admin - admin main page', () => {
         it('expect success HTTP 200 status', (done) => {
             supertest(app).get('/admin')
@@ -133,7 +140,7 @@ describe('Admin Routes - Sanity Checks', () => {
                 .expect(500, done);
         });
     });
-    
+
     describe('POST /admin/users/delete - delete last remaining admin', () => {
         it('expect HTTP 500 status', (done) => {
             let requestBody = {
@@ -263,7 +270,7 @@ describe('Admin Routes - Volunteer Management Workflow', () => {
 describe('Admin Routes - Import CSV', () => {
     describe('POST /admin/users/import - upload volunteers CSV with headers', () => {
         it('expect success HTTP 200 status and success message in return body', (done) => {
-            const filePath = 'test/_files/testVolunteersHeaders.csv'
+            const filePath = 'tests/_files/testVolunteersHeaders.csv'
             supertest(app).post('/admin/users/import')
                 .set(testUtil.commonHeaders)
                 .set(testUtil.adminAuthHeaders)
@@ -283,7 +290,7 @@ describe('Admin Routes - Import CSV', () => {
 
     describe('POST /admin/users/import - upload volunteers CSV without headers', () => {
         it('expect success HTTP 200 status and success message in return body', (done) => {
-            const filePath = 'test/_files/testVolunteersNoHeaders.csv'
+            const filePath = 'tests/_files/testVolunteersNoHeaders.csv'
             supertest(app).post('/admin/users/import')
                 .set(testUtil.commonHeaders)
                 .set(testUtil.adminAuthHeaders)
@@ -303,7 +310,7 @@ describe('Admin Routes - Import CSV', () => {
 
     describe('POST /admin/users/import - upload invalid volunteers CSV', () => {
         it('expect success HTTP 200 status and faliure message in return body', (done) => {
-            const filePath = 'test/_files/testVolunteersInvalid.csv'
+            const filePath = 'tests/_files/testVolunteersInvalid.csv'
             supertest(app).post('/admin/users/import')
                 .set(testUtil.commonHeaders)
                 .set(testUtil.adminAuthHeaders)
@@ -323,7 +330,7 @@ describe('Admin Routes - Import CSV', () => {
 
     describe('POST /admin/users/import - upload non CSV file', () => {
         it('expect success HTTP 200 status and faliure message in return body', (done) => {
-            const filePath = 'test/_files/test.txt'
+            const filePath = 'tests/_files/test.txt'
             supertest(app).post('/admin/users/import')
                 .set(testUtil.commonHeaders)
                 .set(testUtil.adminAuthHeaders)

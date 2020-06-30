@@ -1,29 +1,26 @@
-const supertest = require('supertest');
-const app = require('../../app');
-const dbUtil = require('../../db/db-util.js');
-const ItemService = require('../../services/item-service');
-const PreorderService = require('../../services/preorder-service');
-const testUtil = require('../util/test-util');
+const supertest = require('supertest'),
+    app = require('../../app'),
+    dbUtil = require('../../db/db-util.js'),
+    ItemService = require('../../services/item-service'),
+    PreorderService = require('../../services/preorder-service'),
+    testUtil = require('../util/test-util');
+
 require('dotenv').config();
 
 describe('Preorder Routes - Preorder Management Workflow', () => {
+    before(async () => {
+        await dbUtil.dropTables(false);
+        await dbUtil.createTables(false);
+        await dbUtil.initAdmin(false);
+    });
     describe('GET /preorders - get all preorders', () => {
         it('expect success HTTP 200 status', (done) => {
-            dbUtil.dropTables().then(() => {
-            dbUtil.createTables().then(() => {
-            dbUtil.initAdmin().then(() => {
-                ItemService.createItem('chicken', '', '', 5).then(() => {
-                    PreorderService.createPreorder(1, 1, testUtil.userAuthHeaders.uid).then(() => {
-                        supertest(app).get('/preorders')
+            ItemService.createItem('chicken', '', '', 5).then(() => {
+                PreorderService.createPreorder(1, 1, testUtil.userAuthHeaders.uid).then(() => {
+                    supertest(app).get('/preorders')
                         .set(testUtil.adminAuthHeaders)
                         .expect(200, done);
-                    });
                 });
-            })
-            })
-            })
-            .catch((err) => {
-                done(err);
             });
         });
     });

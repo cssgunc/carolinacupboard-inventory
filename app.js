@@ -1,13 +1,13 @@
-let express     = require("express"),
-    app         = express(),
-    bodyParser  = require("body-parser"),
-    morgan      = require("morgan"),
-    config      = require("./config/server"),
-    ejs         = require("ejs"),
-    fileUpload  = require('express-fileupload'),
-    authService = require("./services/authorization-service");
+const express = require('express'),
+    app = express(),
+    bodyParser = require('body-parser'),
+    morgan = require('morgan'),
+    config = require('./config/server'),
+    ejs = require('ejs'),
+    fileUpload = require('express-fileupload'),
+    userIsAuthenticated = require('./controllers/util/auth').userIsAuthenticated;
 
-app.engine("html", ejs.renderFile);
+app.engine('html', ejs.renderFile);
 
 if (process.env.NODE_ENV === 'prod') {
     app.set('trust proxy', 1);
@@ -17,28 +17,24 @@ if (process.env.NODE_ENV === 'prod') {
  * Set up server parsing and logging
  */
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 if (config) {
     app.use(morgan(config.logging));
 }
 
 app.use(express.static('/views'));
-app.use("/static", express.static("static"));
+app.use('/static', express.static('static'));
 
 app.use(fileUpload());
 
 /*
  *Register routes on api 
  */
-app.use("/", require("./controllers/index"));
+app.use('/', require('./controllers/index'));
 
-app.get("/", async function(req, res) {
-    let onyen = await authService.getOnyen(req);
-    let userType = await authService.getUserType(onyen);
-    if(process.env.NODE_ENV === "dev")
-        console.log(req.headers);
-    res.render("index.ejs", {onyen: onyen, userType: userType});
+app.get('/', [userIsAuthenticated], async function (req, res) {
+    res.render('index.ejs', { onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 module.exports = app;
