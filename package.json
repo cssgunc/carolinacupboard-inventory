@@ -7,6 +7,8 @@
     "start": "npm run prod",
     "dev": "cross-env NODE_ENV=dev nodemon index.js",
     "prod": "cross-env NODE_ENV=prod node index.js",
+    "test": "cross-env nyc --reporter=lcov --reporter=text mocha --recursive --exit 'test'",
+    "test:clean": "npm run bootstrap && npm run test",
     "bootstrap": "cross-env NODE_ENV=dev sh ./scripts/bootstrap.sh"
   },
   "author": "",
@@ -21,11 +23,13 @@
     "express": "^4.16.4",
     "express-fileupload": "^1.1.6-alpha.6",
     "morgan": "^1.9.1",
+    "nyc": "^15.1.0",
     "pg": "^7.12.1",
     "pg-copy-streams": "^2.2.2",
     "pg-hstore": "^2.3.2",
     "request": "^2.88.0",
-    "sequelize": "^5.21.9"
+    "sequelize": "^5.21.9",
+    "supertest": "^4.0.2"
   },
   "optionalDependencies": {
     "fsevents": "^1.2.9"
@@ -34,6 +38,7 @@
     "chai": "^4.2.0",
     "chai-http": "^4.2.0",
     "mocha": "^8.0.1",
-    "nodemon": "^1.18.7"
+    "nodemon": "^1.18.7",
+    "should": "^13.2.3"
   }
 }

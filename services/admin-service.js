@@ -51,7 +51,7 @@ exports.getAllUsers = async function () {
 
 exports.changeUserType = async function(onyen, type) {
     try {
-        User.update(
+        await User.update(
             { type: type },
             { where: { onyen: onyen } }
         );
@@ -69,7 +69,6 @@ exports.changeUserType = async function(onyen, type) {
 
 // Takes a CSV file and appends it to the Users table
 exports.appendCsvUsers = async function (data) {
-    console.log(data);
     // wrapping everything in a Promise, so we can return exceptions from the csvParser callback
     // this will allow the caller to tell when the Users table creation fails
     return new Promise((resolve, reject) => {

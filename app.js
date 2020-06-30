@@ -18,8 +18,10 @@ if (process.env.NODE_ENV === 'prod') {
  */
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-   
-app.use(morgan(config.logging));
+
+if (config) {
+    app.use(morgan(config.logging));
+}
 
 app.use(express.static('/views'));
 app.use("/static", express.static("static"));

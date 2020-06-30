@@ -11,15 +11,15 @@ const   Item = require("../db/sequelize").items,
         fs = require('fs');
 
 exports.createItem = async function (name, barcode, description, count) {
-    if(barcode) barcode = barcode.padStart(14, '0');
     try {
         let item = await Item.build({
             name: name,
             barcode: barcode,
-            description: description,
+            description: description ? description : '',
             count: count
         });
         await item.save();
+        return item;
     } catch (e) {
         if (e instanceof Sequelize.ValidationError) {
             let errorMessage = "The following values are invalid:";
@@ -93,7 +93,7 @@ exports.getItemByBarcodeThenNameDesc = async function (barcode, name, desc) {
         if(!item) item = await getItemByNameDesc(name, desc);
         return item;
     } catch (e) {
-        throw new InternalErrorException("A problem occurred when retrieving the item by barcode, or name and description",e);
+        throw e;
     }
 }
 
@@ -107,7 +107,7 @@ let getItemByBarcode = async function (barcode) {
         let item = await Item.findOne({ where: { barcode: barcode }});
         return item;
     } catch (e) {
-        throw new InternalErrorException("A problem occurred when retrieving the item by barcode",e);
+        throw e;
     }
 }
 
@@ -117,10 +117,12 @@ Returns the item fround or null if nothing is found
 */
 let getItemByNameDesc = async function (name, desc) {
     try {
+        name = name ? name : '';
+        desc = desc ? desc : '';
         let item = await Item.findOne({ where: { name: name, description: desc }});
         return item;
     } catch (e) {
-        throw new InternalErrorException("A problem occurred when retrieving the item by name and description",e);
+        throw e;
     }
 }
 
@@ -134,7 +136,6 @@ exports.removeItems = async function (itemId, quantity, onyen, volunteerId) {
 
 exports.createTransaction = async function (itemId, quantity, onyen, volunteerId) {
     let item = await this.getItem(itemId);
-    // item.count += quantity;
 
     if(quantity < 0 && item.count < Math.abs(quantity)) {
         throw new BadRequestException("The amount requested is larger than the quantity in the system");
@@ -148,7 +149,6 @@ exports.createTransaction = async function (itemId, quantity, onyen, volunteerId
             volunteer_id: volunteerId,
             status: "complete"
         });
-        // await item.save();
         await transaction.save();
         item.increment('count', {by: quantity});
     } catch (e) {
@@ -180,7 +180,12 @@ exports.appendCsv = async function (data) {
                         let entry = output[i];
 
                         // Skip row headers
-                        if (entry.length === 7 && i === 0) continue;
+                        if ((entry.length === 7 && i === 0) ||
+                            (entry.length === 4 
+                            && entry[0] === 'name'
+                            && entry[1] === 'barcode'
+                            && entry[2] === 'count'
+                            && entry[3] === 'description')) continue;
 
                         let item = "";
 
@@ -213,11 +218,13 @@ exports.appendCsv = async function (data) {
                         }
 
                         // Execute query, on conflict with name/desc composite primary key, add existing and new counts
-                        sequelize.query(`INSERT INTO items (name, barcode, count, description, "createdAt", "updatedAt") 
-                        VALUES ${item}
-                        ON CONFLICT (name, description)
-                        DO UPDATE
-                        SET count = items.count + EXCLUDED.count`
+                        sequelize.query(
+                            `INSERT INTO items 
+                            (name, barcode, count, description, "createdAt", "updatedAt") 
+                            VALUES ${item}
+                            ON CONFLICT (name, description)
+                            DO UPDATE
+                            SET count = items.count + EXCLUDED.count`
                         ).then(function(result) {
                             resolve(result);
                         }).catch(function(e) {
@@ -225,8 +232,6 @@ exports.appendCsv = async function (data) {
                             reject(e);
                         });
                     }
-
-                    
                 }
             );
         } catch(e) {
