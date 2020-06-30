@@ -9,7 +9,9 @@ require('dotenv').config();
 describe('Preorder Routes - Preorder Management Workflow', () => {
     describe('GET /preorders - get all preorders', () => {
         it('expect success HTTP 200 status', (done) => {
-            ItemService.deleteAllItems().then(() => {
+            dbUtil.dropTables().then(() => {
+            dbUtil.createTables().then(() => {
+            dbUtil.initAdmin().then(() => {
                 ItemService.createItem('chicken', '', '', 5).then(() => {
                     PreorderService.createPreorder(1, 1, testUtil.userAuthHeaders.uid).then(() => {
                         supertest(app).get('/preorders')
@@ -17,6 +19,11 @@ describe('Preorder Routes - Preorder Management Workflow', () => {
                         .expect(200, done);
                     });
                 });
+            })
+            })
+            })
+            .catch((err) => {
+                done(err);
             });
         });
     });
@@ -43,7 +50,9 @@ describe('Preorder Routes - Preorder Management Workflow', () => {
                     .set(testUtil.adminAuthHeaders)
                     .send(requestBody)
                     .expect(200, done);
-            });
+            }).catch((err) => {
+                done(err);
+            });;
         });
     });
 });
