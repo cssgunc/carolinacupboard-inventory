@@ -22,12 +22,12 @@ exports.init_table = function (sequelize) {
         },
         pid: {
             type: Sequelize.STRING,
-            allowNull: false,
+            allowNull: true,
             unique: true,
         },
         email: {
             type: Sequelize.STRING,
-            allowNull: false,
+            allowNull: true,
             unique: true,
             validate: {
                 isEmail: true,

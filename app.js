@@ -6,6 +6,7 @@ const express = require('express'),
     ejs = require('ejs'),
     fileUpload = require('express-fileupload'),
     userIsAuthenticated = require('./controllers/util/auth').userIsAuthenticated,
+    userHasInfo = require('./controllers/util/auth').userHasInfo,
     userIsBasicUser = require('./controllers/util/auth').userIsBasicUser;
 
 app.engine('html', ejs.renderFile);
@@ -29,12 +30,15 @@ app.use('/static', express.static('static'));
 
 app.use(fileUpload());
 
+// Registers authentication middleware on all routes
+app.use([userIsAuthenticated, userHasInfo]);
+
 /*
  *Register routes on api 
  */
 app.use('/', require('./controllers/index'));
 
-app.get('/', [userIsAuthenticated, userIsBasicUser], async function (req, res) {
+app.get('/', [userIsBasicUser], async function (req, res) {
     res.render('index.ejs', { onyen: res.locals.onyen, userType: res.locals.userType });
 });
 

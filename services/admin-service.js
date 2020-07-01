@@ -1,20 +1,22 @@
-const   User = require("../db/sequelize").users,
-        Sequelize = require("sequelize"),
-        BadRequestException = require("../exceptions/bad-request-exception"),
-        InternalErrorException = require("../exceptions/internal-error-exception"),
-        CarolinaCupboardException = require("../exceptions/carolina-cupboard-exception"),
-        initAdmin = require("../db/db-util").initAdmin,
-        csvParser = require("csv-parse");
+const User = require("../db/sequelize").users,
+    Sequelize = require("sequelize"),
+    BadRequestException = require("../exceptions/bad-request-exception"),
+    InternalErrorException = require("../exceptions/internal-error-exception"),
+    CarolinaCupboardException = require("../exceptions/carolina-cupboard-exception"),
+    initAdmin = require("../db/db-util").initAdmin,
+    csvParser = require("csv-parse");
 
 
-exports.createUser = async function(onyen, type) {
+exports.createUser = async function (onyen, type, pid, email) {
     try {
-        if(await User.count({ where: {onyen : onyen } }) > 0) {
+        if (await User.count({ where: { onyen: onyen } }) > 0) {
             return;
         }
         let user = await User.build({
             onyen: onyen,
-            type: type
+            type: type,
+            pid: pid,
+            email: email
         });
         await user.save();
     } catch (e) {
@@ -25,18 +27,30 @@ exports.createUser = async function(onyen, type) {
             });
             throw new BadRequestException(errorMessage);
         }
-        throw new InternalErrorException("A problem occurred when saving the user",e);
+        throw new InternalErrorException("A problem occurred when saving the user", e);
     }
 }
 
 exports.countAllAdmins = async function () {
     try {
         let users = await User.count({
-            where: {type: "admin"}
+            where: { type: "admin" }
         });
         return users;
     } catch (e) {
-        throw new InternalErrorException("A problem occurred when retrieving users",e);
+        throw new InternalErrorException("A problem occurred when retrieving users", e);
+    }
+}
+
+exports.getUser = async function (onyen) {
+    try {
+        let user = await User.findOne({
+            where: { onyen: onyen }
+        }
+        );
+        return user;
+    } catch (e) {
+        throw new InternalErrorException("A problem occurred when retrieving user", e);
     }
 }
 
@@ -45,14 +59,18 @@ exports.getAllUsers = async function () {
         let users = await User.findAll();
         return users;
     } catch (e) {
-        throw new InternalErrorException("A problem occurred when retrieving all users",e);
+        throw new InternalErrorException("A problem occurred when retrieving all users", e);
     }
 }
 
-exports.changeUserType = async function(onyen, type) {
+exports.editUser = async function (onyen, type, pid, email) {
     try {
+        let newInfo = {};
+        if (type) newInfo.type = type;
+        if (pid) newInfo.pid = pid;
+        if (email) newInfo.email = email;
         await User.update(
-            { type: type },
+            newInfo,
             { where: { onyen: onyen } }
         );
     } catch (e) {
@@ -63,7 +81,7 @@ exports.changeUserType = async function(onyen, type) {
             });
             throw new BadRequestException(errorMessage);
         }
-        throw new InternalErrorException("A problem occurred when editting the user",e);
+        throw new InternalErrorException("A problem occurred when editting the user", e);
     }
 }
 
@@ -73,25 +91,29 @@ exports.appendCsvUsers = async function (data) {
     // this will allow the caller to tell when the Users table creation fails
     return new Promise((resolve, reject) => {
         try {
-            csvParser(data.data, 
+            csvParser(data.data,
                 {
-                    delimiter: ',', 
-                    endLine: '\n', 
-                    escapeChar: '"', 
+                    delimiter: ',',
+                    endLine: '\n',
+                    escapeChar: '"',
                     enclosedChar: '"'
-                }, 
-                function(err, output) {
+                },
+                function (err, output) {
                     if (err) {
                         throw new InternalErrorException("A problem occurred when parsing CSV data");
                     }
                     let newUsers = [];
-                    for(let i = 0; i < output.length; i++) {
+                    for (let i = 0; i < output.length; i++) {
                         let entry = output[i];
                         if (i === 0 && entry[0] === "onyen" && entry[1] === "type") continue; // skip optional headers
                         try {
                             let user = {
                                 onyen: entry[0],
-                                type: entry[1]
+                                type: entry[1],
+                                pid: entry[2],
+                                email: entry[3],
+                                firstItemDate: entry[4],
+                                numItemsReceived: entry[5]
                             }
                             newUsers.push(user);
                         } catch (e) {
@@ -102,51 +124,51 @@ exports.appendCsvUsers = async function (data) {
 
                     User.bulkCreate(newUsers,
                         {
-                            updateOnDuplicate: ["type"]
+                            ignoreDuplicates: true
                         }
-                    ).then(function(result) {
+                    ).then(function (result) {
                         resolve(result);
-                    }).catch(function(e) {
+                    }).catch(function (e) {
                         console.error(e);
                         reject(e);
                     });
                 }
             );
-        } catch(e) {
+        } catch (e) {
             console.error(e);
             reject(e);
         }
     });
 }
 
-exports.deleteUser = async function(onyen) {
-    if(onyen !== "PREORDER") {
+exports.deleteUser = async function (onyen) {
+    if (onyen !== "PREORDER") {
         try {
             User.destroy(
                 { where: { onyen: onyen } }
             );
         } catch (e) {
-            if(e instanceof CarolinaCupboardException) {
+            if (e instanceof CarolinaCupboardException) {
                 throw e;
             }
 
-            throw new InternalErrorException("A problem occurred when deleting the user",e);
+            throw new InternalErrorException("A problem occurred when deleting the user", e);
         }
     }
 }
 
-exports.deleteAllUsers = async function() {
+exports.deleteAllUsers = async function () {
     try {
         await User.destroy({
             where: {},
             truncate: false
         });
         initAdmin(false);
-    } catch(e) {
-        if(e instanceof CarolinaCupboardException) {
+    } catch (e) {
+        if (e instanceof CarolinaCupboardException) {
             throw e;
         }
-        
+
         throw e;
     }
 }

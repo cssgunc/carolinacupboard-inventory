@@ -18,9 +18,7 @@ const MANUAL_CREATE_SUCCESS = /New item successfully created, id:/,
 
 describe('Entry Routes - GET pages', () => {
     before(async () => {
-        await dbUtil.dropTables(false);
-        await dbUtil.createTables(false);
-        await dbUtil.initAdmin(false);
+        await dbUtil.preTestSetup(false);
     });
     
     describe('GET /entry - entry main page', () => {
@@ -245,9 +243,7 @@ describe('Entry Routes - Import CSV', () => {
                 .expect(200)
                 .end(async (err, res) => {
                     // Clear imported volunteers
-                    await dbUtil.dropTables(false);
-                    await dbUtil.createTables(false);
-                    await dbUtil.initAdmin(false);
+                    await dbUtil.preTestSetup(false);
                     if (err) done(err);
                     else done();
                 });
@@ -264,9 +260,7 @@ describe('Entry Routes - Import CSV', () => {
                 .expect(200)
                 .end(async (err, res) => {
                     // Clear imported volunteers
-                    await dbUtil.dropTables(false);
-                    await dbUtil.createTables(false);
-                    await dbUtil.initAdmin(false);
+                    await dbUtil.preTestSetup(false);
                     if (err) done(err);
                     else done();
                 });
@@ -283,9 +277,7 @@ describe('Entry Routes - Import CSV', () => {
                 .expect(200)
                 .end(async (err, res) => {
                     // Clear imported volunteers
-                    await dbUtil.dropTables(false);
-                    await dbUtil.createTables(false);
-                    await dbUtil.initAdmin(false);
+                    await dbUtil.preTestSetup(false);
                     if (err) done(err);
                     else done();
                 });
@@ -302,9 +294,7 @@ describe('Entry Routes - Import CSV', () => {
                 .expect(200)
                 .end(async (err, res) => {
                     // Clear imported volunteers
-                    await dbUtil.dropTables(false);
-                    await dbUtil.createTables(false);
-                    await dbUtil.initAdmin(false);
+                    await dbUtil.preTestSetup(false);
                     if (err) done(err);
                     else done();
                 });
@@ -319,9 +309,7 @@ describe('Entry Routes - Import CSV', () => {
                 .expect(200)
                 .end(async (err, res) => {
                     // Clear imported volunteers
-                    await dbUtil.dropTables(false);
-                    await dbUtil.createTables(false);
-                    await dbUtil.initAdmin(false);
+                    await dbUtil.preTestSetup(false);
                     if (err) done(err);
                     else done();
                 });

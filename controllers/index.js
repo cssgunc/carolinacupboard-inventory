@@ -1,11 +1,13 @@
 let express     = require("express"),
     router      = express.Router(),
+    account     = require("./account"),
     admin       = require("./admin"),
     entry       = require("./entry"),
     history     = require("./history"),
     item        = require("./items"),
     preorders   = require("./preorders");
-    
+
+router.use("/account", account);
 router.use("/admin", admin);
 router.use("/entry", entry);
 router.use("/history", history);

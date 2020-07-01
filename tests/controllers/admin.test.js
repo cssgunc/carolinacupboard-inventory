@@ -12,9 +12,7 @@ const CSV_SUCCESS_MESSAGE = /Success!/,
 
 describe('Admin Routes - GET pages', () => {
     before(async () => {
-        await dbUtil.dropTables(false);
-        await dbUtil.createTables(false);
-        await dbUtil.initAdmin(false);
+        await dbUtil.preTestSetup(false);
     });
     
     describe('GET /admin - admin main page', () => {
@@ -100,6 +98,10 @@ describe('Admin Routes - GET pages', () => {
 });
 
 describe('Admin Routes - Sanity Checks', () => {
+    before(async () => {
+        await dbUtil.preTestSetup(false);
+    });
+
     describe('POST /admin/users/edit - change PREORDER admin to volunteer', () => {
         it('expect HTTP 403 status', (done) => {
             let requestBody = {
@@ -156,11 +158,17 @@ describe('Admin Routes - Sanity Checks', () => {
 });
 
 describe('Admin Routes - Volunteer Management Workflow', () => {
+    before(async () => {
+        await dbUtil.preTestSetup(false);
+    });
+
     describe('POST /admin/users/create - create new admin', () => {
         it('expect success HTTP 302 status', (done) => {
             let requestBody = {
                 onyen: 'admin',
-                type: 'admin'
+                type: 'admin',
+                pid: 10,
+                email: "test@test.com"
             }
             supertest(app).post('/admin/users/create')
                 .set(testUtil.commonHeaders)
@@ -174,7 +182,9 @@ describe('Admin Routes - Volunteer Management Workflow', () => {
         it('expect success HTTP 302 status', (done) => {
             let requestBody = {
                 onyen: 'admin',
-                type: 'volunteer'
+                type: 'volunteer',
+                pid: 20,
+                email: "vol@test.com"
             };
             supertest(app).post('/admin/users/edit')
                 .set(testUtil.commonHeaders)
@@ -201,7 +211,9 @@ describe('Admin Routes - Volunteer Management Workflow', () => {
         it('expect success HTTP 302 status', (done) => {
             let requestBody = {
                 onyen: 'volunteer',
-                type: 'volunteer'
+                type: 'volunteer',
+                pid: 10,
+                email: "test@test.com"
             };
             supertest(app).post('/admin/users/create')
                 .set(testUtil.commonHeaders)
@@ -215,7 +227,9 @@ describe('Admin Routes - Volunteer Management Workflow', () => {
         it('expect success HTTP 302 status', (done) => {
             let requestBody = {
                 onyen: 'volunteer',
-                type: 'admin'
+                type: 'admin',
+                pid: 20,
+                email: "admin@test.com"
             };
             supertest(app).post('/admin/users/edit')
                 .set(testUtil.commonHeaders)
@@ -279,9 +293,7 @@ describe('Admin Routes - Import CSV', () => {
                 .expect((res) => testUtil.matchResponseText(res, CSV_SUCCESS_MESSAGE)) // checks for success message in response html body
                 .end(async (err, res) => {
                     // Clear imported volunteers
-                    await dbUtil.dropTables(false);
-                    await dbUtil.createTables(false);
-                    await dbUtil.initAdmin(false);
+                    await dbUtil.preTestSetup(false);
                     if (err) done(err);
                     else done();
                 });
@@ -299,9 +311,7 @@ describe('Admin Routes - Import CSV', () => {
                 .expect((res) => testUtil.matchResponseText(res, CSV_SUCCESS_MESSAGE)) // checks for success message in response html body
                 .end(async (err, res) => {
                     // Clear imported volunteers
-                    await dbUtil.dropTables(false);
-                    await dbUtil.createTables(false);
-                    await dbUtil.initAdmin(false);
+                    await dbUtil.preTestSetup(false);
                     if (err) done(err);
                     else done();
                 });
@@ -319,9 +329,7 @@ describe('Admin Routes - Import CSV', () => {
                 .expect((res) => testUtil.matchResponseText(res, CSV_FAIL_MESSAGE)) // checks for fail message in response html body
                 .end(async (err, res) => {
                     // Clear imported volunteers
-                    await dbUtil.dropTables(false);
-                    await dbUtil.createTables(false);
-                    await dbUtil.initAdmin(false);
+                    await dbUtil.preTestSetup(false);
                     if (err) done(err);
                     else done();
                 });
@@ -339,9 +347,7 @@ describe('Admin Routes - Import CSV', () => {
                 .expect((res) => testUtil.matchResponseText(res, CSV_FILETYPE_MESSAGE)) // checks for fail message in response html body
                 .end(async (err, res) => {
                     // Clear imported volunteers
-                    await dbUtil.dropTables(false);
-                    await dbUtil.createTables(false);
-                    await dbUtil.initAdmin(false);
+                    await dbUtil.preTestSetup(false);
                     if (err) done(err);
                     else done();
                 });
@@ -357,9 +363,7 @@ describe('Admin Routes - Import CSV', () => {
                 .expect((res) => testUtil.matchResponseText(res, CSV_NOFILE_MESSAGE)) // checks for fail message in response html body
                 .end(async (err, res) => {
                     // Clear imported volunteers
-                    await dbUtil.dropTables(false);
-                    await dbUtil.createTables(false);
-                    await dbUtil.initAdmin(false);
+                    await dbUtil.preTestSetup(false);
                     if (err) done(err);
                     else done();
                 });
@@ -368,6 +372,10 @@ describe('Admin Routes - Import CSV', () => {
 });
 
 describe('Admin Routes - Delete Tables', () => {
+    before(async () => {
+        await dbUtil.preTestSetup(false);
+    });
+
     describe('POST /admin/delete/items/all - delete all items', () => {
         it('expect success HTTP 200 status', (done) => {
             supertest(app).post('/admin/delete/items/all')
@@ -402,9 +410,7 @@ describe('Admin Routes - Delete Tables', () => {
                 .set(testUtil.adminAuthHeaders)
                 .expect(200)
                 .end(async (err, res) => {
-                    await dbUtil.dropTables(false);
-                    await dbUtil.createTables(false);
-                    await dbUtil.initAdmin(false);
+                    await dbUtil.preTestSetup(false);
                     if (err) done(err);
                     else done();
                 });
@@ -422,6 +428,10 @@ describe('Admin Routes - Delete Tables', () => {
 });
 
 describe('Admin Routes - Not Authorized', () => {
+    before(async () => {
+        await dbUtil.preTestSetup(false);
+    });
+    
     describe('GET /admin - admin main page', () => {
         it('expect HTTP 403 status', (done) => {
             supertest(app).get('/admin')

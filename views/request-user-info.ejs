@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("baselinks") -%>
+</head>
+<body>
+  <%- include("header") -%>
+  <main>
+    <div class="container">
+      <% if(response.error) { %>
+        <div class="alert alert-danger" role="alert">
+          <p><%= response.error %></p>
+        </div>
+      <% } %>
+      <div class="row">
+        <div class="col-sm-12">
+          <h1>Welcome to Carolina Cupboard!</h1>
+          <p>Before you enter, please fill out some information about yourself. As a student organization, we use this information to track our growth and progress.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <form action="/account/update" method="POST">
+            <div class="form-group">
+              <label for="email">Email Address:</label>
+              <input type="email" class="form-control" id="email" name="email">
+            </div>
+            <div class="form-group">
+              <label for="pid">PID:</label>
+              <input type="number" class="pid form-control" id="pid" name="pid">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+  <%- include("scripts") -%>
+</body>
+</html>

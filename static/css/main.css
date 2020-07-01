@@ -67,3 +67,13 @@ a:active, a:focus, a:hover {
 .navbar-toggler {
   border-color: white;
 } 
+
+input.pid::-webkit-outer-spin-button,
+input.pid::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number].pid {
+  -moz-appearance: textfield;
+}

@@ -29,10 +29,12 @@
                                 <% if (user.onyen !== "PREORDER") {%>
                                 <div class="btn-group" role="group">
                                     <button type="button" class="btn btn-primary" data-toggle="modal" 
-                                        data-target="#editModal" data-onyen="<%= user.onyen %>" data-type="<%= user.type %>">
+                                        data-target="#editModal" data-onyen="<%= user.onyen %>" data-type="<%= user.type %>"
+                                        data-pid="<%= user.pid %>" data-email="<%= user.email %>">
                                         Edit</button>
                                     <button type="button" class="btn btn-danger" data-toggle="modal" 
-                                        data-target="#deleteModal" data-onyen="<%= user.onyen %>" data-type="<%= user.type %>">
+                                        data-target="#deleteModal" data-onyen="<%= user.onyen %>" data-type="<%= user.type %>"
+                                        data-pid="<%= user.pid %>" data-email="<%= user.email %>">
                                         Delete</button>
                                 </div>
                                 <% } %>
@@ -81,6 +83,14 @@
                             <% }); %>
                         </select>
                     </div>
+                    <div class="form=group">
+                        <label for="createModalPid">PID</label>
+                        <input class="form-control pid" type="number" name="pid" id="createModalPid" placeholder="PID">
+                    </div>
+                    <div class="form=group">
+                        <label for="createModalEmail">Email Address</label>
+                        <input class="form-control email" type="email" name="email" id="createModalEmail" placeholder="Email Address">
+                    </div>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary" id="submitCreate">Save</button>
                 </form>
@@ -111,6 +121,14 @@
                             <% }); %>
                         </select>
                     </div>
+                    <div class="form=group">
+                        <label for="editModalPid">PID</label>
+                        <input class="form-control pid" type="number" name="pid" id="editModalPid" placeholder="PID">
+                    </div>
+                    <div class="form=group">
+                        <label for="editModalEmail">Email Address</label>
+                        <input class="form-control email" type="email" name="email" id="editModalEmail" placeholder="Email Address">
+                    </div>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary" id="submitEdit">Save</button>
                 </form>
@@ -136,6 +154,14 @@
                     <div class="form-group">
                         <label for="deleteModalType">User Type</label>
                         <input class="form-control" type="text" name="type" id="deleteModalType" placeholder="Type" readonly>
+                    </div>
+                    <div class="form=group">
+                        <label for="deleteModalPid">PID</label>
+                        <input class="form-control pid" type="number" name="pid" id="deleteModalPid" placeholder="PID" readonly>
+                    </div>
+                    <div class="form=group">
+                        <label for="deleteModalEmail">Email Address</label>
+                        <input class="form-control email" type="email" name="email" id="deleteModalEmail" placeholder="Email Address" readonly>
                     </div>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-danger" id="submitDelete">Delete</button>
