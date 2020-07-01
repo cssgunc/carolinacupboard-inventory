@@ -11,7 +11,6 @@ router.get('/', [userIsAuthenticated, userIsBasicUser], async function (req, res
     try {
         response.transactions = await tranService.getUserPurchaseHistory(res.locals.onyen);
         for (const t of response.transactions) {
-            t['item_name'] = (await itemService.getItem(t['item_id']))['name'];
             t['count'] = -t['count'];
         }
 
