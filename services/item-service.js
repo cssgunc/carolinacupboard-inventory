@@ -144,6 +144,7 @@ exports.createTransaction = async function (itemId, quantity, onyen, volunteerId
     try {
         let transaction = await Transaction.build({
             item_id: itemId,
+            item_name: item.get('name'),
             count: quantity,
             onyen: onyen,
             volunteer_id: volunteerId,

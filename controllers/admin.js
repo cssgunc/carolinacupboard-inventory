@@ -123,10 +123,6 @@ router.get('/history', [userIsAuthenticated, userIsAdmin], async function (req, 
     let response = {};
     try {
         response.transactions = await tranService.getAllTransactions();
-        // Transactions only specify the item id, so we have to search the Items table for the item name
-        for (const t of response.transactions) {
-            t['item_name'] = (await itemService.getItem(t['item_id']))['name'];
-        }
     }
     catch (e) {
         response.error = e;
