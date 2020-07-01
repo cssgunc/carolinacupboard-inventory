@@ -3,9 +3,10 @@ const express = require("express"),
     tranService = require("../services/transaction-service"),
     itemService = require("../services/item-service"),
     exceptionHandler = require("../exceptions/exception-handler"),
-    userIsAuthenticated = require("./util/auth.js").userIsAuthenticated;
+    userIsAuthenticated = require("./util/auth").userIsAuthenticated,
+    userIsBasicUser = require('./util/auth').userIsBasicUser;
 
-router.get('/', [userIsAuthenticated], async function (req, res, next) {
+router.get('/', [userIsAuthenticated, userIsBasicUser], async function (req, res, next) {
     let response = {};
     try {
         response.transactions = await tranService.getUserPurchaseHistory(res.locals.onyen);

@@ -5,7 +5,8 @@ const express = require('express'),
     config = require('./config/server'),
     ejs = require('ejs'),
     fileUpload = require('express-fileupload'),
-    userIsAuthenticated = require('./controllers/util/auth').userIsAuthenticated;
+    userIsAuthenticated = require('./controllers/util/auth').userIsAuthenticated,
+    userIsBasicUser = require('./controllers/util/auth').userIsBasicUser;
 
 app.engine('html', ejs.renderFile);
 
@@ -33,7 +34,7 @@ app.use(fileUpload());
  */
 app.use('/', require('./controllers/index'));
 
-app.get('/', [userIsAuthenticated], async function (req, res) {
+app.get('/', [userIsAuthenticated, userIsBasicUser], async function (req, res) {
     res.render('index.ejs', { onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
