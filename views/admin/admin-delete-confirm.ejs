@@ -15,7 +15,9 @@
       <a href="/admin/backup" type="button" class="btn btn-primary">Back to Backup & Delete page</a>
     <% } else {%>
       <div class="alert alert-danger" role="alert">
-        <p>Sorry, there was an error with your request. Please try again later or contact technical support.</p>
+        <p>Sorry, there was an error with your request.
+            <%= response.error %>
+            Please try again later or contact technical support.</p>
       </div>
       <a href="/admin/backup" type="button" class="btn btn-primary">Back to Backup & Delete page</a>
     <% } %>
