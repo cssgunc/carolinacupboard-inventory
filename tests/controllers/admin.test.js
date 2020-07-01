@@ -167,7 +167,7 @@ describe('Admin Routes - Volunteer Management Workflow', () => {
             let requestBody = {
                 onyen: 'admin',
                 type: 'admin',
-                pid: 10,
+                pid: '10',
                 email: "test@test.com"
             }
             supertest(app).post('/admin/users/create')
@@ -183,7 +183,7 @@ describe('Admin Routes - Volunteer Management Workflow', () => {
             let requestBody = {
                 onyen: 'admin',
                 type: 'volunteer',
-                pid: 20,
+                pid: '20',
                 email: "vol@test.com"
             };
             supertest(app).post('/admin/users/edit')
@@ -212,7 +212,7 @@ describe('Admin Routes - Volunteer Management Workflow', () => {
             let requestBody = {
                 onyen: 'volunteer',
                 type: 'volunteer',
-                pid: 10,
+                pid: '10',
                 email: "test@test.com"
             };
             supertest(app).post('/admin/users/create')
@@ -228,7 +228,7 @@ describe('Admin Routes - Volunteer Management Workflow', () => {
             let requestBody = {
                 onyen: 'volunteer',
                 type: 'admin',
-                pid: 20,
+                pid: '20',
                 email: "admin@test.com"
             };
             supertest(app).post('/admin/users/edit')
@@ -431,7 +431,7 @@ describe('Admin Routes - Not Authorized', () => {
     before(async () => {
         await dbUtil.preTestSetup(false);
     });
-    
+
     describe('GET /admin - admin main page', () => {
         it('expect HTTP 403 status', (done) => {
             supertest(app).get('/admin')

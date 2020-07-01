@@ -84,7 +84,7 @@ exports.upsertUser = async function (onyen, type, pid, email) {
             });
             throw new BadRequestException(errorMessage);
         }
-        throw new InternalErrorException("A problem occurred when editting the user", e);
+        throw new InternalErrorException("A problem occurred when updating user info", e);
     }
 }
 
@@ -109,7 +109,7 @@ exports.editUser = async function (onyen, type, pid, email) {
             });
             throw new BadRequestException(errorMessage);
         }
-        throw new InternalErrorException("A problem occurred when editting the user", e);
+        throw new InternalErrorException("A problem occurred when editing the user", e);
     }
 }
 
