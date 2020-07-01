@@ -31,7 +31,9 @@
                             <td><%= user.type %></td>
                             <td><%= user.pid %></td>
                             <td><%= user.email %></td>
-                            <td><%= user.firstItemDate.toLocaleString() %></td>
+                            <td><% if (user.firstItemDate) {%>
+                                <%= user.firstItemDate.toLocaleString() %>
+                                <% } %></td>
                             <td><%= user.numItemsReceived %></td>
                             <td class="text-right pr-1">
                                 <% if (user.onyen !== "PREORDER") {%>
