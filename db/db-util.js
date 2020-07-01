@@ -1,5 +1,5 @@
 const sequelize         = require("./sequelize");
-const adminService      = require("../services/admin-service");
+const userService      = require("../services/user-service");
 const testUtil          = require("../tests/util/test-util");
 
 // exit param is passed to determine whether or not to exit after running the function
@@ -27,16 +27,16 @@ async function createTables(exit) {
 }
 
 async function initAdmin(exit) {
-    await adminService.createUser("PREORDER", "admin", 0, "preorder@admin.com");
+    await userService.createUser("PREORDER", "admin", 0, "preorder@admin.com");
     if(process.env.DEFAULT_ADMIN) {
-        await adminService.createUser(process.env.DEFAULT_ADMIN, "admin", 1, "admin@admin.com");
+        await userService.createUser(process.env.DEFAULT_ADMIN, "admin", 1, "admin@admin.com");
     }
     if (exit) process.exit(0);
 }
 
 async function initTestUsers(exit) {
-    await adminService.createUser(testUtil.volunteerAuthHeaders.uid, "volunteer", 2, "volunteer@admin.com");
-    await adminService.createUser(testUtil.userAuthHeaders.uid, "user", 3, "user@admin.com");
+    await userService.createUser(testUtil.volunteerAuthHeaders.uid, "volunteer", 2, "volunteer@admin.com");
+    await userService.createUser(testUtil.userAuthHeaders.uid, "user", 3, "user@admin.com");
     if (exit) process.exit(0);
 }
 

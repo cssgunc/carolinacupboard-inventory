@@ -63,16 +63,44 @@ exports.getAllUsers = async function () {
     }
 }
 
+exports.upsertUser = async function (onyen, type, pid, email) {
+    try {
+        let newInfo = {
+            onyen: onyen,
+        };
+        newInfo.type = type ? type : 'user';
+        if (pid) newInfo.pid = pid;
+        if (email) newInfo.email = email;
+
+        let user = await User.upsert(newInfo, {
+            returning: true
+        });
+        return user;
+    } catch (e) {
+        if (e instanceof Sequelize.ValidationError) {
+            let errorMessage = "The following values are invalid:";
+            e.errors.forEach((error) => {
+                errorMessage += `\n${error.path}: ${error.message}`;
+            });
+            throw new BadRequestException(errorMessage);
+        }
+        throw new InternalErrorException("A problem occurred when editting the user", e);
+    }
+}
+
 exports.editUser = async function (onyen, type, pid, email) {
     try {
         let newInfo = {};
         if (type) newInfo.type = type;
         if (pid) newInfo.pid = pid;
         if (email) newInfo.email = email;
-        await User.update(
+
+        let user = await User.update(
             newInfo,
             { where: { onyen: onyen } }
         );
+
+        return user;
     } catch (e) {
         if (e instanceof Sequelize.ValidationError) {
             let errorMessage = "The following values are invalid:";

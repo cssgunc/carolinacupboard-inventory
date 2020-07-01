@@ -14,6 +14,12 @@ exports.init_table = function (sequelize) {
             allowNull: false,
             require: true
         },
+
+        item_name: {
+            type: Sequelize.STRING,
+            allowNull: true,
+            require: false
+        },
 		
 		count: {
             type: Sequelize.INTEGER,

@@ -1,5 +1,5 @@
 const authService = require("../../services/authorization-service"),
-    adminService = require("../../services/admin-service"),
+    userService = require("../../services/user-service"),
     exceptionHandler = require("../../exceptions/exception-handler");
 
 // Checks if the user is authenticated or not
@@ -16,7 +16,7 @@ exports.userIsAuthenticated = async (req, res, next) => {
 
 // Checks if the user has filled out their PID and email
 exports.userHasInfo = async (req, res, next) => {
-    let user = await adminService.getUser(res.locals.onyen);
+    let user = await userService.getUser(res.locals.onyen);
 
     // Allows requests to the /account routes because they are needed to update account info
     if (req.originalUrl === '/account/update') {

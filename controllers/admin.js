@@ -1,6 +1,6 @@
 const express = require("express"),
     router = express.Router(),
-    adminService = require("../services/admin-service"),
+    userService = require("../services/user-service"),
     authService = require("../services/authorization-service"),
     tranService = require("../services/transaction-service"),
     itemService = require("../services/item-service"),
@@ -25,7 +25,7 @@ router.get('/users', [userIsAdmin], async function (req, res, next) {
     let types = ["admin", "volunteer", "user", "disabled"];
 
     try {
-        response.users = await adminService.getAllUsers();
+        response.users = await userService.getAllUsers();
     } catch (e) {
         response.error = exceptionHandler.retrieveException(e);
     }
@@ -46,7 +46,7 @@ router.post('/users/create', [userIsAdmin], async function (req, res, next) {
             return;
         }
 
-        await adminService.createUser(newOnyen, type, pid, email);
+        await userService.createUser(newOnyen, type, pid, email);
     } catch (e) {
         res.status(500).send("Internal server error");
         return;
@@ -75,16 +75,16 @@ router.post('/users/edit', [userIsAdmin], async function (req, res, next) {
         // PREORDER and one other admin
         let currType = await authService.getUserType(editOnyen);
         if (currType === "admin" && req.body.type !== "admin") {
-            let adminCount = await adminService.countAllAdmins();
+            let adminCount = await userService.countAllAdmins();
             if (adminCount <= 2) {
                 res.status(500).send('Cannot remove the last admin');
                 return;
             }
         }
-        await adminService.editUser(editOnyen, type, pid, email);
+        await userService.editUser(editOnyen, type, pid, email);
 
     } catch (e) {
-        res.status(500).send("Internal server error");
+        res.status(500).send(exceptionHandler.retrieveException(e));
         return;
     }
 
@@ -107,13 +107,13 @@ router.post('/users/delete', [userIsAdmin], async function (req, res, next) {
         // PREORDER and one other admin
         let delType = await authService.getUserType(delOnyen);
         if (delType === "admin") {
-            let adminCount = await adminService.countAllAdmins();
+            let adminCount = await userService.countAllAdmins();
             if (adminCount <= 2) {
                 res.status(500).send('Cannot delete the last admin');
                 return;
             }
         }
-        await adminService.deleteUser(delOnyen);
+        await userService.deleteUser(delOnyen);
 
     } catch (e) {
         res.status(500).send("Internal server error");
@@ -149,7 +149,7 @@ router.post('/users/import', [userIsAdmin], async function (req, res, next) {
             response.failMessage = "Please upload a valid CSV file";
         }
         else {
-            await adminService.appendCsvUsers(file).then((result) => {
+            await userService.appendCsvUsers(file).then((result) => {
                 if (result) response.successMessage = "Success!";
                 else response.failMessage = "An error occurred with the CSV file. The error message can be found in the console.";
             }).catch((e) => {
@@ -317,7 +317,7 @@ router.post('/delete/transactions', [userIsAdmin], async function (req, res, nex
 router.post('/delete/users', [userIsAdmin], async function (req, res, next) {
     let response = { 'table': 'users' };
     try {
-        await adminService.deleteAllUsers();
+        await userService.deleteAllUsers();
         response.success = true;
     } catch (e) {
         if (e.name === "SequelizeForeignKeyConstraintError") {
