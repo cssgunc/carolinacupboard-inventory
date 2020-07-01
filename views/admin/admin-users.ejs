@@ -15,7 +15,11 @@
                     <thead>
                         <tr>
                             <th scope="col">ONYEN</th>
-                            <th scope="col">Volunteer Type</th>
+                            <th scope="col">User Type</th>
+                            <th scope="col">PID</th>
+                            <th scope="col">Email Address</th>
+                            <th scope="col">First Time Visited</th>
+                            <th scope="col"># Items Received</th>
                             <th scope="col" class="text-right"></th>
                         </tr>
                     </thead>
@@ -25,6 +29,10 @@
                         <tr>
                             <td><%= user.onyen %></td>
                             <td><%= user.type %></td>
+                            <td><%= user.pid %></td>
+                            <td><%= user.email %></td>
+                            <td><%= user.firstItemDate.toLocaleString() %></td>
+                            <td><%= user.numItemsReceived %></td>
                             <td class="text-right pr-1">
                                 <% if (user.onyen !== "PREORDER") {%>
                                 <div class="btn-group" role="group">

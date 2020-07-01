@@ -111,9 +111,7 @@ exports.appendCsvUsers = async function (data) {
                                 onyen: entry[0],
                                 type: entry[1],
                                 pid: entry[2],
-                                email: entry[3],
-                                firstItemDate: entry[4],
-                                numItemsReceived: entry[5]
+                                email: entry[3]
                             }
                             newUsers.push(user);
                         } catch (e) {
