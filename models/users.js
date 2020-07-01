@@ -5,21 +5,45 @@ exports.init_table = function (sequelize) {
         onyen: {
             type: Sequelize.STRING,
             allowNull: false,
-            require: true,
             unique: true,
-			primaryKey: true,
+            primaryKey: true,
             validate: {
                 isAlphanumeric: true
             }
         },
-		type: {
+        type: {
             type: Sequelize.ENUM([
-                'volunteer', 
                 'admin',
+                'volunteer',
+                'user',
                 'disabled'
             ]),
             allowNull: false,
-            require: true,
+        },
+        pid: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            unique: true,
+        },
+        email: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            unique: true,
+            validate: {
+                isEmail: true,
+            }
+        },
+        firstItemDate: {
+            type: Sequelize.DATE,
+            allowNull: true,
+        },
+        numItemsReceived: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+            defaultValue: 0,
+            validate: {
+                min: 0,
+            }
         }
     });
 }
