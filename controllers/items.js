@@ -3,10 +3,11 @@ const express = require("express"),
     itemService = require("../services/item-service"),
     preorderService = require("../services/preorder-service"),
     authService = require("../services/authorization-service")
-exceptionHandler = require("../exceptions/exception-handler"),
-    userIsAuthenticated = require("./util/auth.js").userIsAuthenticated;
+    exceptionHandler = require("../exceptions/exception-handler"),
+    userIsAuthenticated = require("./util/auth").userIsAuthenticated,
+    userIsBasicUser = require('./util/auth').userIsBasicUser;
 
-router.get('/', [userIsAuthenticated], async function (req, res, next) {
+router.get('/', [userIsAuthenticated, userIsBasicUser], async function (req, res, next) {
     let response = {};
     try {
         response.items = await itemService.getItems(null, null);
@@ -17,7 +18,7 @@ router.get('/', [userIsAuthenticated], async function (req, res, next) {
     res.render("user/view-items.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
-router.post('/add', [userIsAuthenticated], async function (req, res, next) {
+router.post('/add', [userIsAuthenticated, userIsBasicUser], async function (req, res, next) {
     let itemId = req.body.id;
     let itemName = req.body.name;
     let quantity = req.body.quantity;
