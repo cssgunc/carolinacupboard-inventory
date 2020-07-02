@@ -6,10 +6,8 @@ const   Item = require("../db/sequelize").items,
         BadRequestException = require("../exceptions/bad-request-exception"),
         InternalErrorException = require("../exceptions/internal-error-exception"),
         CarolinaCupboardException = require("../exceptions/carolina-cupboard-exception"),
-        csvParser = require("csv-parse"),
-        copyTo = require('pg-copy-streams').to,
-        {Client} = require('pg'),
-        fs = require('fs');
+        exceptionHandler = require("../exceptions/exception-handler"),
+        csvParser = require("csv-parse");
 
 exports.createItem = async function (name, barcode, description, count) {
     try {
@@ -131,26 +129,37 @@ let getItemByNameDesc = async function (name, desc) {
 Creates a new transaction to add a specified quantity of an item
 */
 exports.addItems = async function (itemId, quantity, onyen, volunteerId) {
-    await this.createTransaction(itemId, quantity, onyen, volunteerId);
+    try {
+        await this.createTransaction(itemId, quantity, onyen, volunteerId);
+    } catch (e) {
+        if (e instanceof InternalErrorException) throw exceptionHandler.retrieveException(e);
+        else throw e;
+    }
 }
 
 /*
 Creates a new transaction to remove a specified quantity of an item
 */
 exports.removeItems = async function (itemId, quantity, onyen, volunteerId) {
-    await this.createTransaction(itemId, -quantity, onyen, volunteerId);
-    let user = await userService.getUser(onyen);
+    try {
+        await this.createTransaction(itemId, -quantity, onyen, volunteerId);
+        let user = await userService.getUser(onyen);
 
-    // Update first item date
-    // Create new user if they don't exist
-    if (!user) {
-        await userService.createUser(onyen, 'user', null, null);
-        await userService.updatefirstItemDate(onyen, new Date());
-    }
-    else if (!user.get('firstItemDate')) {
-        // console.log(onyen);
-        // console.log(new Date());
-        await userService.updatefirstItemDate(onyen, new Date());
+        // Update first item date
+        // Create new user if they don't exist
+        if (!user) {
+            await userService.createUser(onyen, 'user', null, null);
+            await userService.updatefirstItemDate(onyen, new Date());
+        }
+        else if (!user.get('firstItemDate')) {
+            await userService.updatefirstItemDate(onyen, new Date());
+        }
+
+        // Update num items received
+        await userService.incrementItemsReceived(onyen, quantity);
+    } catch (e) {
+        if (e instanceof InternalErrorException) throw exceptionHandler.retrieveException(e);
+        else throw e;
     }
 }
 
@@ -173,8 +182,7 @@ exports.createTransaction = async function (itemId, quantity, onyen, volunteerId
         await transaction.save();
         item.increment('count', {by: quantity});
     } catch (e) {
-        throw e;
-        // throw new InternalErrorException("A problem occurred when adding the transaction",e);
+        throw new InternalErrorException("A problem occurred when adding the transaction",e);
     }
 }
 

@@ -137,6 +137,15 @@ exports.updatefirstItemDate = async function (onyen, date) {
     }
 }
 
+exports.incrementItemsReceived = async function (onyen, n) {
+    try {
+        let user = await this.getUser(onyen);
+        user.increment('numItemsReceived', { by: n });
+    } catch(e) {
+        throw new InternalErrorException("A problem occurred when incrementing user's number of items received", e);
+    }
+}
+
 // Takes a CSV file and appends it to the Users table
 exports.appendCsvUsers = async function (data) {
     // wrapping everything in a Promise, so we can return exceptions from the csvParser callback
