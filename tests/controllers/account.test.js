@@ -29,7 +29,7 @@ describe('Account Routes - User Info Update Workflow', () => {
     });
 
     describe('POST /account/update - update PID and email', () => {
-        it('expect success HTTP 302 status', (done) => {
+        it('expect success HTTP 200 status', (done) => {
             const requestBody = {
                 pid: '123',
                 email: 'user@user.com'
@@ -38,7 +38,7 @@ describe('Account Routes - User Info Update Workflow', () => {
                 .set(testUtil.commonHeaders)
                 .set(testUtil.userAuthHeaders)
                 .send(requestBody)
-                .expect(302, done);
+                .expect(200, done);
         });
     });
 
