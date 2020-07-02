@@ -1,10 +1,9 @@
 const express = require("express"),
-    request = require('request'),
     router = express.Router(),
     url = require('url'),
     itemService = require("../services/item-service"),
+    userService = require("../services/user-service"),
     exceptionHandler = require("../exceptions/exception-handler"),
-    userIsAuthenticated = require("./util/auth.js").userIsAuthenticated,
     userIsVolunteer = require("./util/auth.js").userIsVolunteer;
 
 const MANUAL_UPDATE_SUCCESS_MESSAGE = "Item successfully updated!";
@@ -150,6 +149,8 @@ router.post("/add", [userIsVolunteer], async function (req, res) {
 });
 
 router.post("/remove", [userIsVolunteer], async function (req, res) {
+    let response = {};
+
     let id = req.body.id;
     let onyen = req.body.onyen;
     let quantity = parseInt(req.body.quantity);
@@ -158,12 +159,54 @@ router.post("/remove", [userIsVolunteer], async function (req, res) {
         await itemService.removeItems(id, quantity, onyen, res.locals.onyen);
     }
 
+    let user = await userService.getUser(onyen);
+
+    if (!user) {
+        user = await userService.createUser(onyen, 'user', null, null);
+    }
+    if (!user.get('pid') || !user.get('email')) {
+        response.onyen = onyen;
+        response.pid = user.get('pid');
+        response.email = user.get('email');
+        res.render('admin/entry-update-info.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType })
+        return;
+    }
+
     res.redirect(url.format({
         pathname: "/entry/search",
         query: {
             "prevOnyen": res.locals.onyen
         }
     }));
+});
+
+router.post("/remove/update", [userIsVolunteer], async function (req, res) {
+    let response = {};
+
+    let onyen = req.body.onyen;
+    let pid = req.body.pid;
+    let email = req.body.email;
+    
+    if (!pid || !email) {
+        response.onyen = onyen;
+        response.pid = pid;
+        response.email = email;
+        response.error = "Please input both a PID and an email address."
+        res.render('admin/entry-update-info.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType })
+    } else {
+        try {
+            await userService.editUser(onyen, null, pid, email);
+        } catch (e) {
+            throw exceptionHandler.retrieveException(e);
+        }
+
+        res.redirect(url.format({
+            pathname: "/entry/search",
+            query: {
+                "prevOnyen": onyen
+            }
+        }));
+    }
 });
 
 router.get('/import', [userIsVolunteer], async function (req, res, next) {

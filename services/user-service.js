@@ -19,6 +19,7 @@ exports.createUser = async function (onyen, type, pid, email) {
             email: email
         });
         await user.save();
+        return user;
     } catch (e) {
         if (e instanceof Sequelize.ValidationError) {
             let errorMessage = "The following values are invalid:";

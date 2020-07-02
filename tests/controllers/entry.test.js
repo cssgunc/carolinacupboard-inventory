@@ -222,7 +222,7 @@ describe('Entry Routes - Entry Workflow', () => {
             let requestBody = {
                 id: 1,
                 count: 1,
-                onyen: 'onyen'
+                onyen: testUtil.userAuthHeaders.uid
             };
             supertest(app).post('/entry/remove')
                 .set(testUtil.adminAuthHeaders)
