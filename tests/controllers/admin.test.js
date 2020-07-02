@@ -78,9 +78,9 @@ describe('Admin Routes - GET pages', () => {
         });
     });
 
-    describe('GET /admin/backup/volunteers.csv - backup volunteers table', () => {
+    describe('GET /admin/backup/users.csv - backup users table', () => {
         it('expect success HTTP 200 status', (done) => {
-            supertest(app).get('/admin/backup/volunteers.csv')
+            supertest(app).get('/admin/backup/users.csv')
                 .set(testUtil.commonHeaders)
                 .set(testUtil.adminAuthHeaders)
                 .expect(200, done);
@@ -531,9 +531,9 @@ describe('Admin Routes - Not Authorized', () => {
         });
     });
 
-    describe('GET /admin/backup/volunteers.csv - backup volunteers table', () => {
+    describe('GET /admin/backup/users.csv - backup users table', () => {
         it('expect HTTP 403 status', (done) => {
-            supertest(app).get('/admin/backup/volunteers.csv')
+            supertest(app).get('/admin/backup/users.csv')
                 .set(testUtil.commonHeaders)
                 .set(testUtil.volunteerAuthHeaders)
                 .expect(403, done);

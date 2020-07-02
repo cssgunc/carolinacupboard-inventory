@@ -239,7 +239,7 @@ router.get('/backup/transactions.csv', [userIsAdmin], async function (req, res, 
 });
 
 // Downloads a CSV copy of the Users table
-router.get('/backup/volunteers.csv', [userIsAdmin], async function (req, res, next) {
+router.get('/backup/users.csv', [userIsAdmin], async function (req, res, next) {
     let data = '';
 
     let client = new Client({

@@ -23,9 +23,9 @@
         </form>
       </div>
       <div class="col-sm-12">
-        <form method="GET" action="/admin/backup/volunteers.csv">
+        <form method="GET" action="/admin/backup/users.csv">
           <div class="form-group">
-            <input class="btn btn-primary btn-lg" type="submit" value="Download Volunteers">
+            <input class="btn btn-primary btn-lg" type="submit" value="Download Users">
           </div>
         </form>
       </div>
@@ -52,7 +52,7 @@
     <div class="row">
       <div class="col-sm-12">
         <button type="button" class="btn btn-danger btn-lg" data-toggle="modal" 
-          data-target="#delUsersModal">Delete Volunteers</button>
+          data-target="#delUsersModal">Delete Users</button>
       </div>
     </div>
     <div class="row">
@@ -138,13 +138,13 @@
             </button>
           </div>
           <div class="modal-body">
-            <p><b>Please backup volunteers before you delete them.</b> Once deleted, they will not be recoverable.</p>
-            <p><b>You must delete all transactions before deleting volunteers, otherwise you will get an error.</b></p>
-            <p>Are you sure you want to delete all volunteers?</p>
+            <p><b>Please backup users before you delete them.</b> Once deleted, they will not be recoverable.</p>
+            <p><b>You must delete all transactions before deleting users, otherwise you will get an error.</b></p>
+            <p>Are you sure you want to delete all users?</p>
             <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Cancel</button>
             <form method="POST" action="/admin/delete/users">
               <div class="form-group">
-                <button class="btn btn-danger float-right" type="submit">Delete Volunteers</button>
+                <button class="btn btn-danger float-right" type="submit">Delete Users</button>
               </div>
             </form>
           </div>
