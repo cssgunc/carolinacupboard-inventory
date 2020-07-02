@@ -113,6 +113,30 @@ exports.editUser = async function (onyen, type, pid, email) {
     }
 }
 
+exports.updatefirstItemDate = async function (onyen, date) {
+    try {
+        let user = await User.update(
+            {
+                firstItemDate: date
+            },
+            {
+                where: { onyen: onyen }
+            }
+        );
+
+        return user;
+    } catch (e) {
+        if (e instanceof Sequelize.ValidationError) {
+            let errorMessage = "The following values are invalid:";
+            e.errors.forEach((error) => {
+                errorMessage += `\n${error.path}: ${error.message}`;
+            });
+            throw new BadRequestException(errorMessage);
+        }
+        throw new InternalErrorException("A problem occurred when updating user's first item date", e);
+    }
+}
+
 // Takes a CSV file and appends it to the Users table
 exports.appendCsvUsers = async function (data) {
     // wrapping everything in a Promise, so we can return exceptions from the csvParser callback

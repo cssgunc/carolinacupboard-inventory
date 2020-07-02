@@ -2,6 +2,7 @@ const   Item = require("../db/sequelize").items,
         Transaction = require("../db/sequelize").transactions,
         Sequelize = require("sequelize"),
         sequelize = require("../db/sequelize"),
+        userService = require("./user-service"),
         BadRequestException = require("../exceptions/bad-request-exception"),
         InternalErrorException = require("../exceptions/internal-error-exception"),
         CarolinaCupboardException = require("../exceptions/carolina-cupboard-exception"),
@@ -126,12 +127,31 @@ let getItemByNameDesc = async function (name, desc) {
     }
 }
 
+/*
+Creates a new transaction to add a specified quantity of an item
+*/
 exports.addItems = async function (itemId, quantity, onyen, volunteerId) {
     await this.createTransaction(itemId, quantity, onyen, volunteerId);
 }
 
+/*
+Creates a new transaction to remove a specified quantity of an item
+*/
 exports.removeItems = async function (itemId, quantity, onyen, volunteerId) {
     await this.createTransaction(itemId, -quantity, onyen, volunteerId);
+    let user = await userService.getUser(onyen);
+
+    // Update first item date
+    // Create new user if they don't exist
+    if (!user) {
+        await userService.createUser(onyen, 'user', null, null);
+        await userService.updatefirstItemDate(onyen, new Date());
+    }
+    else if (!user.get('firstItemDate')) {
+        // console.log(onyen);
+        // console.log(new Date());
+        await userService.updatefirstItemDate(onyen, new Date());
+    }
 }
 
 exports.createTransaction = async function (itemId, quantity, onyen, volunteerId) {
