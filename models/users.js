@@ -24,6 +24,7 @@ exports.init_table = function (sequelize) {
             type: Sequelize.STRING,
             allowNull: true,
             unique: true,
+            is: /^[0-9]{9}$/ // Validates to match a 9 digit PID
         },
         email: {
             type: Sequelize.STRING,

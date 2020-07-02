@@ -26,6 +26,7 @@ exports.userHasInfo = async (req, res, next) => {
     } 
     // New users are redirected to update info and users who are missing information are redirected to update info
     else if (!user || !user.get('pid') || !user.get('email')) {
+        res.locals.firstTime = true;
         res.redirect('/account/update');
     } 
     // All other users are forwarded to the next page
