@@ -9,19 +9,18 @@ require('dotenv').config();
 
 describe('Preorder Routes - Preorder Management Workflow', () => {
     before(async () => {
-        await dbUtil.dropTables(false);
-        await dbUtil.createTables(false);
-        await dbUtil.initAdmin(false);
+        await ItemService.deleteAllItems();
+        await dbUtil.preTestSetup(false);
+        const item = await ItemService.createItem('chicken', '', '', 5);
+        await PreorderService.createPreorder(item.get('id'), 1, testUtil.userAuthHeaders.uid);
+        await PreorderService.createPreorder(item.get('id'), 1, testUtil.userAuthHeaders.uid);
     });
+
     describe('GET /preorders - get all preorders', () => {
         it('expect success HTTP 200 status', (done) => {
-            ItemService.createItem('chicken', '', '', 5).then(() => {
-                PreorderService.createPreorder(1, 1, testUtil.userAuthHeaders.uid).then(() => {
-                    supertest(app).get('/preorders')
-                        .set(testUtil.adminAuthHeaders)
-                        .expect(200, done);
-                });
-            });
+            supertest(app).get('/preorders')
+                .set(testUtil.adminAuthHeaders)
+                .expect(200, done);
         });
     });
 
@@ -39,17 +38,13 @@ describe('Preorder Routes - Preorder Management Workflow', () => {
 
     describe('POST /preorders/cancel - cancel a preorder', () => {
         it('expect success HTTP 200 status', (done) => {
-            PreorderService.createPreorder(1, 1, testUtil.userAuthHeaders.uid).then(() => {
-                const requestBody = {
-                    id: 2
-                };
-                supertest(app).post('/preorders/cancel')
-                    .set(testUtil.adminAuthHeaders)
-                    .send(requestBody)
-                    .expect(200, done);
-            }).catch((err) => {
-                done(err);
-            });;
+            const requestBody = {
+                id: 2
+            };
+            supertest(app).post('/preorders/cancel')
+                .set(testUtil.adminAuthHeaders)
+                .send(requestBody)
+                .expect(200, done);
         });
     });
 });

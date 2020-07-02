@@ -23,3 +23,4 @@ exports.adminAuthHeaders = adminAuthHeaders;
 exports.volunteerAuthHeaders = volunteerAuthHeaders;
 exports.userAuthHeaders = userAuthHeaders;
 exports.matchResponseText = matchResponseText;
+exports.alertDanger = /alert-danger/;

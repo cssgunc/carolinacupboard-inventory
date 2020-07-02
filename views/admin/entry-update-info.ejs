@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("../baselinks") -%>
+</head>
+<body>
+  <%- include("../header") -%>
+  <main>
+    <div class="container">
+      <% if(response.success) { %>
+        <div class="alert alert-success" role="alert">
+          <p><%= response.success %></p>
+        </div>
+      <% } %>
+      <% if(response.error) { %>
+        <div class="alert alert-danger" role="alert">
+          <p><%= response.error %></p>
+        </div>
+      <% } %>
+      <div class="row">
+        <div class="col-sm-12">
+          <h1>Update User's Account Information</h1>
+          <p>It looks likes it's this visitor's first time at Carolina Cupboard! Please ask them to fill out the following information!</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <form action="/entry/remove/update" method="POST">
+            <div class="form-group">
+              <label for="pid">ONYEN:</label>
+              <input type="text" class="form-control" id="onyen" name="onyen" value="<%= response.onyen %>">
+            </div>
+            <div class="form-group">
+              <label for="pid">PID:</label>
+              <input type="number" class="pid form-control" id="pid" name="pid" value="<%= response.pid %>">
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address:</label>
+              <input type="email" class="form-control" id="email" name="email" value="<%= response.email %>">
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+  <%- include("../scripts") -%>
+</body>
+</html>

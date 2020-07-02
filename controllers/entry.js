@@ -1,21 +1,20 @@
 const express = require("express"),
-    request = require('request'),
     router = express.Router(),
     url = require('url'),
     itemService = require("../services/item-service"),
+    userService = require("../services/user-service"),
     exceptionHandler = require("../exceptions/exception-handler"),
-    userIsAuthenticated = require("./util/auth.js").userIsAuthenticated,
     userIsVolunteer = require("./util/auth.js").userIsVolunteer;
 
 const MANUAL_UPDATE_SUCCESS_MESSAGE = "Item successfully updated!";
 const MANUAL_UPDATE_ERROR_MESSAGE = "Error updating item.";
 
-router.get("/", [userIsAuthenticated, userIsVolunteer], async function (req, res) {
+router.get("/", [userIsVolunteer], async function (req, res) {
     let response = {};
     res.render("admin/entry.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
-router.get("/search", [userIsAuthenticated, userIsVolunteer], async function (req, res) {
+router.get("/search", [userIsVolunteer], async function (req, res) {
     let response = {};
     if (req.query.prevOnyen) response.prevOnyen = req.query.prevOnyen;
     try {
@@ -27,7 +26,7 @@ router.get("/search", [userIsAuthenticated, userIsVolunteer], async function (re
     res.render("admin/entry-search.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
-router.post('/search', [userIsAuthenticated, userIsVolunteer], async function (req, res) {
+router.post('/search', [userIsVolunteer], async function (req, res) {
     let response = {};
     try {
         let searchTerm = req.body.searchTerm === '' ? null : req.body.searchTerm;
@@ -40,7 +39,7 @@ router.post('/search', [userIsAuthenticated, userIsVolunteer], async function (r
     }
 });
 
-router.get("/manual", [userIsAuthenticated, userIsVolunteer], async function (req, res) {
+router.get("/manual", [userIsVolunteer], async function (req, res) {
     response = {};
 
     // this success field is passed back by a redirect from /entry/manual/update
@@ -63,7 +62,7 @@ router.get("/manual", [userIsAuthenticated, userIsVolunteer], async function (re
     res.render("admin/entry-manual.ejs", { response: response, foundItem: foundItem, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
-router.post('/manual', [userIsAuthenticated, userIsVolunteer], async function (req, res) {
+router.post('/manual', [userIsVolunteer], async function (req, res) {
     let response = {};
     try {
         let name = req.body.name;
@@ -98,7 +97,7 @@ router.post('/manual', [userIsAuthenticated, userIsVolunteer], async function (r
     res.render("admin/entry-manual.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
-router.post("/manual/update", [userIsAuthenticated, userIsVolunteer], async function (req, res) {
+router.post("/manual/update", [userIsVolunteer], async function (req, res) {
     let id = req.body.id;
     let quantity = parseInt(req.body.quantity);
 
@@ -136,7 +135,7 @@ router.post("/manual/update", [userIsAuthenticated, userIsVolunteer], async func
     }
 });
 
-router.post("/add", [userIsAuthenticated, userIsVolunteer], async function (req, res) {
+router.post("/add", [userIsVolunteer], async function (req, res) {
     let id = req.body.id;
     let quantity = parseInt(req.body.quantity);
 
@@ -149,13 +148,28 @@ router.post("/add", [userIsAuthenticated, userIsVolunteer], async function (req,
     }));
 });
 
-router.post("/remove", [userIsAuthenticated, userIsVolunteer], async function (req, res) {
+router.post("/remove", [userIsVolunteer], async function (req, res) {
+    let response = {};
+
     let id = req.body.id;
     let onyen = req.body.onyen;
     let quantity = parseInt(req.body.quantity);
 
     if (quantity > 0) {
         await itemService.removeItems(id, quantity, onyen, res.locals.onyen);
+    }
+
+    let user = await userService.getUser(onyen);
+
+    if (!user) {
+        user = await userService.createUser(onyen, 'user', null, null);
+    }
+    if (!user.get('pid') || !user.get('email')) {
+        response.onyen = onyen;
+        response.pid = user.get('pid');
+        response.email = user.get('email');
+        res.render('admin/entry-update-info.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType })
+        return;
     }
 
     res.redirect(url.format({
@@ -166,12 +180,41 @@ router.post("/remove", [userIsAuthenticated, userIsVolunteer], async function (r
     }));
 });
 
-router.get('/import', [userIsAuthenticated, userIsVolunteer], async function (req, res, next) {
+router.post("/remove/update", [userIsVolunteer], async function (req, res) {
+    let response = {};
+
+    let onyen = req.body.onyen;
+    let pid = req.body.pid;
+    let email = req.body.email;
+    
+    if (!pid || !email) {
+        response.onyen = onyen;
+        response.pid = pid;
+        response.email = email;
+        response.error = "Please input both a PID and an email address."
+        res.render('admin/entry-update-info.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType })
+    } else {
+        try {
+            await userService.editUser(onyen, null, pid, email);
+        } catch (e) {
+            throw exceptionHandler.retrieveException(e);
+        }
+
+        res.redirect(url.format({
+            pathname: "/entry/search",
+            query: {
+                "prevOnyen": onyen
+            }
+        }));
+    }
+});
+
+router.get('/import', [userIsVolunteer], async function (req, res, next) {
     let response = {};
     res.render('admin/entry-import.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
-router.post('/import', [userIsAuthenticated, userIsVolunteer], async function (req, res, next) {
+router.post('/import', [userIsVolunteer], async function (req, res, next) {
     let response = {};
 
     if (req.files != null) {

@@ -8,9 +8,7 @@ require('dotenv').config();
 
 describe('Items Routes - Item Preorder Workflow', () => {
     before(async () => {
-        await dbUtil.dropTables(false);
-        await dbUtil.createTables(false);
-        await dbUtil.initAdmin(false);
+        await dbUtil.preTestSetup(false);
     });
     describe('GET /items - items main page', () => {
         it('expect success HTTP 200 status', (done) => {

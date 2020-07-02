@@ -18,9 +18,7 @@ const MANUAL_CREATE_SUCCESS = /New item successfully created, id:/,
 
 describe('Entry Routes - GET pages', () => {
     before(async () => {
-        await dbUtil.dropTables(false);
-        await dbUtil.createTables(false);
-        await dbUtil.initAdmin(false);
+        await dbUtil.preTestSetup(false);
     });
     
     describe('GET /entry - entry main page', () => {
@@ -219,8 +217,22 @@ describe('Entry Routes - Entry Workflow', () => {
         });
     });
 
-    describe('POST /entry/remove - remove from search entry page', () => {
+    describe('POST /entry/remove - remove from search entry page, existing user', () => {
         it('expect success HTTP 302 status', (done) => {
+            let requestBody = {
+                id: 1,
+                count: 1,
+                onyen: testUtil.userAuthHeaders.uid
+            };
+            supertest(app).post('/entry/remove')
+                .set(testUtil.adminAuthHeaders)
+                .send(requestBody)
+                .expect(302, done);
+        });
+    });
+
+    describe('POST /entry/remove - remove from search entry page, new user', () => {
+        it('expect success HTTP 200 status', (done) => {
             let requestBody = {
                 id: 1,
                 count: 1,
@@ -229,7 +241,33 @@ describe('Entry Routes - Entry Workflow', () => {
             supertest(app).post('/entry/remove')
                 .set(testUtil.adminAuthHeaders)
                 .send(requestBody)
+                .expect(200, done);
+        });
+    });
+
+    describe('POST /entry/remove/update - volunteer update info for a new user', () => {
+        it('expect success HTTP 200 status', (done) => {
+            let requestBody = {
+                onyen: 'onyen',
+                pid: '999999999',
+                email: 'onyen@onyen.com'
+            };
+            supertest(app).post('/entry/remove/update')
+                .set(testUtil.adminAuthHeaders)
+                .send(requestBody)
                 .expect(302, done);
+        });
+    });
+
+    describe('POST /entry/remove/update - volunteer update info for a new user, missing pid and email', () => {
+        it('expect success HTTP 200 status', (done) => {
+            let requestBody = {
+                onyen: 'onyen',
+            };
+            supertest(app).post('/entry/remove/update')
+                .set(testUtil.adminAuthHeaders)
+                .send(requestBody)
+                .expect(200, done);
         });
     });
 });
@@ -245,9 +283,7 @@ describe('Entry Routes - Import CSV', () => {
                 .expect(200)
                 .end(async (err, res) => {
                     // Clear imported volunteers
-                    await dbUtil.dropTables(false);
-                    await dbUtil.createTables(false);
-                    await dbUtil.initAdmin(false);
+                    await dbUtil.preTestSetup(false);
                     if (err) done(err);
                     else done();
                 });
@@ -264,9 +300,7 @@ describe('Entry Routes - Import CSV', () => {
                 .expect(200)
                 .end(async (err, res) => {
                     // Clear imported volunteers
-                    await dbUtil.dropTables(false);
-                    await dbUtil.createTables(false);
-                    await dbUtil.initAdmin(false);
+                    await dbUtil.preTestSetup(false);
                     if (err) done(err);
                     else done();
                 });
@@ -283,9 +317,7 @@ describe('Entry Routes - Import CSV', () => {
                 .expect(200)
                 .end(async (err, res) => {
                     // Clear imported volunteers
-                    await dbUtil.dropTables(false);
-                    await dbUtil.createTables(false);
-                    await dbUtil.initAdmin(false);
+                    await dbUtil.preTestSetup(false);
                     if (err) done(err);
                     else done();
                 });
@@ -302,9 +334,7 @@ describe('Entry Routes - Import CSV', () => {
                 .expect(200)
                 .end(async (err, res) => {
                     // Clear imported volunteers
-                    await dbUtil.dropTables(false);
-                    await dbUtil.createTables(false);
-                    await dbUtil.initAdmin(false);
+                    await dbUtil.preTestSetup(false);
                     if (err) done(err);
                     else done();
                 });
@@ -319,9 +349,7 @@ describe('Entry Routes - Import CSV', () => {
                 .expect(200)
                 .end(async (err, res) => {
                     // Clear imported volunteers
-                    await dbUtil.dropTables(false);
-                    await dbUtil.createTables(false);
-                    await dbUtil.initAdmin(false);
+                    await dbUtil.preTestSetup(false);
                     if (err) done(err);
                     else done();
                 });

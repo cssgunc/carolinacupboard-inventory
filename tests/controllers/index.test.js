@@ -10,6 +10,7 @@ before(async () => {
     await dbUtil.dropTables(false);
     await dbUtil.createTables(false);
     await dbUtil.initAdmin(false);
+    await dbUtil.initTestUsers(false);
 });
 
 describe('Index routes - GET pages', () => {

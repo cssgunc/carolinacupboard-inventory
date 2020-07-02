@@ -1,6 +1,6 @@
 const express = require("express"),
     router = express.Router(),
-    adminService = require("../services/admin-service"),
+    userService = require("../services/user-service"),
     authService = require("../services/authorization-service"),
     tranService = require("../services/transaction-service"),
     itemService = require("../services/item-service"),
@@ -14,18 +14,18 @@ const express = require("express"),
 
 // The root of the admin route
 // Returns a view with links to other admin views
-router.get('/', [userIsAuthenticated, userIsAdmin], async function (req, res, next) {
+router.get('/', [userIsAdmin], async function (req, res, next) {
     res.render("admin/admin.ejs", { onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 // Returns the user view
 // Shows a list of all admins and volunteers
-router.get('/users', [userIsAuthenticated, userIsAdmin], async function (req, res, next) {
+router.get('/users', [userIsAdmin], async function (req, res, next) {
     let response = {};
-    let types = ["admin", "volunteer", "disabled"];
+    let types = ["admin", "volunteer", "user", "disabled"];
 
     try {
-        response.users = await adminService.getAllUsers();
+        response.users = await userService.getAllUsers();
     } catch (e) {
         response.error = exceptionHandler.retrieveException(e);
     }
@@ -34,17 +34,19 @@ router.get('/users', [userIsAuthenticated, userIsAdmin], async function (req, re
 
 // Creates a new user of given type
 // Redirects to /users
-router.post('/users/create', [userIsAuthenticated, userIsAdmin], async function (req, res, next) {
+router.post('/users/create', [userIsAdmin], async function (req, res, next) {
     try {
         let newOnyen = req.body.onyen;
         let type = req.body.type;
+        let pid = req.body.pid;
+        let email = req.body.email;
 
         if (type === "disabled") {
             res.status(400).send("Can't create a new user that's disabled");
             return;
         }
 
-        await adminService.createUser(newOnyen, type);
+        await userService.createUser(newOnyen, type, pid, email);
     } catch (e) {
         res.status(500).send("Internal server error");
         return;
@@ -55,7 +57,7 @@ router.post('/users/create', [userIsAuthenticated, userIsAdmin], async function 
 
 // Changes the given user to the specified type
 // Redirects to /users
-router.post('/users/edit', [userIsAuthenticated, userIsAdmin], async function (req, res, next) {
+router.post('/users/edit', [userIsAdmin], async function (req, res, next) {
     try {
         let editOnyen = req.body.onyen;
 
@@ -64,22 +66,25 @@ router.post('/users/edit', [userIsAuthenticated, userIsAdmin], async function (r
             res.status(403).send("Cannot edit PREORDER admin");
             return;
         }
+        
         let type = req.body.type;
+        let pid = req.body.pid;
+        let email = req.body.email;
 
         // Checks to make sure there are at least two admins in the system
         // PREORDER and one other admin
         let currType = await authService.getUserType(editOnyen);
         if (currType === "admin" && req.body.type !== "admin") {
-            let adminCount = await adminService.countAllAdmins();
+            let adminCount = await userService.countAllAdmins();
             if (adminCount <= 2) {
                 res.status(500).send('Cannot remove the last admin');
                 return;
             }
         }
-        await adminService.changeUserType(editOnyen, type);
+        await userService.editUser(editOnyen, type, pid, email);
 
     } catch (e) {
-        res.status(500).send("Internal server error");
+        res.status(500).send(exceptionHandler.retrieveException(e));
         return;
     }
 
@@ -88,7 +93,7 @@ router.post('/users/edit', [userIsAuthenticated, userIsAdmin], async function (r
 
 // Deletes the given user
 // Redirects to /users
-router.post('/users/delete', [userIsAuthenticated, userIsAdmin], async function (req, res, next) {
+router.post('/users/delete', [userIsAdmin], async function (req, res, next) {
     try {
         let delOnyen = req.body.onyen;
 
@@ -102,13 +107,13 @@ router.post('/users/delete', [userIsAuthenticated, userIsAdmin], async function 
         // PREORDER and one other admin
         let delType = await authService.getUserType(delOnyen);
         if (delType === "admin") {
-            let adminCount = await adminService.countAllAdmins();
+            let adminCount = await userService.countAllAdmins();
             if (adminCount <= 2) {
                 res.status(500).send('Cannot delete the last admin');
                 return;
             }
         }
-        await adminService.deleteUser(delOnyen);
+        await userService.deleteUser(delOnyen);
 
     } catch (e) {
         res.status(500).send("Internal server error");
@@ -119,7 +124,7 @@ router.post('/users/delete', [userIsAuthenticated, userIsAdmin], async function 
 });
 
 // Returns a view that shows a table of all transactions
-router.get('/history', [userIsAuthenticated, userIsAdmin], async function (req, res, next) {
+router.get('/history', [userIsAdmin], async function (req, res, next) {
     let response = {};
     try {
         response.transactions = await tranService.getAllTransactions();
@@ -130,12 +135,12 @@ router.get('/history', [userIsAuthenticated, userIsAdmin], async function (req, 
     res.render('admin/admin-transactions.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
-router.get('/users/import', [userIsAuthenticated, userIsAdmin], async function (req, res, next) {
+router.get('/users/import', [userIsAdmin], async function (req, res, next) {
     let response = {};
     res.render('admin/admin-users-import.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
-router.post('/users/import', [userIsAuthenticated, userIsAdmin], async function (req, res, next) {
+router.post('/users/import', [userIsAdmin], async function (req, res, next) {
     let response = {};
 
     if (req.files != null) {
@@ -144,7 +149,7 @@ router.post('/users/import', [userIsAuthenticated, userIsAdmin], async function 
             response.failMessage = "Please upload a valid CSV file";
         }
         else {
-            await adminService.appendCsvUsers(file).then((result) => {
+            await userService.appendCsvUsers(file).then((result) => {
                 if (result) response.successMessage = "Success!";
                 else response.failMessage = "An error occurred with the CSV file. The error message can be found in the console.";
             }).catch((e) => {
@@ -158,13 +163,13 @@ router.post('/users/import', [userIsAuthenticated, userIsAdmin], async function 
 });
 
 // Returns a view that lets the user backup or clear tables
-router.get('/backup', [userIsAuthenticated, userIsAdmin], async function (req, res, next) {
+router.get('/backup', [userIsAdmin], async function (req, res, next) {
     let response = {};
     res.render('admin/admin-backup.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 // Downloads a CSV copy of the Items table
-router.get('/backup/items.csv', [userIsAuthenticated, userIsAdmin], async function (req, res, next) {
+router.get('/backup/items.csv', [userIsAdmin], async function (req, res, next) {
     let data = '';
 
     let client = new Client({
@@ -199,7 +204,7 @@ router.get('/backup/items.csv', [userIsAuthenticated, userIsAdmin], async functi
 });
 
 // Downloads a CSV copy of the Transactions table
-router.get('/backup/transactions.csv', [userIsAuthenticated, userIsAdmin], async function (req, res, next) {
+router.get('/backup/transactions.csv', [userIsAdmin], async function (req, res, next) {
     let data = '';
 
     let client = new Client({
@@ -234,7 +239,7 @@ router.get('/backup/transactions.csv', [userIsAuthenticated, userIsAdmin], async
 });
 
 // Downloads a CSV copy of the Users table
-router.get('/backup/volunteers.csv', [userIsAuthenticated, userIsAdmin], async function (req, res, next) {
+router.get('/backup/users.csv', [userIsAdmin], async function (req, res, next) {
     let data = '';
 
     let client = new Client({
@@ -268,7 +273,7 @@ router.get('/backup/volunteers.csv', [userIsAuthenticated, userIsAdmin], async f
     });
 });
 
-router.post('/delete/items/all', [userIsAuthenticated, userIsAdmin], async function (req, res, next) {
+router.post('/delete/items/all', [userIsAdmin], async function (req, res, next) {
     let response = { 'table': 'items' };
     try {
         await itemService.deleteAllItems();
@@ -285,7 +290,7 @@ router.post('/delete/items/all', [userIsAuthenticated, userIsAdmin], async funct
     res.render('admin/admin-delete-confirm.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
-router.post('/delete/items/outofstock', [userIsAuthenticated, userIsAdmin], async function (req, res, next) {
+router.post('/delete/items/outofstock', [userIsAdmin], async function (req, res, next) {
     let response = { 'table': 'out of stock items' };
     try {
         await itemService.deleteOutOfStock();
@@ -302,17 +307,17 @@ router.post('/delete/items/outofstock', [userIsAuthenticated, userIsAdmin], asyn
     res.render('admin/admin-delete-confirm.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
-router.post('/delete/transactions', [userIsAuthenticated, userIsAdmin], async function (req, res, next) {
+router.post('/delete/transactions', [userIsAdmin], async function (req, res, next) {
     let response = { 'table': 'transactions' };
     await tranService.deleteAllTransactions();
     response.success = true;
     res.render('admin/admin-delete-confirm.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
-router.post('/delete/users', [userIsAuthenticated, userIsAdmin], async function (req, res, next) {
+router.post('/delete/users', [userIsAdmin], async function (req, res, next) {
     let response = { 'table': 'users' };
     try {
-        await adminService.deleteAllUsers();
+        await userService.deleteAllUsers();
         response.success = true;
     } catch (e) {
         if (e.name === "SequelizeForeignKeyConstraintError") {
@@ -327,12 +332,12 @@ router.post('/delete/users', [userIsAuthenticated, userIsAdmin], async function 
     res.render('admin/admin-delete-confirm.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
-router.get('/database', [userIsAuthenticated, userIsAdmin], async function (req, res, next) {
+router.get('/database', [userIsAdmin], async function (req, res, next) {
     let response = {};
     res.render('admin/admin-database.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
-router.post('/database', [userIsAuthenticated, userIsAdmin], async function (req, res, next) {
+router.post('/database', [userIsAdmin], async function (req, res, next) {
     let response = {};
     try {
         await dbUtil.dropTables(false);
