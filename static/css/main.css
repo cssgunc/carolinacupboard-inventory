@@ -77,3 +77,9 @@ input.pid::-webkit-inner-spin-button {
 input[type=number].pid {
   -moz-appearance: textfield;
 }
+
+td {
+  max-width: 100px;
+  word-wrap: break-word;
+  overflow: hidden;
+}

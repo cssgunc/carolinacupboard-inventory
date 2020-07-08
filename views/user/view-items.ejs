@@ -17,7 +17,7 @@
 						<th scope="col">Barcode</th>
 						<th scope="col">Count</th>
 						<th scope="col">Description</th>
-						<th scope="col"></th>
+						<th scope="col">Action</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -30,10 +30,12 @@
 							<td><%= item.count%></td>
 							<td><%= item.description%></td>
 							<td class="text-right pr-1">
-								<div class="btn-group" role="group">
-									<button type="button" class="btn btn-success" data-toggle="modal" 
-										data-target="#reserveModal" data-id="<%= item.id %>" data-name="<%= item.name %>" 
-										data-barcode="<%= item.barcode %>" data-count="<%= item.count %>">Reserve Item</button>
+								<div>
+									<input style="width: 50px" id="cartQuantity" type="number" min="1" max="<%= item.count %>" value=1>
+									<div class="btn-group" role="group">
+										<button type="button" class="btn btn-success" id="addToCartButton" data-id="<%= item.id %>" data-name="<%= item.name %>" 
+											data-barcode="<%= item.barcode %>" data-count="<%= item.count %>">Add to Cart</button>
+									</div>
 								</div>
 							</td>
 						</tr>
