@@ -175,7 +175,7 @@ router.post("/remove", [userIsVolunteer], async function (req, res) {
     res.redirect(url.format({
         pathname: "/entry/search",
         query: {
-            "prevOnyen": res.locals.onyen
+            "prevOnyen": onyen
         }
     }));
 });
@@ -207,6 +207,22 @@ router.post("/remove/update", [userIsVolunteer], async function (req, res) {
             }
         }));
     }
+});
+
+router.post("/edit", [userIsVolunteer], async function (req, res) {
+    let response = {};
+
+    let id = req.body.id;
+    let name = req.body.name;
+    let barcode = req.body.barcode === '' ? null : req.body.barcode;
+    let description = req.body.description; 
+    try {
+        let item = await itemService.editItem(id, name, barcode, description);
+        console.log(item);
+    } catch (e) {
+        response.error = exceptionHandler.retrieveException(e);
+    }
+    res.redirect("/entry/search");
 });
 
 router.get('/import', [userIsVolunteer], async function (req, res, next) {
