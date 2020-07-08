@@ -9,6 +9,7 @@ $(document).ready(function () {
         const name = button.data('name');
         const barcode = button.data('barcode');
         const count = button.data('count');
+        const description = button.data('description');
         const addToCartQuantity = $('#cartQuantity').val();
 
         if (addToCartQuantity <= count) {
@@ -17,7 +18,8 @@ $(document).ready(function () {
                 id: id,
                 name: name,
                 barcode: barcode,
-                quantity: addToCartQuantity
+                quantity: addToCartQuantity,
+                description: description
             }
 
             let cart = localStorage.getItem('cart');
@@ -34,11 +36,8 @@ $(document).ready(function () {
                 if (!found) cart.push(newItem);
                 localStorage.setItem('cart', JSON.stringify(cart));
             } else {
-                console.log('dont exists');
                 localStorage.setItem('cart', JSON.stringify([newItem]));
             }
-
-            console.log(localStorage.getItem('cart'));
         }
     });
 });
