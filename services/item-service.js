@@ -31,6 +31,30 @@ exports.createItem = async function (name, barcode, description, count) {
     }
 }
 
+exports.editItem = async function (id, name, barcode, description) {
+    try {
+        let item = await Item.update({
+            name: name,
+            barcode: barcode,
+            description: description ? description : '',
+        }, {
+            where: { id, id },
+            fields: ['name', 'barcode', 'description'],
+            returning: true
+        });
+        return item;
+    } catch (e) {
+        if (e instanceof Sequelize.ValidationError) {
+            let errorMessage = "The following values are invalid:";
+            e.errors.forEach((error) => {
+                errorMessage += `\n${error.path}: ${error.message}`;
+            });
+            throw new BadRequestException(errorMessage);
+        }
+        throw new InternalErrorException("A problem occurred when saving the item",e);
+    }
+}
+
 exports.getItems = async function (searchTerm, barcode) {
     if(barcode) barcode = barcode.padStart(14, '0');
     try {
