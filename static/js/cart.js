@@ -1,8 +1,10 @@
+const NUM_COLUMNS = 5;
+
 $(document).ready(function () {
     // Grab cart from local storage and parse as JSON
     let cart = JSON.parse(localStorage.getItem('cart'));
     if (cart) {
-        let tbody = document.getElementById('cart-tbody');
+        let tableBody = document.getElementById('cart-tbody');
 
         // Dynamically generate table rows from cart items
         cart.forEach((item, i) => {
@@ -77,7 +79,33 @@ $(document).ready(function () {
             actionCell.appendChild(deleteButton);
             row.appendChild(actionCell);
 
-            tbody.appendChild(row);
+            tableBody.appendChild(row);
         });
+    } else {
+        // Create a cell that notifying the user that the table is empty
+        let cartEmptyCell = document.createElement('td');
+        cartEmptyCell.className = 'text-center';
+        cartEmptyCell.setAttribute('colspan', NUM_COLUMNS);
+        cartEmptyCell.appendChild(document.createTextNode('Cart is Empty'));
+
+        // Clear table body and add empty table notification
+        let tableBody = document.getElementById('cart-tbody');
+        tableBody.appendChild(cartEmptyCell);
     }
+
+    // Clear cart and table when the clear cart confirmation is clicked
+    let clearCartButton = document.getElementById('clearCartButton');
+    clearCartButton.addEventListener('click', (event) => {
+        localStorage.removeItem('cart');
+        // Create a cell that notifying the user that the table is empty
+        let cartEmptyCell = document.createElement('td');
+        cartEmptyCell.className = 'text-center';
+        cartEmptyCell.setAttribute('colspan', NUM_COLUMNS);
+        cartEmptyCell.appendChild(document.createTextNode('Cart is Empty'));
+
+        // Clear table body and add empty table notification
+        let tableBody = document.getElementById('cart-tbody');
+        tableBody.innerHTML = '';
+        tableBody.appendChild(cartEmptyCell);
+    });
 });
