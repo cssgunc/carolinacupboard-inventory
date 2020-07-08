@@ -204,6 +204,21 @@ describe('Entry Routes - Entry Workflow', () => {
         });
     });
 
+    describe('POST /entry/edit - edit an item from the search page', () => {
+        it('expect success HTTP 302 status', (done) => {
+            let requestBody = {
+                id: 1,
+                name: 'newname',
+                barcode: '1234567890',
+                description: 'newname'
+            };
+            supertest(app).post('/entry/edit')
+                .set(testUtil.adminAuthHeaders)
+                .send(requestBody)
+                .expect(302, done);
+        });
+    });
+
     describe('POST /entry/add - add from search entry page', () => {
         it('expect success HTTP 302 status', (done) => {
             let requestBody = {
