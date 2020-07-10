@@ -22,8 +22,8 @@ Renders view with status of check out procedure
 router.post('/', [userIsBasicUser], function(req, res, next) {
     let response = {};
     let cart = JSON.parse(req.body.cart);
-
-    preorderService.createPreorder(res.locals.onyen, cart);
+    // console.log(cart);
+    // preorderService.createPreorder(res.locals.onyen, cart);
 
     res.send(JSON.stringify(cart));
     //    res.render('user/cart.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType })

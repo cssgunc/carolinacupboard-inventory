@@ -12,8 +12,8 @@ describe('Preorder Routes - Preorder Management Workflow', () => {
         await ItemService.deleteAllItems();
         await dbUtil.preTestSetup(false);
         const item = await ItemService.createItem('chicken', '', '', 5);
-        await PreorderService.createPreorder(item.get('id'), 1, testUtil.userAuthHeaders.uid);
-        await PreorderService.createPreorder(item.get('id'), 1, testUtil.userAuthHeaders.uid);
+        await PreorderService.createPreorder([{ id: item.get('id'), quantity: 1 }], testUtil.userAuthHeaders.uid);
+        await PreorderService.createPreorder([{ id: item.get('id'), quantity: 1 }], testUtil.userAuthHeaders.uid);
     });
 
     describe('GET /preorders - get all preorders', () => {

@@ -1,4 +1,6 @@
-const   Item = require("../db/sequelize").items,
+const   { v4: uuidv4 } = require("uuid"),
+        Item = require("../db/sequelize").items,
+        Order = require("../db/sequelize").orders,
         Transaction = require("../db/sequelize").transactions,
         Sequelize = require("sequelize"),
         sequelize = require("../db/sequelize"),
@@ -195,11 +197,14 @@ exports.createTransaction = async function (itemId, quantity, onyen, volunteerId
     }
 
     try {
+        const newOrderId = uuidv4();
+        Order.create({ id: newOrderId })
         let transaction = await Transaction.build({
             item_id: itemId,
             item_name: item.get('name'),
             count: quantity,
             onyen: onyen,
+            order_id: newOrderId,
             volunteer_id: volunteerId,
             status: "complete"
         });

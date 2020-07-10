@@ -6,14 +6,14 @@ const { v4: uuidv4 } = require("uuid"),
     InternalErrorException = require("../exceptions/internal-error-exception"),
     CarolinaCupboardException = require("../exceptions/carolina-cupboard-exception");
 
-exports.createPreorder = async function (onyen, cart) {
+exports.createPreorder = async function (cart, onyen) {
     let processQueue = {};
     let completedTransactions = [];
 
     const newOrderId = uuidv4();
     await Order.create({ id: newOrderId });
 
-    // console.log(cart[0]);
+    console.log(cart);
 
     // Adds item to process queue, combines duplicate items
     cart.forEach((item) => {
