@@ -198,7 +198,7 @@ exports.createTransaction = async function (itemId, quantity, onyen, volunteerId
 
     try {
         const newOrderId = uuidv4();
-        Order.create({ id: newOrderId })
+        await Order.create({ id: newOrderId })
         let transaction = await Transaction.build({
             item_id: itemId,
             item_name: item.get('name'),
