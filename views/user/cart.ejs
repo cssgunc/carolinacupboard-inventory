@@ -30,27 +30,6 @@
             </tr>
           </thead>
           <tbody id="cart-tbody">
-            <% if (response && response.items) {%>
-            <% response.items.forEach((item) => {%>
-              <% if (item.count > 0) {%>
-              <tr>
-                <th scope="row"><%= item.name%></th>
-                <td><%= item.barcode%></td>
-                <td><%= item.count%></td>
-                <td><%= item.description%></td>
-                <td class="text-right pr-1">
-                  <div>
-                    <input style="width: 50px" id="cartQuantity" type="number" min="1" max="<%= item.count %>" value=1>
-                    <div class="btn-group" role="group">
-                      <button type="button" class="btn btn-success" id="addToCartButton" data-id="<%= item.id %>" data-name="<%= item.name %>" 
-                        data-barcode="<%= item.barcode %>" data-count="<%= item.count %>">Add to Cart</button>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <% } %>
-            <% }); %>
-            <% } %>
           </tbody>
         </table>
       </div>
@@ -59,7 +38,7 @@
           <button type="button" class="btn btn-danger float-left" data-toggle="modal" data-target="#clearCartModal">Clear Cart</button>
         </div>
         <div class="col-sm-6">
-            <button type="button" class="btn btn-primary float-right">Check Out</button>
+            <button type="button" class="btn btn-primary float-right" id='checkoutButton'>Check Out</button>
         </div>
       </div>
     </div>
@@ -75,7 +54,7 @@
           <div class="modal-body">
             <p>Are you sure you want to clear your cart?</p>
             <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Cancel</button>
-            <button class="btn btn-danger float-right" id="clearCartButton" data-dismiss="modal">Clear</button>
+            <button class="btn btn-danger float-right" id="clearCartButton" data-dismiss="modal">Clear Cart</button>
           </div>
         </div>
       </div>

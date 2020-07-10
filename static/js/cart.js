@@ -108,4 +108,19 @@ $(document).ready(function () {
         tableBody.innerHTML = '';
         tableBody.appendChild(cartEmptyCell);
     });
+
+    let checkoutButton = document.getElementById('checkoutButton');
+    checkoutButton.addEventListener('click', (event) => {
+        fetch('/cart', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(localStorage)
+        })
+        .then((response) => {
+            console.log(response);
+        });
+    });
 });

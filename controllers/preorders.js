@@ -31,9 +31,9 @@ router.post('/cancel', [userIsVolunteer], async function (req, res, next) {
     let id = req.body.id;
     let count = req.body.count;
 
-    await preorderService.cancelPreorder(id, res.locals.onyen, count);
+    await preorderService.cancelPreorder(id, res.locals.onyen);
 
-    response.success = true;;
+    response.success = true;
 
     res.render('admin/preorders-result.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });

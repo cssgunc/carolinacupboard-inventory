@@ -8,6 +8,11 @@ exports.init_table = function (sequelize) {
             require: true,
             primaryKey: true
         },
+
+        order_id: {
+            type: Sequelize.UUID,
+            allowNull: false
+        },
 		
         item_id: {
             type: Sequelize.INTEGER,
@@ -37,11 +42,13 @@ exports.init_table = function (sequelize) {
                 isAlphanumeric: true
             }
         },
+
 		volunteer_id: {
             type: Sequelize.STRING,
             allowNull: false,
             require: true
         },
+
 		status: {
             type: Sequelize.STRING,
             allowNull: false,
