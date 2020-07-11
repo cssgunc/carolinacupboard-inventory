@@ -7,12 +7,12 @@
   <%- include("../header") -%>
   <main>
     <div class="container">
-      <% if (response & response.success) { %>
+      <% if (response && response.success) { %>
         <div class="alert alert-success" role="alert">
           <p><%= response.success %></p>
         </div>
       <% } %>
-      <% if (response & response.error) { %>
+      <% if (response && response.error) { %>
         <div class="alert alert-danger" role="alert">
           <p><%= response.error %></p>
         </div>
@@ -62,5 +62,10 @@
   </main>
   <%- include("../scripts") -%>
   <script src="/static/js/cart.js"></script>
+  <% if (response && response.success) { %>
+    $(document).ready(function () {
+      clearCart();
+    }
+  <% } %>
 </body>
 </html>

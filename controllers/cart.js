@@ -19,14 +19,25 @@ POST /cart
 Receives an array of items with quantities, creates a new transaction group, creates transactions for each item
 Renders view with status of check out procedure
 */
-router.post('/', [userIsBasicUser], function(req, res, next) {
+router.post('/', [userIsBasicUser], async function(req, res, next) {
     let response = {};
     let cart = JSON.parse(req.body.cart);
-    // console.log(cart);
-    // preorderService.createPreorder(res.locals.onyen, cart);
+    console.log(cart);
+    try{
+        let success = await preorderService.createPreorder(cart, res.locals.onyen);
+        if (success) {
+            response.success = 'You preorder has been successfully placed! Visit Carolina Cupboard to pickup your items within the next 24 hours.';
+        } else {
+            response.error = 'Unknown error occurred. Please try again later or contact Carolina Cupboard staff.';
+        }
+    } catch(e) {
+        response.error = exceptionHandler.retrieveException(e);
+    }
 
-    res.send(JSON.stringify(cart));
-    //    res.render('user/cart.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType })
+    console.log(response);
+
+    // res.send(JSON.stringify(cart));
+    res.render('user/cart.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 module.exports = router;

@@ -6,6 +6,13 @@ const { v4: uuidv4 } = require("uuid"),
     InternalErrorException = require("../exceptions/internal-error-exception"),
     CarolinaCupboardException = require("../exceptions/carolina-cupboard-exception");
 
+/*
+Creates a new preorder
+Takes a cart, an array of objects that contain item id and quantity
+Creates a new Order object and creates a new transaction under that order for each cart item
+If any single transaction fails, the order is rolled back
+Returns true if successful, false if not
+*/
 exports.createPreorder = async function (cart, onyen) {
     let processQueue = {};
     let completedTransactions = [];
@@ -13,11 +20,8 @@ exports.createPreorder = async function (cart, onyen) {
     const newOrderId = uuidv4();
     await Order.create({ id: newOrderId });
 
-    console.log(cart);
-
     // Adds item to process queue, combines duplicate items
     cart.forEach((item) => {
-        console.log(item);
         processQueue[item.id] = processQueue[item.id] === undefined ? item.quantity : currQuantity + item.quantity;
     });
 
@@ -27,12 +31,21 @@ exports.createPreorder = async function (cart, onyen) {
             quantity = processQueue[id];
             console.log(id, quantity)
 
-            if (quantity === 0) return;
+            // Skips if quantity is zero or less
+            if (quantity <= 0) return;
 
             let item = await Item.findOne({ where: { id: id } });
 
-            if (quantity > 0 && item.count < Math.abs(quantity)) {
-                throw new BadRequestException("The amount requested is larger than the quantity in the system");
+            if (!item) {
+                throw new BadRequestException("The item " + item.name + " doesn't exist in our inventory");
+            }
+
+            // console.log(item);
+
+            // Throws an error if there aren't enough in stock
+            if (quantity > 0 && item.count < quantity) {
+                console.log("BAD");
+                throw new BadRequestException("The amount requested for " + item.name + " is " + (quantity - item.count) + " more than the quantity in the system");
             }
 
             let transaction = await Transaction.build({
@@ -45,8 +58,11 @@ exports.createPreorder = async function (cart, onyen) {
                 status: 'pending'
             });
 
+            console.log(transaction);
+
             await transaction.save();
 
+            // changes item count, but if it fails, roll back this transaction
             try {
                 await item.increment('count', { by: -quantity });
             } catch (e) {
@@ -57,6 +73,8 @@ exports.createPreorder = async function (cart, onyen) {
             delete processQueue[id];
             completedTransactions.push(transaction);
         }
+
+        return true;
     } catch (e) {
         // If one transaction fails, we delete each of them and revert the counts
         completedTransactions.forEach(async (transaction) => {
@@ -67,6 +85,7 @@ exports.createPreorder = async function (cart, onyen) {
 
         await Order.destroy({ where: { id: newOrderId } });
     }
+    return false;
 }
 
 exports.getPreorder = async function (id) {
