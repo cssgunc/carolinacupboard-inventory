@@ -62,9 +62,7 @@
   <%- include("../scripts") -%>
   <script src="/static/js/cart.js"></script>
   <% if (response && response.success) { %>
-    $(document).ready(function () {
-      clearCart();
-    }
+    <div id="clear-cart">
   <% } %>
 </body>
 </html>

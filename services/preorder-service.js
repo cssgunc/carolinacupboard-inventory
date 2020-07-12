@@ -135,7 +135,7 @@ exports.cancelPreorder = async function (preorderId, volunteerId) {
         preorder.status = "cancelled";
         preorder.save();
         let itemId = preorder.item_id;
-        await this.putbackCancelledItems(itemId, preorder.count);
+        await this.putbackCancelledItems(itemId, -preorder.count);
     } catch (e) {
         throw new InternalErrorException("A problem occurred when cancelling preorder", e);
     }

@@ -1,6 +1,24 @@
 const NUM_COLUMNS = 5;
 
+const clearCart = () => {
+    localStorage.removeItem('cart');
+    // Create a cell that notifying the user that the table is empty
+    let cartEmptyCell = document.createElement('td');
+    cartEmptyCell.className = 'text-center';
+    cartEmptyCell.setAttribute('colspan', NUM_COLUMNS);
+    cartEmptyCell.appendChild(document.createTextNode('Cart is Empty'));
+
+    // Clear table body and add empty table notification
+    let tableBody = document.getElementById('cart-tbody');
+    tableBody.innerHTML = '';
+    tableBody.appendChild(cartEmptyCell);
+};
+
 $(document).ready(function () {
+    if (document.getElementById('clear-cart')) {
+        localStorage.removeItem('cart');
+    }
+
     // Grab cart from local storage and parse as JSON
     let cart = JSON.parse(localStorage.getItem('cart'));
     if (cart && cart.length > 0) {
@@ -14,11 +32,6 @@ $(document).ready(function () {
             let nameCell = document.createElement('td');
             nameCell.appendChild(document.createTextNode(item.name));
             row.appendChild(nameCell);
-
-            // Barcode cell contains barcode text
-            let barcodeCell = document.createElement('td');
-            barcodeCell.appendChild(document.createTextNode(item.barcode ? item.barcode : ''));
-            row.appendChild(barcodeCell);
 
             // Quantity cell contains number input that allows users to change the quantity in their cart
             let quantityCell = document.createElement('td');
@@ -115,18 +128,4 @@ $(document).ready(function () {
         document.body.appendChild(form);
         form.submit();
     });
-
-    let clearCart = () => {
-        localStorage.removeItem('cart');
-        // Create a cell that notifying the user that the table is empty
-        let cartEmptyCell = document.createElement('td');
-        cartEmptyCell.className = 'text-center';
-        cartEmptyCell.setAttribute('colspan', NUM_COLUMNS);
-        cartEmptyCell.appendChild(document.createTextNode('Cart is Empty'));
-
-        // Clear table body and add empty table notification
-        let tableBody = document.getElementById('cart-tbody');
-        tableBody.innerHTML = '';
-        tableBody.appendChild(cartEmptyCell);
-    };
 });
