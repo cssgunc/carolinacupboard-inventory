@@ -22,7 +22,7 @@ Renders view with status of check out procedure
 router.post('/', [userIsBasicUser], async function(req, res, next) {
     let response = {};
     let cart = JSON.parse(req.body.cart);
-    console.log(cart);
+    
     try{
         let success = await preorderService.createPreorder(cart, res.locals.onyen);
         if (success) {
@@ -34,9 +34,6 @@ router.post('/', [userIsBasicUser], async function(req, res, next) {
         response.error = exceptionHandler.retrieveException(e);
     }
 
-    console.log(response);
-
-    // res.send(JSON.stringify(cart));
     res.render('user/cart.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 

@@ -8,16 +8,19 @@
 <body>
 	<%- include("../header") -%>
 	<div class="container">
+		<div id="toast-div">
+			<div id="toast-pos" class="toast-pos">
+			</div>
+		</div>
 		<h2>Search for items to add to your cart</h2>
 		<div class="table-responsive">
 			<table id="itemsTable" class="table table-striped table-bordered" cellspacing="0" width="99%">
 				<thead>
 					<tr>
-						<th scope="col">Item Name</th>
-						<th scope="col">Barcode</th>
-						<th scope="col">Count</th>
-						<th scope="col">Description</th>
-						<th scope="col">Action</th>
+						<th scope="col">Item</th>
+						<th scope="col">In Stock</th>
+						<th scope="col">Details</th>
+						<th scope="col">Add</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -26,7 +29,6 @@
 						<% if (item.count > 0) {%>
 						<tr>
 							<th scope="row"><%= item.name%></th>
-							<td><%= item.barcode%></td>
 							<td><%= item.count%></td>
 							<td><%= item.description%></td>
 							<td class="text-right pr-1">
