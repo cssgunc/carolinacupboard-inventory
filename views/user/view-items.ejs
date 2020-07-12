@@ -33,9 +33,9 @@
 							<td><%= item.description%></td>
 							<td class="text-right pr-1">
 								<div>
-									<input style="width: 50px" id="cartQuantity" type="number" min="1" max="<%= item.count %>" value=1>
+									<input style="width: 50px" class="cartQuantity" type="number" min="1" max="<%= item.count %>" value=1>
 									<div class="btn-group" role="group">
-										<button type="button" class="btn btn-success" id="addToCartButton" data-id="<%= item.id %>" data-name="<%= item.name %>" 
+										<button type="button" class="btn btn-success addToCartButton" data-id="<%= item.id %>" data-name="<%= item.name %>" 
 											data-barcode="<%= item.barcode %>" data-count="<%= item.count %>" data-description="<%= item.description %>">Add to Cart</button>
 									</div>
 								</div>
