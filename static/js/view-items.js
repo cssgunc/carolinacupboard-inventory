@@ -96,9 +96,9 @@ $(document).ready(function () {
         }
 
         $('.toast').toast('show');
-        // $('.toast').on('hidden.bs.toast', (e) => {
-        //     console.log(e);
-        //     e.target.outerHTML = '';
-        // });
+        $('.toast').on('hidden.bs.toast', (e) => {
+            console.log(e);
+            e.target.outerHTML = '';
+        });
     });
 });
