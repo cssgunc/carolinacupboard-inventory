@@ -6,12 +6,13 @@ const express = require("express"),
 
 router.get('/', [userIsBasicUser], async function (req, res, next) {
     let response = {};
+    response.order = {};
     try {
         response.transactions = await tranService.getUserPurchaseHistory(res.locals.onyen);
         for (const t of response.transactions) {
             t['count'] = -t['count'];
         }
-
+        console.log(response.transactions);
     }
     catch (e) {
         response.error = e;

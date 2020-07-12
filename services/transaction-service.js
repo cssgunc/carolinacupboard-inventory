@@ -23,10 +23,13 @@ exports.getUserPurchaseHistory = async function(onyen) {
             where: {
                 onyen: onyen,
                 count: {[Sequelize.Op.lt]: 0}
-            }
+            },
+            group: ['id', 'order_id']
         });
+        // console.log(trans);/
         return trans;
     } catch(e) {
+        throw e;
         if(e instanceof CarolinaCupboardException) {
             throw e;
         }

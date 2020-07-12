@@ -11,7 +11,7 @@ describe('History Routes - GET pages', () => {
         await dbUtil.preTestSetup(false);
     });
     
-    describe('GET /get - create item and transaction, get user history', () => {
+    describe('GET /history - create item and transaction, get user history', () => {
         it('expect success HTTP 200 status', (done) => {
             // Create new item and transaction for user
             ItemService.createItem('chicken', '', '', 5).then(() => {

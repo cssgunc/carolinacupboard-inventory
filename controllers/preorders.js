@@ -1,3 +1,5 @@
+const { response } = require("express");
+
 const express = require("express"),
     router = express.Router(),
     authService = require("../services/authorization-service"),
@@ -8,6 +10,7 @@ const express = require("express"),
     userIsVolunteer = require("./util/auth.js").userIsVolunteer;
 
 router.get('/', [userIsVolunteer], async function (req, res, next) {
+    let response = {};
     response.preorders = await preorderService.getAllPreorders();
     for (const t of response.preorders) {
         t['count'] = -t['count'];
@@ -17,6 +20,7 @@ router.get('/', [userIsVolunteer], async function (req, res, next) {
 });
 
 router.post('/complete', [userIsVolunteer], async function (req, res, next) {
+    let response = {};
     let id = req.body.id;
     console.log("preorder ID: " + id);
 
@@ -28,12 +32,13 @@ router.post('/complete', [userIsVolunteer], async function (req, res, next) {
 });
 
 router.post('/cancel', [userIsVolunteer], async function (req, res, next) {
+    let response = {};
     let id = req.body.id;
     let count = req.body.count;
 
-    await preorderService.cancelPreorder(id, res.locals.onyen, count);
+    await preorderService.cancelPreorder(id, res.locals.onyen);
 
-    response.success = true;;
+    response.success = true;
 
     res.render('admin/preorders-result.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
