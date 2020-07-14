@@ -24,9 +24,12 @@ router.post('/complete', [userIsVolunteer], async function (req, res, next) {
     let id = req.body.id;
     console.log("preorder ID: " + id);
 
-    await preorderService.completePreorder(id, res.locals.onyen);
-
-    response.success = true;
+    try {
+        await preorderService.completePreorder(id, res.locals.onyen);
+        response.success = "Success! Preorder successfully resolved.";
+    } catch (e) {
+        response.error = "Sorry, there was an error with your request. Please try again later. " + exceptionHandler.retrieveException(e);
+    }
 
     res.render('volunteer/preorders-result.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
@@ -36,9 +39,12 @@ router.post('/cancel', [userIsVolunteer], async function (req, res, next) {
     let id = req.body.id;
     let count = req.body.count;
 
-    await preorderService.cancelPreorder(id, res.locals.onyen);
-
-    response.success = true;
+    try {
+        await preorderService.cancelPreorder(id, res.locals.onyen);
+        response.success = "Success! Preorder successfully resolved.";
+    } catch (e) {
+        response.error = "Sorry, there was an error with your request. Please try again later. " + exceptionHandler.retrieveException(e);
+    }
 
     res.render('volunteer/preorders-result.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });

@@ -5,8 +5,8 @@ const supertest = require('supertest'),
 
 require('dotenv').config();
 
-const CSV_SUCCESS_MESSAGE = /Success!/,
-    CSV_FAIL_MESSAGE = /An error occurred with the CSV file/,
+const CSV_SUCCESS_MESSAGE = /CSV file successfully imported!/,
+    CSV_FAIL_MESSAGE = /error occurred/,
     CSV_FILETYPE_MESSAGE = /Please upload a valid CSV file/,
     CSV_NOFILE_MESSAGE = /Please select a CSV file to upload/;
 

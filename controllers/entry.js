@@ -44,12 +44,12 @@ router.get("/manual", [userIsVolunteer], async function (req, res) {
 
     // this success field is passed back by a redirect from /entry/manual/update
     // allows us to give the user feedback for their update
-    if (req.query.success) {
-        response.success = req.query.success;
-        if (response.success === "0") {
-            response.infoMessage = MANUAL_UPDATE_ERROR_MESSAGE;
-        } else if (response.success === "1") {
-            response.infoMessage = MANUAL_UPDATE_SUCCESS_MESSAGE;
+    let success = req.query.success;
+    if (success) {
+        if (success === "0") {
+            response.error = MANUAL_UPDATE_ERROR_MESSAGE;
+        } else if (success === "1") {
+            response.success = MANUAL_UPDATE_SUCCESS_MESSAGE;
         }
     }
 
@@ -84,11 +84,9 @@ router.post('/manual', [userIsVolunteer], async function (req, res) {
 
         let item = await itemService.createItem(name, barcode, description, count);
         if (item) {
-            response.success = '1';
-            response.infoMessage = 'New item successfully created, id: ' + item.id;
+            response.success = 'New item successfully created, id: ' + item.id;
         } else {
-            response.success = '0';
-            response.infoMessage = 'Failed to create new item. Please try again later.'
+            response.error = 'Failed to create new item. Please try again later.'
         }
     } catch (e) {
         response.error = exceptionHandler.retrieveException(e);
@@ -236,18 +234,19 @@ router.post('/import', [userIsVolunteer], async function (req, res, next) {
     if (req.files != null) {
         let file = req.files.file;
         if (!file.name.match(/\.csv$/i)) {
-            response.failMessage = "Please upload a valid CSV file";
+            response.success = "Please upload a valid CSV file";
         }
         else {
-            await itemService.appendCsv(file).then((result) => {
-                if (result) response.successMessage = "Success!";
-                else response.failMessage = "An error occurred with the CSV file. The error message can be found in the console.";
-            }).catch((e) => {
-                response.failMessage = "An error occurred with the CSV file. The error message can be found in the console.";
-            });
+            try {
+                let result = await itemService.appendCsv(file);
+                if (result) response.success = "CSV file successfully imported!";
+                else response.error = "An unknown error occurred.";
+            } catch (e) {
+                response.error = "An error occurred with the CSV file. The error message can be found in the console.";
+            }
         }
     }
-    else response.failMessage = "Please select a CSV file to upload"; // user never selected a file
+    else response.error = "Please select a CSV file to upload"; // user never selected a file
 
     res.render('volunteer/entry-import.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });

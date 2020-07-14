@@ -4,192 +4,192 @@
   <%- include("../components/baselinks") -%>
 </head>
 <body>
-    <%- include("../components/header") -%>
-    <div class="container">
-        <%- include("../components/alerts") -%>
-        <h2>Manage Visitors</h2>
-        <div class="table-responsive">
-            <table id="visitorsTable" class="table table-striped table-bordered" cellspacing="0" width="99%">
-                <thead>
-                    <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">ONYEN</th>
-                        <th scope="col">PID</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">First Time</th>
-                        <th scope="col">Number of Items Received</th>
-                        <th scope="col" class="text-right"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% if (response && response.visitors) {%>
-                    <% response.visitors.forEach((visitor) => {%>
-                    <tr>
-                        <td><%= visitor.name %></td>
-                        <td><%= visitor.onyen %></td>
-                        <td><%= visitor.PID %></td>
-                        <td><%= visitor.email %></td>
-                        <td><%= visitor.firstTime %></td>
-                        <td><%= visitor.numItemsReceived %></td>
-                        <td class="text-right pr-1">
-                            <div class="btn-group" role="group">
-                                <button type="button"
-                                        class="btn btn-primary"
-                                        data-toggle="modal"
-                                        data-target="#editModal"
-                                        data-onyen="<%= visitor.onyen %>"
-                                        data-name="<%= visitor.name %>"
-                                        data-PID="<%= visitor.PID %>"
-                                        data-email="<%= visitor.email %>"
-                                        data-firstTime="<%= visitor.firstTime %>"
-                                        data-numItemsReceived="<%= visitor.numItemsReceived %>"
-                                >
-                                    Edit
-                                </button>
-                                <button type="button"
-                                        class="btn btn-danger"
-                                        data-toggle="modal"
-                                        data-target="#deleteModal"
-                                        data-onyen="<%= visitor.onyen %>"
-                                        data-name="<%= visitor.name %>"
-                                        data-PID="<%= visitor.PID %>"
-                                        data-email="<%= visitor.email %>"
-                                >
-                                    Delete
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <% }); %>
-                    <% } %>
-                </tbody>
-            </table>
-            <% if (response && response.error) {%>
-            <div class="alert alert-danger">
-                <%= response.error%>
-            </div>
-            <% } %>
-        </div>
-        <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#createModal">Add new visitor</button>
-    </div>
-    <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="createModalLabel">Add new visitor</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
+  <%- include("../components/header") -%>
+  <div class="container">
+    <%- include("../components/alerts") -%>
+    <h2>Manage Visitors</h2>
+    <div class="table-responsive">
+      <table id="visitorsTable" class="table table-striped table-bordered" cellspacing="0" width="99%">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">ONYEN</th>
+            <th scope="col">PID</th>
+            <th scope="col">Email</th>
+            <th scope="col">First Time</th>
+            <th scope="col">Number of Items Received</th>
+            <th scope="col" class="text-right"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (response && response.visitors) {%>
+          <% response.visitors.forEach((visitor) => {%>
+          <tr>
+            <td><%= visitor.name %></td>
+            <td><%= visitor.onyen %></td>
+            <td><%= visitor.PID %></td>
+            <td><%= visitor.email %></td>
+            <td><%= visitor.firstTime %></td>
+            <td><%= visitor.numItemsReceived %></td>
+            <td class="text-right pr-1">
+              <div class="btn-group" role="group">
+                <button type="button"
+                    class="btn btn-primary"
+                    data-toggle="modal"
+                    data-target="#editModal"
+                    data-onyen="<%= visitor.onyen %>"
+                    data-name="<%= visitor.name %>"
+                    data-PID="<%= visitor.PID %>"
+                    data-email="<%= visitor.email %>"
+                    data-firstTime="<%= visitor.firstTime %>"
+                    data-numItemsReceived="<%= visitor.numItemsReceived %>"
+                >
+                  Edit
                 </button>
-            </div>
-            <div class="modal-body">
-                <form name="createForm" id="createForm" action="/admin/visitors/create" method="POST">
-                    <div class="form-group">
-                        <label for="createModalOnyen">ONYEN</label>
-                        <input class="form-control" type="text" name="onyen" id="createModalOnyen" placeholder="ONYEN">
-                    </div>
-                    <div class="form-group">
-                        <label for="createModalType">Name</label>
-                        <input class="form-control" type="text" name="name" id="createModalName" placeholder="Name">
-                    </div>
-                    <div class="form-group">
-                        <label for="createModalOnyen">PID</label>
-                        <input class="form-control" type="number" name="PID" id="createModalPID" placeholder="PID">
-                    </div>
-                    <div class="form-group">
-                        <label for="createModalOnyen">Email</label>
-                        <input class="form-control" type="email" name="email" id="createModalEmail" placeholder="Email">
-                    </div>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary" id="submitCreate">Save</button>
-                </form>
-            </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Edit visitor information</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
+                <button type="button"
+                    class="btn btn-danger"
+                    data-toggle="modal"
+                    data-target="#deleteModal"
+                    data-onyen="<%= visitor.onyen %>"
+                    data-name="<%= visitor.name %>"
+                    data-PID="<%= visitor.PID %>"
+                    data-email="<%= visitor.email %>"
+                >
+                  Delete
                 </button>
-            </div>
-            <div class="modal-body">
-                <form name="editForm" id="editForm" action="/admin/visitors/edit" method="POST">
-                    <div class="form-group">
-                        <label for="editModalOnyen">ONYEN</label>
-                        <input class="form-control" type="text" name="onyen" id="editModalOnyen" placeholder="ONYEN" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="editModalOnyen">PID</label>
-                        <input class="form-control" type="text" name="PID" id="editModalPID" placeholder="PID" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="editModalName">Name</label>
-                        <input class="form-control" type="text" name="name" id="editModalName" placeholder="Name">
-                    </div>
-                    <div class="form-group">
-                        <label for="editModalEmail">Email</label>
-                        <input class="form-control" type="email" name="email" id="editModalEmail" placeholder="Email">
-                    </div>
-                    <div class="form-group">
-                        <label for="editModalFirstTime">First Time Visiting?</label>
-                        <div>
-                            <input class="form-control" type="radio" name="firstTime" value="true" id="editModalFirstTime" placeholder="True">
-                            <label for="editModalFirstTime">Yes</label>
-                        </div>
-                        <div>
-                            <input class="form-control" type="radio" name="firstTime" value="false" id="editModalFirstTime" placeholder="False">
-                            <label for="editModalFirstTime">No</label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="editModalEmail">Number of Items Received</label>
-                        <input class="form-control" type="number" min="0" name="numItemsReceived" id="editModalNumItemsReceived" placeholder="# of Items Received">
-                    </div>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary" id="submitEdit">Save</button>
-                </form>
-            </div>
-            </div>
-        </div>
+              </div>
+            </td>
+          </tr>
+          <% }); %>
+          <% } %>
+        </tbody>
+      </table>
+      <% if (response && response.error) {%>
+      <div class="alert alert-danger">
+        <%= response.error%>
+      </div>
+      <% } %>
     </div>
-    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Delete visitor</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form name="deleteForm" id="deleteForm" action="/admin/visitors/delete" method="POST">
-                    <div class="form-group">
-                        <label for="deleteModalOnyen">ONYEN</label>
-                        <input class="form-control" type="text" name="onyen" id="deleteModalOnyen" placeholder="ONYEN" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="deleteModalOnyen">Name</label>
-                        <input class="form-control" type="text" name="name" id="deleteModalName" placeholder="Name" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="deleteModalOnyen">PID</label>
-                        <input class="form-control" type="text" name="PID" id="deleteModalPID" placeholder="PID" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="deleteModalOnyen">Email</label>
-                        <input class="form-control" type="email" name="email" id="deleteModalEmail" placeholder="Email" readonly>
-                    </div>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger" id="submitDelete">Delete</button>
-                </form>
-            </div>
-            </div>
-        </div>
+    <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#createModal">Add new visitor</button>
+  </div>
+  <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createModalLabel">Add new visitor</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form name="createForm" id="createForm" action="/admin/visitors/create" method="POST">
+          <div class="form-group">
+            <label for="createModalOnyen">ONYEN</label>
+            <input class="form-control" type="text" name="onyen" id="createModalOnyen" placeholder="ONYEN">
+          </div>
+          <div class="form-group">
+            <label for="createModalType">Name</label>
+            <input class="form-control" type="text" name="name" id="createModalName" placeholder="Name">
+          </div>
+          <div class="form-group">
+            <label for="createModalOnyen">PID</label>
+            <input class="form-control" type="number" name="PID" id="createModalPID" placeholder="PID">
+          </div>
+          <div class="form-group">
+            <label for="createModalOnyen">Email</label>
+            <input class="form-control" type="email" name="email" id="createModalEmail" placeholder="Email">
+          </div>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="submitCreate">Save</button>
+        </form>
+      </div>
+      </div>
     </div>
-    <%- include("../components/scripts") -%>
-    <script src="/static/js/admin-visitors.js"></script>
+  </div>
+  <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel">Edit visitor information</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form name="editForm" id="editForm" action="/admin/visitors/edit" method="POST">
+          <div class="form-group">
+            <label for="editModalOnyen">ONYEN</label>
+            <input class="form-control" type="text" name="onyen" id="editModalOnyen" placeholder="ONYEN" readonly>
+          </div>
+          <div class="form-group">
+            <label for="editModalOnyen">PID</label>
+            <input class="form-control" type="text" name="PID" id="editModalPID" placeholder="PID" readonly>
+          </div>
+          <div class="form-group">
+            <label for="editModalName">Name</label>
+            <input class="form-control" type="text" name="name" id="editModalName" placeholder="Name">
+          </div>
+          <div class="form-group">
+            <label for="editModalEmail">Email</label>
+            <input class="form-control" type="email" name="email" id="editModalEmail" placeholder="Email">
+          </div>
+          <div class="form-group">
+            <label for="editModalFirstTime">First Time Visiting?</label>
+            <div>
+              <input class="form-control" type="radio" name="firstTime" value="true" id="editModalFirstTime" placeholder="True">
+              <label for="editModalFirstTime">Yes</label>
+            </div>
+            <div>
+              <input class="form-control" type="radio" name="firstTime" value="false" id="editModalFirstTime" placeholder="False">
+              <label for="editModalFirstTime">No</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="editModalEmail">Number of Items Received</label>
+            <input class="form-control" type="number" min="0" name="numItemsReceived" id="editModalNumItemsReceived" placeholder="# of Items Received">
+          </div>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="submitEdit">Save</button>
+        </form>
+      </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Delete visitor</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form name="deleteForm" id="deleteForm" action="/admin/visitors/delete" method="POST">
+          <div class="form-group">
+            <label for="deleteModalOnyen">ONYEN</label>
+            <input class="form-control" type="text" name="onyen" id="deleteModalOnyen" placeholder="ONYEN" readonly>
+          </div>
+          <div class="form-group">
+            <label for="deleteModalOnyen">Name</label>
+            <input class="form-control" type="text" name="name" id="deleteModalName" placeholder="Name" readonly>
+          </div>
+          <div class="form-group">
+            <label for="deleteModalOnyen">PID</label>
+            <input class="form-control" type="text" name="PID" id="deleteModalPID" placeholder="PID" readonly>
+          </div>
+          <div class="form-group">
+            <label for="deleteModalOnyen">Email</label>
+            <input class="form-control" type="email" name="email" id="deleteModalEmail" placeholder="Email" readonly>
+          </div>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-danger" id="submitDelete">Delete</button>
+        </form>
+      </div>
+      </div>
+    </div>
+  </div>
+  <%- include("../components/scripts") -%>
+  <script src="/static/js/admin-visitors.js"></script>
 </body>
 </html>

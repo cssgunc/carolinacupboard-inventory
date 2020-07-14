@@ -6,6 +6,7 @@
 <body>
   <%- include("components/header") -%>
   <div class="container">
+    <%- include("components/alerts") -%>
     <p>Hi <%= onyen %>. Welcome to Carolina Cupboard!</p>
     <% if(locals.userType) { %>
     <% if(userType == "admin") { %>
