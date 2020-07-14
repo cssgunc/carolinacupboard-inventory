@@ -2,11 +2,11 @@
 <html lang="en">
 
 <head>
-	<%- include("../baselinks") -%>
+	<%- include("../components/baselinks") -%>
 </head>
 
 <body>
-	<%- include("../header") -%>
+	<%- include("../components/header") -%>
 	<div class="container">
     <% if(response.success) { %>
       <div class="alert alert-success" role="alert">
@@ -20,7 +20,7 @@
       <a href="/preorders/" type="button" class="btn btn-primary">Back to Preorders</a>
     <% } %>
   </div>
-  <%- include("../scripts") -%>
+  <%- include("../components/scripts") -%>
 </body>
 
 </html>

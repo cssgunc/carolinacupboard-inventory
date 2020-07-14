@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <%- include("baselinks") -%>
+  <%- include("components/baselinks") -%>
 </head>
 <body>
-  <%- include("header") -%>
+  <%- include("components/header") -%>
   <div class="container">
     <p>Hi <%= onyen %>. Welcome to Carolina Cupboard!</p>
     <% if(locals.userType) { %>
@@ -97,6 +97,6 @@
       </div>
     </div>
   </div>
-  <%- include("scripts") -%>
+  <%- include("components/scripts") -%>
 </body>
 </html>

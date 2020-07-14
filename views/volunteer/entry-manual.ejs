@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<%- include("../baselinks") -%>
+	<%- include("../components/baselinks") -%>
 </head>
 <body>
-	<%- include("../header") -%>
+	<%- include("../components/header") -%>
 	<div class="container">
 		<% if(response.success === "0") { %>
 			<div class="alert alert-danger" role="alert">
@@ -100,7 +100,7 @@
 		</div>
 	</div>
 	<% } %>
-	<%- include("../scripts") -%>
+	<%- include("../components/scripts") -%>
 	<script type="text/javascript">
 		$(window).on('load',function(){
 			$('#foundModal').modal('show');
