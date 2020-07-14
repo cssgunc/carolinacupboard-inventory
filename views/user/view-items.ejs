@@ -13,7 +13,7 @@
 			<div id="toast-pos" class="toast-pos">
 			</div>
 		</div>
-		<h2>Search for items to add to your cart</h2>
+		<h1>Search for items to add to your cart</h1>
 		<div class="table-responsive">
 			<table id="itemsTable" class="table table-striped table-bordered" cellspacing="0" width="99%">
 				<thead>
@@ -34,7 +34,7 @@
 							<td><%= item.description%></td>
 							<td class="text-right pr-1">
 								<div>
-									<input style="width: 50px" class="cartQuantity" type="number" min="1" max="<%= item.count %>" value=1>
+									<input class="cartQuantity" aria-label="Add to cart quantity" type="number" min="1" max="<%= item.count %>" value=1>
 									<div class="btn-group" role="group">
 										<button type="button" class="btn btn-success addToCartButton" data-id="<%= item.id %>" data-name="<%= item.name %>" 
 											data-barcode="<%= item.barcode %>" data-count="<%= item.count %>" data-description="<%= item.description %>">Add to Cart</button>
