@@ -10,7 +10,7 @@
       <li class="nav-item rounded">
         <a class="nav-link rounded" href="/">Home</a>
       </li>
-      <% if(locals.userType) { %>
+      <% if(userType) { %>
         <% if(userType == "volunteer" || userType == "admin") { %>
           <li class="nav-item rounded dropdown">
           <a class="nav-link rounded dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -10,6 +10,7 @@ const express = require('express'),
     userIsBasicUser = require('./controllers/util/auth').userIsBasicUser;
 
 app.engine('html', ejs.renderFile);
+ejs.localsName = 'response';
 
 if (process.env.NODE_ENV === 'prod') {
     app.set('trust proxy', 1);

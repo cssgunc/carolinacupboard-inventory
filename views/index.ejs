@@ -8,7 +8,7 @@
   <div class="container">
     <%- include("components/alerts") -%>
     <p>Hi <%= onyen %>. Welcome to Carolina Cupboard!</p>
-    <% if(locals.userType) { %>
+    <% if(userType) { %>
     <% if(userType == "admin") { %>
     <h2>Admin</h2>
     <div class="row">
