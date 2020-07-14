@@ -1,24 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <%- include("../components/baselinks") -%>
 </head>
+
 <body>
   <%- include("../components/header") -%>
   <div class="container">
     <%- include("../components/alerts") -%>
-    <h2>Manage Preorders</h2>
+    <h1>Manage Preorders</h1>
     <div class="table-responsive">
       <table id="preordersTable" class="table table-striped table-bordered" cellspacing="0" width="99%">
         <thead>
           <tr>
             <th scope="col">ID</th>
             <th scope="col">Time</th>
-            <th scope="col">Item Name</th>
+            <th scope="col">Item</th>
             <th scope="col">Count</th>
             <th scope="col">ONYEN</th>
             <th scope="col">Status</th>
-            <th scope="col"></th>
+            <th scope="col">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -32,16 +34,17 @@
             <td><%= trans.onyen %></td>
             <td><%= trans.status %></td>
             <td class="text-right pr-1">
-            <div class="btn-group" role="group">
-              <button style="width:40px" type="button" class="btn btn-success" data-toggle="modal"
-              data-target="#completeModal" data-id="<%= trans.id %>" data-name="<%= trans.item_name %>"
-              data-count="<%= trans.count %>" data-onyen="<%= trans.onyen %>">
-              <i class="fas fa-check"></i></button>
-              <button style="width:40px" type="button" class="btn btn-danger" data-toggle="modal"
-              data-target="#cancelModal" data-id="<%= trans.id%>" data-name="<%= trans.item_name %>"
-              data-count="<%= trans.count %>" data-onyen="<%= trans.onyen %>">
-              <i class="fas fa-times"></i></button>
-            </div>
+              <div class="btn-group" role="group">
+                <button style="width:40px" type="button" class="btn btn-success" title="Approve preorder"
+                  aria-label="Approve preorder" data-toggle="modal" data-target="#completeModal"
+                  data-id="<%= trans.id %>" data-name="<%= trans.item_name %>" data-count="<%= trans.count %>"
+                  data-onyen="<%= trans.onyen %>">
+                  <i class="fas fa-check"></i></button>
+                <button style="width:40px" type="button" class="btn btn-danger" title="Cancel preorder"
+                  aria-label="Cancel preorder" data-toggle="modal" data-target="#cancelModal" data-id="<%= trans.id%>"
+                  data-name="<%= trans.item_name %>" data-count="<%= trans.count %>" data-onyen="<%= trans.onyen %>">
+                  <i class="fas fa-times"></i></button>
+              </div>
             </td>
           </tr>
           <% }); %>
@@ -55,30 +58,33 @@
       <% } %>
     </div>
   </div>
-  <div class="modal fade" id="completeModal" tabindex="-1" role="dialog" aria-labelledby="completeModalLabel" aria-hidden="true">
+  <div class="modal fade" id="completeModal" tabindex="-1" role="dialog" aria-labelledby="completeModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="completeModalLabel">Complete this preorder?</h5>
+          <p class="modal-title" id="completeModalLabel">Complete this preorder?</p>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+            <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
           <form name="completeForm" id="completeForm" action="/preorders/complete" method="POST">
             <div class="form-group">
-              <input class="form-control" type="text" name="id" id="completeModalId" readonly hidden>
+              <input class="form-control" type="text" name="id" id="completeModalId" readonly hidden
+                aria-label="item id">
             </div>
             <div class="form-group">
               <label for="completeModalName">Item Name</label>
-              <input class="form-control" type="text" name="name" id="completeModalName" placeholder="Item Name" readonly>
+              <input class="form-control" type="text" name="name" id="completeModalName" placeholder="Item Name"
+                readonly>
             </div>
             <div class="form-group">
-              <label for="completeModalBarcode">ONYEN</label>
+              <label for="completeModalOnyen">ONYEN</label>
               <input class="form-control" type="text" name="onyen" id="completeModalOnyen" placeholder="ONYEN" readonly>
             </div>
             <div class="form-group">
-              <label for="completeModalQuantity">Count</label>
+              <label for="completeModalCount">Count</label>
               <input class="form-control" type="number" name="count" id="completeModalCount" min="1" readonly>
             </div>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -88,30 +94,31 @@
       </div>
     </div>
   </div>
-  <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
+  <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="cancelModalLabel">Cancel this preorder?</h5>
+          <p class="modal-title" id="cancelModalLabel">Cancel this preorder?</p>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+            <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
           <form name="cancelForm" id="cancelForm" action="/preorders/cancel" method="POST">
             <div class="form-group">
-              <input class="form-control" type="text" name="id" id="cancelModalId" readonly hidden>
+              <input class="form-control" type="text" name="id" id="cancelModalId" readonly hidden aria-label="item id">
             </div>
             <div class="form-group">
               <label for="cancelModalName">Item Name</label>
               <input class="form-control" type="text" name="name" id="cancelModalName" placeholder="Item Name" readonly>
             </div>
             <div class="form-group">
-              <label for="cancelModalBarcode">ONYEN</label>
+              <label for="cancelModalOnyen">ONYEN</label>
               <input class="form-control" type="text" name="onyen" id="cancelModalOnyen" placeholder="ONYEN" readonly>
             </div>
             <div class="form-group">
-              <label for="cancelModalQuantity">Count</label>
+              <label for="cancelModalCount">Count</label>
               <input class="form-control" type="number" name="count" id="cancelModalCount" min="1" readonly>
             </div>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -124,4 +131,5 @@
   <%- include("../components/scripts") -%>
   <script src="/static/js/preorders.js"></script>
 </body>
+
 </html>

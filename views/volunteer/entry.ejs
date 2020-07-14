@@ -1,43 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <%- include("../components/baselinks") -%>
 </head>
+
 <body>
   <%- include("../components/header") -%>
   <div class="container">
     <%- include("../components/alerts") -%>
-    <h2>Select Method</h2>
+    <h1>Select Method</h1>
     <div class="row">
       <div class="col-md-4">
         <div class="card">
-          <a class="card-link" href="/entry/search"></a>
-          <div class="card-body">
-            <h5 class="card-title">Search Catalog</h5>
-            <p class="card-text">Add existing item by name</p>
-          </div>
-        </div>
-      </div>  
-      <div class="col-md-4">
-        <div class="card">
-          <a class="card-link" href="/entry/manual"></a>
-          <div class="card-body">
-            <h5 class="card-title">Manual Entry</h5>
-            <p class="card-text">Add a new item manually</p>
-          </div>
+          <a class="card-link" href="/entry/search">
+            <div class="card-body">
+              <p class="card-title">Search Catalog</p>
+              <p class="card-text">Add existing item by name</p>
+            </div>
+          </a>
         </div>
       </div>
       <div class="col-md-4">
         <div class="card">
-          <a class="card-link" href="/entry/import"></a>
-          <div class="card-body">
-            <h5 class="card-title">Import Items</h5>
-            <p class="card-text">Mass import items by uploading a CSV file</p>
-          </div>
+          <a class="card-link" href="/entry/manual">
+            <div class="card-body">
+              <p class="card-title">Manual Entry</p>
+              <p class="card-text">Add a new item manually</p>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <a class="card-link" href="/entry/import">
+            <div class="card-body">
+              <p class="card-title">Import Items</p>
+              <p class="card-text">Mass import items by uploading a CSV file</p>
+            </div>
+          </a>
         </div>
       </div>
     </div>
   </div>
   <%- include("../components/scripts") -%>
 </body>
+
 </html>

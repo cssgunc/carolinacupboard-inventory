@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <%- include("../components/baselinks") -%>
 </head>
+
 <body>
   <%- include("../components/header") -%>
   <main>
@@ -11,14 +13,15 @@
       <div class="row">
         <div class="col-sm-12">
           <h1>Update User's Account Information</h1>
-          <p>It looks likes it's this visitor's first time at Carolina Cupboard! Please ask them to fill out the following information!</p>
+          <p>It looks likes it's this visitor's first time at Carolina Cupboard! Please ask them to fill out the
+            following information!</p>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-12">
           <form action="/entry/remove/update" method="POST">
             <div class="form-group">
-              <label for="pid">ONYEN:</label>
+              <label for="onyen">ONYEN:</label>
               <input type="text" class="form-control" id="onyen" name="onyen" value="<%= response.onyen %>">
             </div>
             <div class="form-group">
@@ -37,4 +40,5 @@
   </main>
   <%- include("../components/scripts") -%>
 </body>
+
 </html>
