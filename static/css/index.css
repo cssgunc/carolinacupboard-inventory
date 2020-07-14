@@ -19,6 +19,13 @@
   transition: all .3s ease-in-out;
 }
 
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.2;
+  margin-top: 0;
+}
+
 .card-text {
   font-size: 0.8rem;
 }
