@@ -53,13 +53,13 @@ router.get("/manual", [userIsVolunteer], async function (req, res) {
         }
     }
 
-    let foundItem = {
+    response.foundItem = {
         name: req.query.name,
         barcode: req.query.barcode,
         desc: req.query.decr
     };
 
-    res.render("volunteer/entry-manual.ejs", { response: response, foundItem: foundItem, onyen: res.locals.onyen, userType: res.locals.userType });
+    res.render("volunteer/entry-manual.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 router.post('/manual', [userIsVolunteer], async function (req, res) {

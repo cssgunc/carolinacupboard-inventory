@@ -13,14 +13,14 @@
 				<label for="Item Name">Item Name: </label>
 				<div class="input-group">
 					<input name="name" class="form-control form-control-lg" type="text"
-						placeholder="Ex. Campbell's Chicken Noodle Soup" required <% if(locals.foundItem && foundItem && foundItem.brand_name && foundItem.name) {%>value="<%- foundItem.brand_name %><%- foundItem.name %>"<% } %>>
+						placeholder="Ex. Campbell's Chicken Noodle Soup" required <% if(response.foundItem && response.foundItem.brand_name && response.foundItem.name) {%>value="<%- foundItem.brand_name %><%- foundItem.name %>"<% } %>>
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="Barcode">Barcode: </label>
 				<div class="input-group">
 					<input name="barcode" class="form-control form-control-lg" type="text" placeholder="Ex. 123456789098"
-						<% if(locals.foundItem && foundItem && foundItem.barcode) {%>value="<%= foundItem.barcode %>"<% } %>>
+						<% if(response.foundItem && response.foundItem.barcode) {%>value="<%= response.foundItem.barcode %>"<% } %>>
 				</div>
 			</div>
 			<div class="form-group">
@@ -34,7 +34,7 @@
 				<div class="input-group">
 					<input name="description" class="form-control form-control-lg" type="text"
 						placeholder="Ex. Gluten-free soup expiring 4/20/19"
-						<% if(locals.foundItem && foundItem && foundItem.desc) {%>value="<%= foundItem.desc %>"<% } %>>
+						<% if(response.foundItem && response.foundItem.desc) {%>value="<%= response.foundItem.desc %>"<% } %>>
 				</div>
 			</div>
 			<div class="form-group">
