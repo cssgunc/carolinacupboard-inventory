@@ -1,3 +1,5 @@
+const { response } = require("express");
+
 const express = require("express"),
     router = express.Router(),
     userService = require("../services/user-service"),
@@ -15,7 +17,8 @@ const express = require("express"),
 // The root of the admin route
 // Returns a view with links to other admin views
 router.get('/', [userIsAdmin], async function (req, res, next) {
-    res.render("admin/admin.ejs", { onyen: res.locals.onyen, userType: res.locals.userType });
+    let response = {};
+    res.render("admin/admin.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 // Returns the user view

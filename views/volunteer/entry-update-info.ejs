@@ -7,16 +7,7 @@
   <%- include("../components/header") -%>
   <main>
     <div class="container">
-      <% if(response.success) { %>
-        <div class="alert alert-success" role="alert">
-          <p><%= response.success %></p>
-        </div>
-      <% } %>
-      <% if(response.error) { %>
-        <div class="alert alert-danger" role="alert">
-          <p><%= response.error %></p>
-        </div>
-      <% } %>
+      <%- include("../components/alerts") -%>
       <div class="row">
         <div class="col-sm-12">
           <h1>Update User's Account Information</h1>
