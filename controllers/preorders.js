@@ -16,7 +16,7 @@ router.get('/', [userIsVolunteer], async function (req, res, next) {
         t['count'] = -t['count'];
     }
 
-    res.render('admin/preorders.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
+    res.render('volunteer/preorders.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 router.post('/complete', [userIsVolunteer], async function (req, res, next) {
@@ -28,7 +28,7 @@ router.post('/complete', [userIsVolunteer], async function (req, res, next) {
 
     response.success = true;
 
-    res.render('admin/preorders-result.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
+    res.render('volunteer/preorders-result.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 router.post('/cancel', [userIsVolunteer], async function (req, res, next) {
@@ -40,7 +40,7 @@ router.post('/cancel', [userIsVolunteer], async function (req, res, next) {
 
     response.success = true;
 
-    res.render('admin/preorders-result.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
+    res.render('volunteer/preorders-result.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 module.exports = router;
