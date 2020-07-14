@@ -1,20 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <%- include("../baselinks") -%>
+  <%- include("../components/baselinks") -%>
 </head>
 <body>
-  <%- include("../header") -%>
+  <%- include("../components/header") -%>
   <div class="container">
-    <% if(response.success && response.success === 1) { %>
-      <div class="alert alert-success" role="alert">
-        <p>Success! All data has been deleted.</p>
-      </div>
-    <% } else if(response.success && response.success === 0) {%>
-      <div class="alert alert-danger" role="alert">
-        <p>Sorry, there was an error with your request. Please try again later or contact technical support.</p>
-      </div>
-    <% } %>
+    <%- include("../components/alerts") -%>
     <h2>Factory Reset</h2>
     <p>Warning this will delete all data in your database and reset it to a clean slate. Please backup any data you want to keep before doing this.</p>
     <div class="row">
@@ -45,6 +37,6 @@
         </div>
       </div>
     </div>
-  <%- include("../scripts") -%>
+  <%- include("../components/scripts") -%>
 </body>
 </html>

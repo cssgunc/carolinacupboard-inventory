@@ -1,3 +1,5 @@
+const { response } = require("express");
+
 const express = require("express"),
     router = express.Router(),
     userService = require("../services/user-service"),
@@ -15,7 +17,8 @@ const express = require("express"),
 // The root of the admin route
 // Returns a view with links to other admin views
 router.get('/', [userIsAdmin], async function (req, res, next) {
-    res.render("admin/admin.ejs", { onyen: res.locals.onyen, userType: res.locals.userType });
+    let response = {};
+    res.render("admin/admin.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 // Returns the user view
@@ -146,18 +149,20 @@ router.post('/users/import', [userIsAdmin], async function (req, res, next) {
     if (req.files != null) {
         let file = req.files.file;
         if (!file.name.match(/\.csv$/i)) {
-            response.failMessage = "Please upload a valid CSV file";
+            response.error = "Please upload a valid CSV file";
         }
         else {
-            await userService.appendCsvUsers(file).then((result) => {
-                if (result) response.successMessage = "Success!";
-                else response.failMessage = "An error occurred with the CSV file. The error message can be found in the console.";
-            }).catch((e) => {
-                response.failMessage = "An error occurred with the CSV file. The error message can be found in the console.";
-            });
+            try {
+                let result = await userService.appendCsvUsers(file);
+                if (result) response.success = "CSV file successfully imported!";
+                else response.error = "An unknown error occurred.";
+    
+            } catch (e) {
+                response.error = exceptionHandler.retrieveException(e);
+            }
         }
     }
-    else response.failMessage = "Please select a CSV file to upload"; // user never selected a file
+    else response.error = "Please select a CSV file to upload"; // user never selected a file
 
     res.render('admin/admin-users-import.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
@@ -291,41 +296,41 @@ router.post('/delete/items/all', [userIsAdmin], async function (req, res, next) 
 });
 
 router.post('/delete/items/outofstock', [userIsAdmin], async function (req, res, next) {
-    let response = { 'table': 'out of stock items' };
+    let response = {};
     try {
         await itemService.deleteOutOfStock();
-        response.success = true;
+        response.success = 'Success! All out of stock items have been deleted.';
     } catch (e) {
         if (e.name === "SequelizeForeignKeyConstraintError") {
-            response.success = false;
             response.error = "You tried to delete an item that exists in a transaction! You must backup and delete the transactions first.";
         } else {
-            response.success = false;
-            response.error = "Unknown Error!";
+            response.error = "Error deleting table. " + exceptionHandler.retrieveException(e);
         }
     }
     res.render('admin/admin-delete-confirm.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 router.post('/delete/transactions', [userIsAdmin], async function (req, res, next) {
-    let response = { 'table': 'transactions' };
-    await tranService.deleteAllTransactions();
-    response.success = true;
+    let response = {};
+    try {
+        await tranService.deleteAllTransactions();
+        response.success = 'Success! All transactions have been deleted.';
+    } catch (e) {
+        response.error = "Error deleting table. " + exceptionHandler.retrieveException(e);
+    }
     res.render('admin/admin-delete-confirm.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 router.post('/delete/users', [userIsAdmin], async function (req, res, next) {
-    let response = { 'table': 'users' };
+    let response = {};
     try {
         await userService.deleteAllUsers();
-        response.success = true;
+        response.success = 'Success! All users have been deleted.';
     } catch (e) {
         if (e.name === "SequelizeForeignKeyConstraintError") {
-            response.success = false;
             response.error = "You tried to delete a user that exists in a transaction! You must backup and delete the transactions first.";
         } else {
-            response.success = false;
-            response.error = "Unknown Error!";
+            response.error = "Error deleting table. " + exceptionHandler.retrieveException(e);
         }
     }
     response.success = true;
@@ -343,9 +348,9 @@ router.post('/database', [userIsAdmin], async function (req, res, next) {
         await dbUtil.dropTables(false);
         await dbUtil.createTables(false);
         await dbUtil.initAdmin(false);
-        response.success = 1;
+        response.success = 'Success! All data has been deleted.';
     } catch (e) {
-        response.success = 0;
+        response.error = 'Sorry, there was an error with your request. Please contact an administrator. ' + exceptionHandler.retrieveException(e);
     }
     res.render('admin/admin-database.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });

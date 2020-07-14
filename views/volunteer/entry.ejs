@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <%- include("../baselinks") -%>
+  <%- include("../components/baselinks") -%>
 </head>
 <body>
-  <%- include("../header") -%>
+  <%- include("../components/header") -%>
   <div class="container">
+    <%- include("../components/alerts") -%>
     <h2>Select Method</h2>
     <div class="row">
       <div class="col-md-4">
@@ -37,28 +38,6 @@
       </div>
     </div>
   </div>
-  <!-- <div id="app-scan">
-    <form v-on:submit.prevent="callScanApi">
-      <input v-model="scanCode" type="text" id="scanCode" name="scanCode" placeholder="scan an item" autofocus>
-      <input type="submit" value="Scan">
-    </form>
-
-    <br>
-    <form v-on:submit.prevent="submitItem">
-      <label for="code">UPC code</label><br>
-      <input v-model="code" type="text" id="code" name="code">
-      <br><label for="item">Item name</label><br>
-      <input v-model="item" type="text" id="item" name="item">
-      <br><label for="size">Item size</label><br>
-      <input v-model="size" type="text" id="size" name="size">
-      <br><label for="quantity">Quantity</label><br>
-      <input v-model="quantity" type="text" id="quantity" name="quantity">
-      <br><input type="submit" value="Submit item">
-    </form>
-
-    <br>
-    <pre>{{ result }}</pre>
-  </div> -->
-  <%- include("../scripts") -%>
+  <%- include("../components/scripts") -%>
 </body>
 </html>

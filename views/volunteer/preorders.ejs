@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <%- include("../baselinks") -%>
+  <%- include("../components/baselinks") -%>
 </head>
 <body>
-  <%- include("../header") -%>
+  <%- include("../components/header") -%>
   <div class="container">
+    <%- include("../components/alerts") -%>
     <h2>Manage Preorders</h2>
     <div class="table-responsive">
       <table id="preordersTable" class="table table-striped table-bordered" cellspacing="0" width="99%">
@@ -120,7 +121,7 @@
       </div>
     </div>
   </div>
-  <%- include("../scripts") -%>
+  <%- include("../components/scripts") -%>
   <script src="/static/js/preorders.js"></script>
 </body>
 </html>

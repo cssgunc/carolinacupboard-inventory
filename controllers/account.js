@@ -27,11 +27,13 @@ router.post('/update', async function (req, res, next) {
     let response = {};
     try {
         let users = await userService.upsertUser(res.locals.onyen, res.locals.userType, req.body.pid, req.body.email);
+        console.log(users);
         response.pid = users[0].get('pid');
         response.email = users[0].get('email');
         response.success = 'Information successfully updated!';
     } catch (e) {
         response.error = exceptionHandler.retrieveException(e);
+        console.log(e);
     }
 
     res.render("update-account.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });

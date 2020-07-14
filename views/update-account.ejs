@@ -1,22 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <%- include("baselinks") -%>
+  <%- include("components/baselinks") -%>
 </head>
 <body>
-  <%- include("header") -%>
+  <%- include("components/header") -%>
   <main>
     <div class="container">
-      <% if(response.success) { %>
-        <div class="alert alert-success" role="alert">
-          <p><%= response.success %></p>
-        </div>
-      <% } %>
-      <% if(response.error) { %>
-        <div class="alert alert-danger" role="alert">
-          <p><%= response.error %></p>
-        </div>
-      <% } %>
+      <%- include("components/alerts") -%>
       <div class="row">
         <div class="col-sm-12">
           <% if(response.firstTime) { %>
@@ -45,6 +36,6 @@
       </div>
     </div>
   </main>
-  <%- include("scripts") -%>
+  <%- include("components/scripts") -%>
 </body>
 </html>

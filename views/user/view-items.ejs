@@ -2,12 +2,13 @@
 <html lang="en">
 
 <head>
-	<%- include("../baselinks") -%>
+	<%- include("../components/baselinks") -%>
 </head>
 
 <body>
-	<%- include("../header") -%>
+	<%- include("../components/header") -%>
 	<div class="container">
+		<%- include("../components/alerts") -%>
 		<div id="toast-div">
 			<div id="toast-pos" class="toast-pos">
 			</div>
@@ -53,7 +54,7 @@
 		</div>
 		<% } %>
 	</div>
-	<%- include("../scripts") -%>
+	<%- include("../components/scripts") -%>
 	<script src="/static/js/view-items.js"></script>
 </body>
 

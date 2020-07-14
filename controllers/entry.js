@@ -11,7 +11,7 @@ const MANUAL_UPDATE_ERROR_MESSAGE = "Error updating item.";
 
 router.get("/", [userIsVolunteer], async function (req, res) {
     let response = {};
-    res.render("admin/entry.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
+    res.render("volunteer/entry.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 router.get("/search", [userIsVolunteer], async function (req, res) {
@@ -23,7 +23,7 @@ router.get("/search", [userIsVolunteer], async function (req, res) {
         response.error = exceptionHandler.retrieveException(e);
     }
 
-    res.render("admin/entry-search.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
+    res.render("volunteer/entry-search.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 router.post('/search', [userIsVolunteer], async function (req, res) {
@@ -32,10 +32,10 @@ router.post('/search', [userIsVolunteer], async function (req, res) {
         let searchTerm = req.body.searchTerm === '' ? null : req.body.searchTerm;
         let barcode = req.body.barcode === '' ? null : req.body.barcode;
         response.items = await itemService.getItems(searchTerm, barcode);
-        res.render("admin/entry-search.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
+        res.render("volunteer/entry-search.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
     } catch (e) {
         response.error = exceptionHandler.retrieveException(e);
-        res.render("admin/entry-search.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
+        res.render("volunteer/entry-search.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
     }
 });
 
@@ -44,12 +44,12 @@ router.get("/manual", [userIsVolunteer], async function (req, res) {
 
     // this success field is passed back by a redirect from /entry/manual/update
     // allows us to give the user feedback for their update
-    if (req.query.success) {
-        response.success = req.query.success;
-        if (response.success === "0") {
-            response.infoMessage = MANUAL_UPDATE_ERROR_MESSAGE;
-        } else if (response.success === "1") {
-            response.infoMessage = MANUAL_UPDATE_SUCCESS_MESSAGE;
+    let success = req.query.success;
+    if (success) {
+        if (success === "0") {
+            response.error = MANUAL_UPDATE_ERROR_MESSAGE;
+        } else if (success === "1") {
+            response.success = MANUAL_UPDATE_SUCCESS_MESSAGE;
         }
     }
 
@@ -59,7 +59,7 @@ router.get("/manual", [userIsVolunteer], async function (req, res) {
         desc: req.query.decr
     };
 
-    res.render("admin/entry-manual.ejs", { response: response, foundItem: foundItem, onyen: res.locals.onyen, userType: res.locals.userType });
+    res.render("volunteer/entry-manual.ejs", { response: response, foundItem: foundItem, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 router.post('/manual', [userIsVolunteer], async function (req, res) {
@@ -77,24 +77,22 @@ router.post('/manual', [userIsVolunteer], async function (req, res) {
             // if the item is found, we send back a message and the found item
             if (item) {
                 response.itemFound = item;
-                res.render("admin/entry-manual.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
+                res.render("volunteer/entry-manual.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
                 return;
             }
         }
 
         let item = await itemService.createItem(name, barcode, description, count);
         if (item) {
-            response.success = '1';
-            response.infoMessage = 'New item successfully created, id: ' + item.id;
+            response.success = 'New item successfully created, id: ' + item.id;
         } else {
-            response.success = '0';
-            response.infoMessage = 'Failed to create new item. Please try again later.'
+            response.error = 'Failed to create new item. Please try again later.'
         }
     } catch (e) {
         response.error = exceptionHandler.retrieveException(e);
     }
 
-    res.render("admin/entry-manual.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
+    res.render("volunteer/entry-manual.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 router.post("/manual/update", [userIsVolunteer], async function (req, res) {
@@ -168,7 +166,7 @@ router.post("/remove", [userIsVolunteer], async function (req, res) {
         response.onyen = onyen;
         response.pid = user.get('pid');
         response.email = user.get('email');
-        res.render('admin/entry-update-info.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType })
+        res.render('volunteer/entry-update-info.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType })
         return;
     }
 
@@ -192,7 +190,7 @@ router.post("/remove/update", [userIsVolunteer], async function (req, res) {
         response.pid = pid;
         response.email = email;
         response.error = "Please input both a PID and an email address."
-        res.render('admin/entry-update-info.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType })
+        res.render('volunteer/entry-update-info.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType })
     } else {
         try {
             await userService.editUser(onyen, null, pid, email);
@@ -227,7 +225,7 @@ router.post("/edit", [userIsVolunteer], async function (req, res) {
 
 router.get('/import', [userIsVolunteer], async function (req, res, next) {
     let response = {};
-    res.render('admin/entry-import.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
+    res.render('volunteer/entry-import.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 router.post('/import', [userIsVolunteer], async function (req, res, next) {
@@ -236,20 +234,21 @@ router.post('/import', [userIsVolunteer], async function (req, res, next) {
     if (req.files != null) {
         let file = req.files.file;
         if (!file.name.match(/\.csv$/i)) {
-            response.failMessage = "Please upload a valid CSV file";
+            response.success = "Please upload a valid CSV file";
         }
         else {
-            await itemService.appendCsv(file).then((result) => {
-                if (result) response.successMessage = "Success!";
-                else response.failMessage = "An error occurred with the CSV file. The error message can be found in the console.";
-            }).catch((e) => {
-                response.failMessage = "An error occurred with the CSV file. The error message can be found in the console.";
-            });
+            try {
+                let result = await itemService.appendCsv(file);
+                if (result) response.success = "CSV file successfully imported!";
+                else response.error = "An unknown error occurred.";
+            } catch (e) {
+                response.error = "An error occurred with the CSV file. The error message can be found in the console.";
+            }
         }
     }
-    else response.failMessage = "Please select a CSV file to upload"; // user never selected a file
+    else response.error = "Please select a CSV file to upload"; // user never selected a file
 
-    res.render('admin/entry-import.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
+    res.render('volunteer/entry-import.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 module.exports = router;

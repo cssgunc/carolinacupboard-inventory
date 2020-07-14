@@ -1,20 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<%- include("../baselinks") -%>
+	<%- include("../components/baselinks") -%>
 </head>
 <body>
-	<%- include("../header") -%>
+	<%- include("../components/header") -%>
 	<div class="container">
-		<% if(response.success === "0") { %>
-			<div class="alert alert-danger" role="alert">
-				<p><%= response.infoMessage %></p>
-			</div>
-		<% } else if(response.success === "1") { %>
-			<div class="alert alert-success" role="alert">
-				<p><%= response.infoMessage %></p>
-			</div>
-		<% } %>
+		<%- include("../components/alerts") -%>
 		<h2>Enter an Item Manually</h2>
 		<form action="/entry/manual" method="post">
 			<div class="form-group">
@@ -100,7 +92,7 @@
 		</div>
 	</div>
 	<% } %>
-	<%- include("../scripts") -%>
+	<%- include("../components/scripts") -%>
 	<script type="text/javascript">
 		$(window).on('load',function(){
 			$('#foundModal').modal('show');

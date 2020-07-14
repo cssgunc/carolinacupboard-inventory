@@ -1,22 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <%- include("../baselinks") -%>
+  <%- include("../components/baselinks") -%>
 </head>
 <body>
-  <%- include("../header") -%>
+  <%- include("../components/header") -%>
   <main>
     <div class="container">
-      <% if (response && response.success) { %>
-        <div class="alert alert-success" role="alert">
-          <p><%= response.success %></p>
-        </div>
-      <% } %>
-      <% if (response && response.error) { %>
-        <div class="alert alert-danger" role="alert">
-          <p><%= response.error %></p>
-        </div>
-      <% } %>
+      <%- include("../components/alerts") -%>
       <h2>Your cart</h2>
       <div class="table-responsive">
         <table id="itemsTable" class="table table-striped table-bordered" cellspacing="0" width="99%">
@@ -59,7 +50,7 @@
       </div>
     </div>
   </main>
-  <%- include("../scripts") -%>
+  <%- include("../components/scripts") -%>
   <script src="/static/js/cart.js"></script>
   <% if (response && response.success) { %>
     <div id="clear-cart">

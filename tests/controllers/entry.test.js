@@ -11,8 +11,8 @@ const MANUAL_CREATE_SUCCESS = /New item successfully created, id:/,
     MANUAL_UPDATE_ERROR = /Error updating item/,
     SUCCESS_QUERY_PARAM = /success=1/,
     ERROR_QUERY_PARAM = /success=0/,
-    CSV_SUCCESS_MESSAGE = /Success!/,
-    CSV_FAIL_MESSAGE = /An error occurred with the CSV file/,
+    CSV_SUCCESS_MESSAGE = /CSV file successfully imported!/,
+    CSV_FAIL_MESSAGE = /error occurred/,
     CSV_FILETYPE_MESSAGE = /Please upload a valid CSV file/,
     CSV_NOFILE_MESSAGE = /Please select a CSV file to upload/;
 

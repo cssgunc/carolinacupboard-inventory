@@ -16,7 +16,7 @@ router.get('/', [userIsVolunteer], async function (req, res, next) {
         t['count'] = -t['count'];
     }
 
-    res.render('admin/preorders.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
+    res.render('volunteer/preorders.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 router.post('/complete', [userIsVolunteer], async function (req, res, next) {
@@ -24,11 +24,14 @@ router.post('/complete', [userIsVolunteer], async function (req, res, next) {
     let id = req.body.id;
     console.log("preorder ID: " + id);
 
-    await preorderService.completePreorder(id, res.locals.onyen);
+    try {
+        await preorderService.completePreorder(id, res.locals.onyen);
+        response.success = "Success! Preorder successfully resolved.";
+    } catch (e) {
+        response.error = "Sorry, there was an error with your request. Please try again later. " + exceptionHandler.retrieveException(e);
+    }
 
-    response.success = true;
-
-    res.render('admin/preorders-result.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
+    res.render('volunteer/preorders-result.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 router.post('/cancel', [userIsVolunteer], async function (req, res, next) {
@@ -36,11 +39,14 @@ router.post('/cancel', [userIsVolunteer], async function (req, res, next) {
     let id = req.body.id;
     let count = req.body.count;
 
-    await preorderService.cancelPreorder(id, res.locals.onyen);
+    try {
+        await preorderService.cancelPreorder(id, res.locals.onyen);
+        response.success = "Success! Preorder successfully resolved.";
+    } catch (e) {
+        response.error = "Sorry, there was an error with your request. Please try again later. " + exceptionHandler.retrieveException(e);
+    }
 
-    response.success = true;
-
-    res.render('admin/preorders-result.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
+    res.render('volunteer/preorders-result.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 module.exports = router;
