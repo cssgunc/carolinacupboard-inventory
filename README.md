@@ -7,6 +7,7 @@ This is an inventory management app developed by UNC-CH CS+Social Good for Carol
 1. Download PostgreSQL and setup a local PostgreSQL server OR use a remote PostgreSQL server for development.
     1. CloudApps currently uses PostgreSQL 9.6.
     1. [ElephantSQL](https://www.elephantsql.com/) was used by some members during the original development of this app.
+    1. Note down the username, password, database url, and port number. You'll need them for step 6.
 1. Clone this repo.
 1. `cd` into the cloned directory and run `npm install`.
 1. Make a copy of `.env-example` and name it `.env`.
@@ -21,26 +22,21 @@ This is an inventory management app developed by UNC-CH CS+Social Good for Carol
 ## Environment Variables
 `DATABASE_URL`: The url for your postgresql server
 
-- If you're using a local PostgreSQL server, the url will be `postgres` by default
+- The format of the URL string is `postgres://username:password@databaseurl:portnumber/databasename`
+- If you've installed Postgres locally, the default should be `postgres://postgres:YOURPASSWORD@localhost:5432/postgres`
 
-`DATABASE_USER`: The login username for your postgresql server
+`DEFAULT_ADMIN`: The onyen that will be created in the `USERS` table as the default admin whenever the database is reinitialized
 
-- If you're using a local PostgreSQL server, the user will be `postgres` by default
-
-`DATABASE_PASSWORD`: The password for your postgresql login
-
-`DEFAULT_ADMIN`: The onyen that will be created in the `USERS` table as the default admin
-
-`DEV_USERTYPE`: The user type you want to mock when running in dev mode (admin, volunteer, user)
-
-`DEV_ONYEN`: The onyen user you want to mock when running in dev mode
-
-**NOTE**:  In local development, you must either set `DEV_USERTYPE` OR you must create an admin/volunteer in the `USERS` table and set `DEV_ONYEN` to that user.
+`DEV_ONYEN`: The onyen user you want the app to see you as when running in dev mode
 
 You may add more environment variables if you would like. You can access them through `process.env.ENV_VAR_NAME`
 
 ## Project Structure
 This section will go over the project structure and what functionality is contained at each level.
+
+### `.github`
+
+This folder contains workflow descriptions for automated tests through GitHub actions.
 
 ### `config`
 
@@ -48,37 +44,23 @@ This folder contains `server.js` which sets up `dev` and `prod` as arguments for
 
 ### `controllers`
 
-This folder contains files that describe the routes for this app, the functions that are executed when a route is requested, and what each request returns to the client. The `index.js` file binds each other file to their root route (eg. `admin.js` to `/admin`, `entry.js` to `/entry`, etc.). 
+This folder contains the routing and rendering for the app. For example, if you're developing and you go to `localhost:8080/admin`, there's a function in the `admin.js` file that will execute and return an HTML file. The `index.js` file binds each other file to their root route (eg. `admin.js` to `/admin`, `entry.js` to `/entry`, etc.). 
 
-The routes typically use a response object to render EJS files and return them to the client. These EJS files can be found in `views`. 
+Each route uses a `response` object for local variables to render EJS files. These EJS files can be found in `views`. 
 
-Calls to the PostgreSQL tables should never be made in controller files. That logic can be found in `services`.
-
-Both `log.js` and `scan.js` are unused and should be deleted or revisted in the future.
+Calls to the PostgreSQL tables should never be made directly in controller files. That logic can be found in `services`.
 
 ### `db`
 
-This folder contains scripts for configuring Sequelize (which we use to access and modify PostgreSQL tables in node. It also contains scripts for initializing and deleting PostgreSQL tables through Sequelize. 
-
-The `init-admin.js` file is used to create the `PREORDER` admin and the default admin (as set in the environment variables). 
-
-**NOTE**: These scripts are only used for development purposes. They are not run when deploying to production on CloudApps.
+This folder contains files that configure Sequelize (the ORM we use to interface with PostgreSQL tables in node) with the schema defined in `models`. It also contains scripts for initializing and deleting PostgreSQL tables through Sequelize. 
 
 ### `exceptions`
 
-This folder contains files for custom exceptions. These are not well designed or fully implemented at the moment, and should be revisited in the future
+This folder contains files for custom exceptions. These are not fully implemented at the moment, and can be revisited in the future.
 
 ### `models`
 
 This folder contains files that describe the table schemas to Sequelize so that it can properly create tables and modify entries. 
-
-If you change the table schemas, you must modify them here so that the table initialization scripts work properly.
-
-### `psql_scripts`
-
-This folder contains commands that can be run (or copy+pasted) in psql to create the tables used in this project. **NOTE**: These commands are currently used to create and update the production tables in CloudApps. 
-
-If you change the table schemas, you should also update these scripts. This can be done by updating the Sequelize schemas in `models` and then running a `pg_dump` in psql. See [this thread](https://stackoverflow.com/questions/2593803/how-to-generate-the-create-table-sql-statement-for-an-existing-table-in-postgr) or [this thread](https://stackoverflow.com/questions/1884758/generate-ddl-programmatically-on-postgresql) for more info.
 
 ### `scripts`
 
@@ -86,17 +68,17 @@ This folder contains the `bootstrap.sh` script which runs the table deletion and
 
 ### `services`
 
-This folder contains service-level logic for the app. This mostly means that all calls to Sequelize (accessing/modifying tables) are done in these files.
+This folder contains service-level logic for the app. All calls to Sequelize (accessing/modifying tables) are done in these files.
 
 ### `static`
 
-This folder contains static client-side content like CSS, JavaScript, and images.
+This folder contains static client-side content like CSS, client-side JavaScript, and images.
 
 ### `views`
 
 This folder contains EJS templates that are pre-processed and rendered as HTML to the client. It may be easy to think of these as HTML files with some dynamically rendered parts. Look [here](https://ejs.co/) for more details on EJS.
 
-The EJS files are split into root, user, and admin folders. Consider adding a volunteer folder in the future because some files in the admin folder are accessible to volunteers.
+The EJS files are split into root, user, volunteer, and admin folders.
 
 ### `.env, .env-example`
 The `.env` file used for environment variables. Please see [the above section](#environment-variables) for more information.
@@ -125,7 +107,7 @@ This section will go over functionality of the app that is not obvious, not expl
 
 ### CSV Import
 
-CSV import currently uses [`bulkCreate`](https://sequelize.org/master/class/lib/model.js~Model.html#static-method-bulkCreate) to insert items. The `bulkCreate` function has an option for `updateOnDuplicate`, but this option requires a unique field. The only unique field is `id`, which may not be accessible to the person importing items. So, currently, CSV import inserts all items as new entries into the table, even if there already exists entries which share the same names and descriptions as those being imported.
+CSV import (`appendCSV()` in `item-service.js`) currently uses a custom SQL query to insert items. Ideally, we would like to use Sequelize's built-in functions, like [`bulkCreate`](https://sequelize.org/master/class/lib/model.js~Model.html#static-method-bulkCreate). However, Carolina Cupboard would like to add counts if they try to import an already existing item. Currently, `bulkCreate` does not support this feature, and can only replace counts. Please keep an eye on updates to Sequelize that may allow this functionality. 
 
 ### Deleting Items/Transactions
 
@@ -136,8 +118,6 @@ In the Backup and Delete Data view, we allow an admin to clear both the `Items` 
 ### Deleting Users
 
 The `Users` table contains admins and volunteers. The `Transactions` table has a foreign key from the `Users` table for `volunteer_id` to record which volunteer checked out items. In order to delete users from the `Users` table, all transactions with that `volunteer_id` must be deleted from the `Transactions` table.
-
-Currently, there is no language that notifies an admin about this restriction. If they try to delete a user, they may encounter an unexpected error.
 
 ## Carolina CloudApps
 This section will go over setup and maintenance of services in CloudApps. There are 3 CloudApps services used for this app:
