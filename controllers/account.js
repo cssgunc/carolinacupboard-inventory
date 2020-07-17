@@ -5,7 +5,9 @@ const express = require("express"),
     userService = require("../services/user-service"),
     exceptionHandler = require("../exceptions/exception-handler");
 
-// Page for new users to update their PID and email
+/**
+ * Route serving account info update form
+ */
 router.get('/update', async function (req, res, next) {
     let response = {};
     if (!res.locals.userType) res.locals.userType = 'user';
@@ -22,18 +24,18 @@ router.get('/update', async function (req, res, next) {
     res.render("update-account.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
-
+/**
+ * Route receiving form for account info update
+ */
 router.post('/update', async function (req, res, next) {
     let response = {};
     try {
         let users = await userService.upsertUser(res.locals.onyen, res.locals.userType, req.body.pid, req.body.email);
-        console.log(users);
         response.pid = users[0].get('pid');
         response.email = users[0].get('email');
         response.success = 'Information successfully updated!';
     } catch (e) {
         response.error = exceptionHandler.retrieveException(e);
-        console.log(e);
     }
 
     res.render("update-account.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });

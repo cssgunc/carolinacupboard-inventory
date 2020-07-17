@@ -14,15 +14,17 @@ const express = require("express"),
     { Client } = require('pg'),
     fs = require('fs');
 
-// The root of the admin route
-// Returns a view with links to other admin views
+/**
+ * Route serving the admin home page
+ */ 
 router.get('/', [userIsAdmin], async function (req, res, next) {
     let response = {};
     res.render("admin/admin.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
-// Returns the user view
-// Shows a list of all admins and volunteers
+/**
+ * Route serving the view of all users in the system
+ */
 router.get('/users', [userIsAdmin], async function (req, res, next) {
     let response = {};
     let types = ["admin", "volunteer", "user", "disabled"];
@@ -35,8 +37,9 @@ router.get('/users', [userIsAdmin], async function (req, res, next) {
     res.render("admin/admin-users.ejs", { response: response, types: types, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
-// Creates a new user of given type
-// Redirects to /users
+/**
+ * Route receiving form for new user creation
+ */
 router.post('/users/create', [userIsAdmin], async function (req, res, next) {
     try {
         let newOnyen = req.body.onyen;
@@ -58,8 +61,9 @@ router.post('/users/create', [userIsAdmin], async function (req, res, next) {
     res.redirect('/admin/users');
 });
 
-// Changes the given user to the specified type
-// Redirects to /users
+/**
+ * Route receiving form for editing user information
+ */
 router.post('/users/edit', [userIsAdmin], async function (req, res, next) {
     try {
         let editOnyen = req.body.onyen;
@@ -94,8 +98,9 @@ router.post('/users/edit', [userIsAdmin], async function (req, res, next) {
     res.redirect('/admin/users');
 });
 
-// Deletes the given user
-// Redirects to /users
+/**
+ * Route receiving form to delete user
+ */
 router.post('/users/delete', [userIsAdmin], async function (req, res, next) {
     try {
         let delOnyen = req.body.onyen;
@@ -126,7 +131,9 @@ router.post('/users/delete', [userIsAdmin], async function (req, res, next) {
     res.redirect('/admin/users');
 });
 
-// Returns a view that shows a table of all transactions
+/**
+ * Route serving view of history for all transactions
+ */
 router.get('/history', [userIsAdmin], async function (req, res, next) {
     let response = {};
     try {
@@ -143,6 +150,9 @@ router.get('/users/import', [userIsAdmin], async function (req, res, next) {
     res.render('admin/admin-users-import.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
+/**
+ * Route receiving CSV import for users
+ */
 router.post('/users/import', [userIsAdmin], async function (req, res, next) {
     let response = {};
 
@@ -167,13 +177,17 @@ router.post('/users/import', [userIsAdmin], async function (req, res, next) {
     res.render('admin/admin-users-import.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
-// Returns a view that lets the user backup or clear tables
+/**
+ * Route serving page for backup and deletion of tables
+ */
 router.get('/backup', [userIsAdmin], async function (req, res, next) {
     let response = {};
     res.render('admin/admin-backup.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
-// Downloads a CSV copy of the Items table
+/**
+ * Route serving a CSV copy of the Items table
+ */
 router.get('/backup/items.csv', [userIsAdmin], async function (req, res, next) {
     let data = '';
 
@@ -208,7 +222,9 @@ router.get('/backup/items.csv', [userIsAdmin], async function (req, res, next) {
     });
 });
 
-// Downloads a CSV copy of the Transactions table
+/**
+ * Route serving a CSV copy of the Transactions table
+ */
 router.get('/backup/transactions.csv', [userIsAdmin], async function (req, res, next) {
     let data = '';
 
@@ -243,7 +259,9 @@ router.get('/backup/transactions.csv', [userIsAdmin], async function (req, res, 
     });
 });
 
-// Downloads a CSV copy of the Users table
+/**
+ * Route serving a CSV copy of the Downloads table
+ */
 router.get('/backup/users.csv', [userIsAdmin], async function (req, res, next) {
     let data = '';
 
@@ -278,6 +296,9 @@ router.get('/backup/users.csv', [userIsAdmin], async function (req, res, next) {
     });
 });
 
+/**
+ * Route receiving request to delete the Items table
+ */
 router.post('/delete/items/all', [userIsAdmin], async function (req, res, next) {
     let response = { 'table': 'items' };
     try {
@@ -295,6 +316,9 @@ router.post('/delete/items/all', [userIsAdmin], async function (req, res, next) 
     res.render('admin/admin-delete-confirm.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
+/**
+ * Route receiving request to delete out of stock items from the Items table
+ */
 router.post('/delete/items/outofstock', [userIsAdmin], async function (req, res, next) {
     let response = {};
     try {
@@ -310,6 +334,9 @@ router.post('/delete/items/outofstock', [userIsAdmin], async function (req, res,
     res.render('admin/admin-delete-confirm.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
+/**
+ * Route receiving request to delete the Transactions table
+ */
 router.post('/delete/transactions', [userIsAdmin], async function (req, res, next) {
     let response = {};
     try {
@@ -321,6 +348,9 @@ router.post('/delete/transactions', [userIsAdmin], async function (req, res, nex
     res.render('admin/admin-delete-confirm.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
+/**
+ * Route receiving request to delete the Users table
+ */
 router.post('/delete/users', [userIsAdmin], async function (req, res, next) {
     let response = {};
     try {
@@ -337,11 +367,17 @@ router.post('/delete/users', [userIsAdmin], async function (req, res, next) {
     res.render('admin/admin-delete-confirm.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
+/**
+ * Route serving page to clear and re-init the database
+ */
 router.get('/database', [userIsAdmin], async function (req, res, next) {
     let response = {};
     res.render('admin/admin-database.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
+/**
+ * Route receiving request to clear and re-init the database
+ */
 router.post('/database', [userIsAdmin], async function (req, res, next) {
     let response = {};
     try {
