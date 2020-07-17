@@ -11,7 +11,7 @@ const express = require("express"),
 router.get('/', [userIsBasicUser], async function (req, res, next) {
     let response = {};
     try {
-        response.items = await itemService.getItems(null, null);
+        response.items = await itemService.getAllItems();
     } catch (e) {
         response.error = exceptionHandler.retrieveException(e);
     }

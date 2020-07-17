@@ -24,7 +24,7 @@ router.get("/search", [userIsVolunteer], async function (req, res) {
     let response = {};
     if (req.query.prevOnyen) response.prevOnyen = req.query.prevOnyen;
     try {
-        response.items = await itemService.getItems(null, null);
+        response.items = await itemService.getAllItems();
     } catch (e) {
         response.error = exceptionHandler.retrieveException(e);
     }

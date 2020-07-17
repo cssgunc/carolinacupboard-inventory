@@ -4,6 +4,9 @@ const   Transaction = require("../db/sequelize").transactions,
         InternalErrorException = require("../exceptions/internal-error-exception"),
         CarolinaCupboardException = require("../exceptions/carolina-cupboard-exception");
 
+/**
+ * Retrieves and returns all transactions
+ */
 exports.getAllTransactions = async function () {
     try {
         let trans = await Transaction.findAll();
@@ -12,11 +15,14 @@ exports.getAllTransactions = async function () {
         if(e instanceof CarolinaCupboardException) {
             throw e;
         }
-        // throw e;
         throw new InternalErrorException("A problem occurred when retrieving the transaction", e);
     }
 };
 
+/**
+ * Retrieves and returns all removal transactions by a specific visitor onyen
+ * @param {string} onyen 
+ */
 exports.getUserPurchaseHistory = async function(onyen) {
     try {
         let trans = await Transaction.findAll({
@@ -26,18 +32,18 @@ exports.getUserPurchaseHistory = async function(onyen) {
             },
             group: ['id', 'order_id']
         });
-        // console.log(trans);/
         return trans;
     } catch(e) {
-        throw e;
         if(e instanceof CarolinaCupboardException) {
             throw e;
-        }
-        
+        }      
         throw new InternalErrorException("A problem occurred when retrieving the transaction", e);
     }
 };
 
+/**
+ * Deletes all transactions
+ */
 exports.deleteAllTransactions = async function() {
     try {
         await Transaction.destroy({

@@ -6,9 +6,58 @@ const User = require("../db/sequelize").users,
     initAdmin = require("../db/db-util").initAdmin,
     csvParser = require("csv-parse");
 
+/**
+ * Retrieves and returns a user by onyen
+ * @param {string} onyen 
+ */
+exports.getUser = async function (onyen) {
+    try {
+        let user = await User.findOne({
+            where: { onyen: onyen }
+        }
+        );
+        return user;
+    } catch (e) {
+        throw new InternalErrorException("A problem occurred when retrieving user", e);
+    }
+}
 
+/**
+ * Retrieves and returns all users
+ */
+exports.getAllUsers = async function () {
+    try {
+        let users = await User.findAll();
+        return users;
+    } catch (e) {
+        throw new InternalErrorException("A problem occurred when retrieving all users", e);
+    }
+}
+
+/**
+ * Counts the number of admins in the Users table
+ */
+exports.countAllAdmins = async function () {
+    try {
+        let users = await User.count({
+            where: { type: "admin" }
+        });
+        return users;
+    } catch (e) {
+        throw new InternalErrorException("A problem occurred when retrieving users", e);
+    }
+}
+
+/**
+ * Creates a new user
+ * @param {string} onyen 
+ * @param {string} type 
+ * @param {number} pid 
+ * @param {string} email 
+ */
 exports.createUser = async function (onyen, type, pid, email) {
     try {
+        // If user already exists, do nothing
         if (await User.count({ where: { onyen: onyen } }) > 0) {
             return;
         }
@@ -32,38 +81,13 @@ exports.createUser = async function (onyen, type, pid, email) {
     }
 }
 
-exports.countAllAdmins = async function () {
-    try {
-        let users = await User.count({
-            where: { type: "admin" }
-        });
-        return users;
-    } catch (e) {
-        throw new InternalErrorException("A problem occurred when retrieving users", e);
-    }
-}
-
-exports.getUser = async function (onyen) {
-    try {
-        let user = await User.findOne({
-            where: { onyen: onyen }
-        }
-        );
-        return user;
-    } catch (e) {
-        throw new InternalErrorException("A problem occurred when retrieving user", e);
-    }
-}
-
-exports.getAllUsers = async function () {
-    try {
-        let users = await User.findAll();
-        return users;
-    } catch (e) {
-        throw new InternalErrorException("A problem occurred when retrieving all users", e);
-    }
-}
-
+/**
+ * Upserts user
+ * @param {string} onyen 
+ * @param {string} type 
+ * @param {number} pid 
+ * @param {string} email 
+ */
 exports.upsertUser = async function (onyen, type, pid, email) {
     try {
         let newInfo = {
@@ -89,6 +113,13 @@ exports.upsertUser = async function (onyen, type, pid, email) {
     }
 }
 
+/**
+ * Edits an existing user
+ * @param {string} onyen 
+ * @param {string} type 
+ * @param {number} pid 
+ * @param {string} email 
+ */
 exports.editUser = async function (onyen, type, pid, email) {
     try {
         let newInfo = {};
@@ -114,6 +145,11 @@ exports.editUser = async function (onyen, type, pid, email) {
     }
 }
 
+/**
+ * Updates an existing user's first item received date
+ * @param {string} onyen 
+ * @param {datetime} date 
+ */
 exports.updatefirstItemDate = async function (onyen, date) {
     try {
         let user = await User.update(
@@ -138,6 +174,11 @@ exports.updatefirstItemDate = async function (onyen, date) {
     }
 }
 
+/**
+ * Increments the number of items a user has received
+ * @param {string} onyen 
+ * @param {number} n 
+ */
 exports.incrementItemsReceived = async function (onyen, n) {
     try {
         let user = await this.getUser(onyen);
@@ -147,7 +188,10 @@ exports.incrementItemsReceived = async function (onyen, n) {
     }
 }
 
-// Takes a CSV file and appends it to the Users table
+/**
+ * Takes a CSV file and appends it to the Users table
+ * @param {file} data 
+ */
 exports.appendCsvUsers = async function (data) {
     // wrapping everything in a Promise, so we can return exceptions from the csvParser callback
     // this will allow the caller to tell when the Users table creation fails
@@ -201,6 +245,10 @@ exports.appendCsvUsers = async function (data) {
     });
 }
 
+/**
+ * Deletes user by onyen
+ * @param {string} onyen 
+ */
 exports.deleteUser = async function (onyen) {
     if (onyen !== "PREORDER") {
         try {
@@ -217,6 +265,9 @@ exports.deleteUser = async function (onyen) {
     }
 }
 
+/**
+ * Deletes all users
+ */
 exports.deleteAllUsers = async function () {
     try {
         await User.destroy({

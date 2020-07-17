@@ -11,6 +11,94 @@ const   { v4: uuidv4 } = require("uuid"),
         exceptionHandler = require("../exceptions/exception-handler"),
         csvParser = require("csv-parse");
 
+/**
+ * Retrieves and returns an item by id
+ * @param {number} itemId 
+ */
+exports.getItem = async function (itemId) {
+    try {
+        let item = await Item.findOne({ where: { id: itemId } });
+        if (!item) {
+            throw new BadRequestException("The item could not be retrieved.");
+        }
+        return item;
+    } catch (e) {
+        if(e instanceof CarolinaCupboardException) {
+            throw e;
+        }
+
+        throw new InternalErrorException("A problem occurred when retrieving the item",e);
+    }
+}
+
+/**
+ * Retrieves and returns all items from the Items table
+ */
+exports.getAllItems = async function () {
+    try {
+        let items = await Item.findAll();
+        return items;
+    } catch (e) {
+        throw new InternalErrorException("A problem occurred when retrieving items",e);
+    }
+}
+
+/**
+ * Looks for an item, first by barcode, then by name and decription
+ * Returns the item found or null if nothing is found
+ * @param {number} barcode 
+ * @param {string} name 
+ * @param {string} desc 
+ */
+exports.getItemByBarcodeThenNameDesc = async function (barcode, name, desc) {
+    try {
+        let item = await getItemByBarcode(barcode);
+        if(!item) item = await getItemByNameDesc(name, desc);
+        return item;
+    } catch (e) {
+        throw e;
+    }
+}
+
+/**
+ * Looks for an item by barcode
+ * Returns the item found or null if nothing is found
+ * @param {number} barcode 
+ */
+let getItemByBarcode = async function (barcode) {
+    if (!barcode || barcode === "") return null;
+    try {
+        let item = await Item.findOne({ where: { barcode: barcode }});
+        return item;
+    } catch (e) {
+        throw e;
+    }
+}
+
+/**
+ * Looks for an item by name and description
+ * Returns the item fround or null if nothing is found
+ * @param {string} name 
+ * @param {string} desc 
+ */
+let getItemByNameDesc = async function (name, desc) {
+    try {
+        name = name ? name : '';
+        desc = desc ? desc : '';
+        let item = await Item.findOne({ where: { name: name, description: desc }});
+        return item;
+    } catch (e) {
+        throw e;
+    }
+}
+
+/**
+ * Creates a new item in the Items table
+ * @param {string} name 
+ * @param {number} barcode 
+ * @param {string} description 
+ * @param {number} count 
+ */
 exports.createItem = async function (name, barcode, description, count) {
     try {
         let item = await Item.build({
@@ -33,6 +121,14 @@ exports.createItem = async function (name, barcode, description, count) {
     }
 }
 
+/**
+ * Updates an existing item in the Items table
+ * Does not allow editing of count
+ * @param {number} id 
+ * @param {string} name 
+ * @param {number} barcode 
+ * @param {string} description 
+ */
 exports.editItem = async function (id, name, barcode, description) {
     try {
         let item = await Item.update({
@@ -57,103 +153,13 @@ exports.editItem = async function (id, name, barcode, description) {
     }
 }
 
-exports.getItems = async function (searchTerm, barcode) {
-    if(barcode) barcode = barcode.padStart(14, '0');
-    try {
-        let whereStatement = {};
-        let orStatement = [];
-
-        if(searchTerm) {
-            orStatement.push({
-                name: {[Sequelize.Op.iLike]: '%'+searchTerm+'%'}
-            });
-            orStatement.push({
-                description: {[Sequelize.Op.iLike]: '%'+searchTerm+'%'}
-            });
-        }
-        if(barcode) {
-            orStatement.push({
-                barcode: barcode
-            });
-        }
-
-        if(orStatement.length > 0) {
-            whereStatement = {
-                [Sequelize.Op.or]: orStatement
-            };
-        }
-
-        let items = await Item.findAll({
-            where: whereStatement
-        });
-        return items;
-    } catch (e) {
-        throw new InternalErrorException("A problem occurred when retrieving items",e);
-    }
-}
-
-exports.getItem = async function (itemId) {
-    try {
-        let item = await Item.findOne({ where: { id: itemId } });
-        if (!item) {
-            throw new BadRequestException("The item could not be retrieved.");
-        }
-        return item;
-    } catch (e) {
-        if(e instanceof CarolinaCupboardException) {
-            throw e;
-        }
-
-        throw new InternalErrorException("A problem occurred when retrieving the item",e);
-    }
-}
-
-/*
-Looks for an item, first by barcode, then by name and decription
-Returns the item found or null if nothing is found
-*/
-exports.getItemByBarcodeThenNameDesc = async function (barcode, name, desc) {
-    try {
-        let item = await getItemByBarcode(barcode);
-        if(!item) item = await getItemByNameDesc(name, desc);
-        return item;
-    } catch (e) {
-        throw e;
-    }
-}
-
-/*
-Looks for an item by barcode
-Returns the item found or null if nothing is found
-*/
-let getItemByBarcode = async function (barcode) {
-    if (!barcode || barcode === "") return null;
-    try {
-        let item = await Item.findOne({ where: { barcode: barcode }});
-        return item;
-    } catch (e) {
-        throw e;
-    }
-}
-
-/*
-Looks for an item by name and description
-Returns the item fround or null if nothing is found
-*/
-let getItemByNameDesc = async function (name, desc) {
-    try {
-        name = name ? name : '';
-        desc = desc ? desc : '';
-        let item = await Item.findOne({ where: { name: name, description: desc }});
-        return item;
-    } catch (e) {
-        throw e;
-    }
-}
-
-/*
-Creates a new transaction to add a specified quantity of an item
-*/
+/**
+ * Creates a new transaction to add a specified quantity of an item
+ * @param {number} itemId - id of item to transact
+ * @param {number} quantity - quantity of item to transact
+ * @param {string} onyen - onyen of visitor who is taking or donating items
+ * @param {number} volunteerId - onyen of volunteer who is helping the visitor
+ */
 exports.addItems = async function (itemId, quantity, onyen, volunteerId) {
     try {
         await this.createTransaction(itemId, quantity, onyen, volunteerId);
@@ -163,9 +169,13 @@ exports.addItems = async function (itemId, quantity, onyen, volunteerId) {
     }
 }
 
-/*
-Creates a new transaction to remove a specified quantity of an item
-*/
+/**
+ * Creates a new transaction to remove a specified quantity of an item
+ * @param {number} itemId - id of item to transact
+ * @param {number} quantity - quantity of item to transact
+ * @param {string} onyen - onyen of visitor who is taking or donating items
+ * @param {string} volunteerId - onyen of volunteer who is helping the visitor
+ */
 exports.removeItems = async function (itemId, quantity, onyen, volunteerId) {
     try {
         await this.createTransaction(itemId, -quantity, onyen, volunteerId);
@@ -189,6 +199,13 @@ exports.removeItems = async function (itemId, quantity, onyen, volunteerId) {
     }
 }
 
+/**
+ * Creates a new transaction
+ * @param {number} itemId - id of item to transact
+ * @param {number} quantity - quantity of item to transact
+ * @param {string} onyen - onyen of visitor who is taking or donating items
+ * @param {string} volunteerId - onyen of volunteer who is helping the visitor
+ */
 exports.createTransaction = async function (itemId, quantity, onyen, volunteerId) {
     let item = await this.getItem(itemId);
 
@@ -215,8 +232,11 @@ exports.createTransaction = async function (itemId, quantity, onyen, volunteerId
     }
 }
 
-// Appends a given CSV to the item table
-// On duplicate, adds the existing count and the new count together
+/**
+ * Appends a given CSV to the item table
+ * On duplicate, adds the existing count and the new count together
+ * @param {file} data 
+ */
 exports.appendCsv = async function (data) {
     // wrapping everything in a Promise, so we can return exceptions from the csvParser callback
     // this will allow the caller to tell when the Item table creation fails
@@ -299,6 +319,9 @@ exports.appendCsv = async function (data) {
     });
 }
 
+/**
+ * Deletes all items in the Items table
+ */
 exports.deleteAllItems = async function() {
     try {
         await Item.destroy({
@@ -318,6 +341,9 @@ exports.deleteAllItems = async function() {
     }
 }
 
+/**
+ * Deletes all out of stock items in the Items table
+ */
 exports.deleteOutOfStock = async function() {   
     try {
         await Item.destroy({
