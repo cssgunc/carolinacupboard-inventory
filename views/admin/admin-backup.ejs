@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <%- include("../components/baselinks") -%>
 </head>
+
 <body>
   <%- include("../components/header") -%>
   <div class="container">
     <%- include("../components/alerts") -%>
-    <h2>Backup Data</h2>
+    <h1>Backup Data</h1>
     <div class="row">
       <div class="col-sm-12">
         <form method="GET" action="/admin/backup/transactions.csv">
@@ -31,29 +33,29 @@
         </form>
       </div>
     </div>
-    <h2>Delete Data</h2>
+    <h1>Delete Data</h1>
     <div class="row">
       <div class="col-sm-12">
-        <button type="button" class="btn btn-danger btn-lg" data-toggle="modal" 
-          data-target="#delTransModal">Delete Transactions</button>
+        <button type="button" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#delTransModal">Delete
+          Transactions</button>
       </div>
     </div>
     <div class="row">
       <div class="col-sm-12">
-        <button type="button" class="btn btn-danger btn-lg" data-toggle="modal" 
-          data-target="#delItemsModal">Delete Items</button>
+        <button type="button" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#delItemsModal">Delete
+          Items</button>
       </div>
     </div>
     <div class="row">
       <div class="col-sm-12">
-        <button type="button" class="btn btn-danger btn-lg" data-toggle="modal" 
-          data-target="#delStockModal">Delete Out of Stock Items</button>
+        <button type="button" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#delStockModal">Delete Out
+          of Stock Items</button>
       </div>
     </div>
     <div class="row">
       <div class="col-sm-12">
-        <button type="button" class="btn btn-danger btn-lg" data-toggle="modal" 
-          data-target="#delUsersModal">Delete Users</button>
+        <button type="button" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#delUsersModal">Delete
+          Users</button>
       </div>
     </div>
     <div class="row">
@@ -61,13 +63,14 @@
         <a role="button" class="btn btn-danger btn-lg" href="/admin/database">Factory Reset</a>
       </div>
     </div>
-    <div class="modal fade" id="delTransModal" tabindex="-1" role="dialog" aria-labelledby="delTransModalLabel" aria-hidden="true">
+    <div class="modal fade" id="delTransModal" tabindex="-1" role="dialog" aria-labelledby="delTransModalLabel"
+      aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="delTransModalLabel">Delete Transactions</h5>
+            <p class="modal-title" id="delTransModalLabel">Delete Transactions</p>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+              <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
@@ -83,13 +86,14 @@
         </div>
       </div>
     </div>
-    <div class="modal fade" id="delItemsModal" tabindex="-1" role="dialog" aria-labelledby="delItemsModalLabel" aria-hidden="true">
+    <div class="modal fade" id="delItemsModal" tabindex="-1" role="dialog" aria-labelledby="delItemsModalLabel"
+      aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="delItemsModalLabel">Delete Items</h5>
+            <p class="modal-title" id="delItemsModalLabel">Delete Items</p>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+              <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
@@ -106,18 +110,20 @@
         </div>
       </div>
     </div>
-    <div class="modal fade" id="delStockModal" tabindex="-1" role="dialog" aria-labelledby="delStockModalLabel" aria-hidden="true">
+    <div class="modal fade" id="delStockModal" tabindex="-1" role="dialog" aria-labelledby="delStockModalLabel"
+      aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="delStockModalLabel">Delete Out-of-stock Items</h5>
+            <p class="modal-title" id="delStockModalLabel">Delete Out-of-stock Items</p>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+              <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
             <p><b>Please backup items before you delete them.</b> Once deleted, they will not be recoverable.</p>
-            <p><b>You must delete all transactions before deleting out of stock items, otherwise you will get an error.</b></p>
+            <p><b>You must delete all transactions before deleting out of stock items, otherwise you will get an
+                error.</b></p>
             <p>Are you sure you want to delete all items?</p>
             <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Cancel</button>
             <form method="POST" action="/admin/delete/items/outofstock">
@@ -129,13 +135,14 @@
         </div>
       </div>
     </div>
-    <div class="modal fade" id="delUsersModal" tabindex="-1" role="dialog" aria-labelledby="delUsersModalLabel" aria-hidden="true">
+    <div class="modal fade" id="delUsersModal" tabindex="-1" role="dialog" aria-labelledby="delUsersModalLabel"
+      aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="delUsersModalLabel">Delete Users</h5>
+            <p class="modal-title" id="delUsersModalLabel">Delete Users</p>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+              <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
@@ -152,6 +159,7 @@
         </div>
       </div>
     </div>
-  <%- include("../components/scripts") -%>
+    <%- include("../components/scripts") -%>
 </body>
+
 </html>

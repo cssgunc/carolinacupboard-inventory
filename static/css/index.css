@@ -1,17 +1,16 @@
 .card-link {
-  /* text-decoration: none;
+  text-decoration: none;
   color: black;
-  width: 30%; */
-  position: absolute;
-  height: 100%;
-  width: 100%;
   z-index: 1;
+}
+
+.card-link:link, .card-link:visited, .card-link:hover, .card-link:active {
+  text-decoration: none;
+  color: black;
 }
 
 .card {
   position: relative;
-  /* display: inline-block; */
-  /* width: 30%; */
 }
 
 .card:hover, .card:visited:hover, .card:focus, .card:visited:focus {

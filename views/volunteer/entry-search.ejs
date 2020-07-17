@@ -1,36 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <%- include("../components/baselinks") -%>
 </head>
+
 <body>
   <%- include("../components/header") -%>
   <div class="container">
     <%- include("../components/alerts") -%>
-    <h2>Search for an item to add or remove</h2>
+    <h1>Search for an item to add or remove</h1>
     <div class="form-group">
       <!-- <label for="customerOnyen"></label> -->
       <div class="input-group">
         <div class="input-group-prepend">
           <span class="input-group-text" id="basic-addon3">Quick Checkout ONYEN</span>
         </div>
-        <input id="customerOnyen" type="text" class="form-control" name="customerOnyen" aria-label="Customer ONYEN" 
-          <% if (response && response.prevOnyen) {%>
-            value=<%= response.prevOnyen %>
-          <% } %>    
-        >
+        <input id="customerOnyen" type="text" class="form-control" name="customerOnyen" aria-label="Customer ONYEN"
+          <% if (response && response.prevOnyen) {%> value=<%= response.prevOnyen %> <% } %>>
       </div>
 
     </div>
     <div class="table-responsive">
-			<table id="itemsTable" class="table table-striped table-bordered" cellspacing="0" width="99%">
-				<thead>
+      <table id="itemsTable" class="table table-striped table-bordered" cellspacing="0" width="99%">
+        <thead>
           <tr>
-            <th scope="col">Item Name</th>
+            <th scope="col">Item</th>
             <th scope="col">Barcode</th>
             <th scope="col">Count</th>
-            <th scope="col">Description</th>
-            <th scope="col"></th>
+            <th scope="col">Desc.</th>
+            <th scope="col">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -43,11 +42,19 @@
             <td><%= item.description%></td>
             <td class="text-right pr-1">
               <div class="btn-group" role="group">
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addModal" data-id="<%= item.id %>" data-name="<%= item.name %>" data-barcode="<%= item.barcode %>" data-count="<%= item.count %>" data-description="<%= item.description %>"><i class="fas fa-plus"></i></button>
-                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#removeModal" data-id="<%= item.id %>" data-name="<%= item.name %>" data-barcode="<%= item.barcode %>" data-count="<%= item.count %>" data-description="<%= item.description %>"><i class="fas fa-minus"></i></button>
+                <button type="button" class="btn btn-success" title="Add" aria-label="Add" data-toggle="modal"
+                  data-target="#addModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
+                  data-barcode="<%= item.barcode %>" data-count="<%= item.count %>"
+                  data-description="<%= item.description %>"><i class="fas fa-plus"></i></button>
+                <button type="button" class="btn btn-danger" title="Remove" aria-label="Remove" data-toggle="modal"
+                  data-target="#removeModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
+                  data-barcode="<%= item.barcode %>" data-count="<%= item.count %>"
+                  data-description="<%= item.description %>"><i class="fas fa-minus"></i></button>
                 <!-- edit button -->
-                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#editModal" data-id="<%= item.id %>" data-name="<%= item.name %>" data-barcode="<%= item.barcode %>" data-count="<%= item.count %>" data-description="<%= item.description %>"><i class="fas fa-pencil-alt"></i></button>
-                  
+                <button type="button" class="btn btn-secondary" title="Edit" aria-label="Edit" data-toggle="modal"
+                  data-target="#editModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
+                  data-barcode="<%= item.barcode %>" data-count="<%= item.count %>"
+                  data-description="<%= item.description %>"><i class="fas fa-pencil-alt"></i></button>
               </div>
             </td>
           </tr>
@@ -56,25 +63,25 @@
         </tbody>
       </table>
     </div>
-		<% if (response && response.error) {%>
-		<div class="alert alert-danger">
-			<%= response.error%>
-		</div>
-		<% } %>
+    <% if (response && response.error) {%>
+    <div class="alert alert-danger">
+      <%= response.error%>
+    </div>
+    <% } %>
   </div>
   <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="addModalLabel">Add item</h5>
+          <p class="modal-title" id="addModalLabel">Add item</p>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+            <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
           <form name="addForm" id="addForm" action="/entry/add" method="POST">
             <div class="form-group">
-              <input class="form-control" type="text" name="id" id="addModalId" readonly hidden>
+              <input class="form-control" type="text" name="id" id="addModalId" readonly hidden aria-label="item id">
             </div>
             <div class="form-group">
               <label for="addModalName">Item Name</label>
@@ -82,7 +89,8 @@
             </div>
             <div class="form-group">
               <label for="addModalBarcode">Barcode</label>
-              <input class="form-control" type="text" name="barcode" id="addModalBarcode" placeholder="Barcode" readonly>
+              <input class="form-control" type="text" name="barcode" id="addModalBarcode" placeholder="Barcode"
+                readonly>
             </div>
             <div class="form-group">
               <label for="addModalQuantity">Quantity to add</label>
@@ -96,24 +104,26 @@
     </div>
   </div>
 
-    <!-- edit button -->
-      <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+  <!-- edit button -->
+  <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="editModalLabel">Edit item</h5>
+          <p class="modal-title" id="editModalLabel">Edit item</p>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+            <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
           <form name="editForm" id="editForm" action="/entry/edit" method="POST">
             <div class="form-group">
-              <input class="form-control" type="text" name="id" id="editModalId" readonly hidden>
+              <input class="form-control" type="text" name="id" id="editModalId" readonly hidden aria-label="item id">
             </div>
             <div class="form-group">
               <label for="editModalName">Item Name</label>
-              <input class="form-control" type="text" name="name" id="editModalName" placeholder="Ex. Campbell's Chicken Noodle Soup">
+              <input class="form-control" type="text" name="name" id="editModalName"
+                placeholder="Ex. Campbell's Chicken Noodle Soup">
             </div>
             <div class="form-group">
               <label for="editModalBarcode">Barcode</label>
@@ -130,20 +140,21 @@
       </div>
     </div>
   </div>
-    
-  <div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true">
+
+  <div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="removeModalLabel">Remove item</h5>
+          <p class="modal-title" id="removeModalLabel">Remove item</p>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+            <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
           <form name="removeForm" id="removeForm" action="/entry/remove" method="POST">
             <div class="form-group">
-              <input class="form-control" type="text" name="id" id="removeModalId" readonly hidden>
+              <input class="form-control" type="text" name="id" id="removeModalId" readonly hidden aria-label="item id">
             </div>
             <div class="form-group">
               <label for="removeModalName">Item Name</label>
@@ -151,11 +162,13 @@
             </div>
             <div class="form-group">
               <label for="removeModalBarcode">Barcode</label>
-              <input class="form-control" type="text" name="barcode" id="removeModalBarcode" placeholder="Barcode" readonly>
+              <input class="form-control" type="text" name="barcode" id="removeModalBarcode" placeholder="Barcode"
+                readonly>
             </div>
             <div class="form-group">
-              <label for="removeModalQuantity">Visitor's ONYEN</label>
-              <input class="form-control" type="text" name="onyen" id="removeModalOnyen" placeholder="Who is taking this item?" required>
+              <label for="removeModalOnyen">Visitor's ONYEN</label>
+              <input class="form-control" type="text" name="onyen" id="removeModalOnyen"
+                placeholder="Who is taking this item?" required>
             </div>
             <div class="form-group">
               <label for="removeModalQuantity">Quantity to remove</label>
@@ -171,4 +184,5 @@
   <%- include("../components/scripts") -%>
   <script src="/static/js/entry.js"></script>
 </body>
+
 </html>

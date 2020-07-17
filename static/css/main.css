@@ -4,12 +4,21 @@ body {
   font-family: "Open Sans";
 }
 
+.btn-primary {
+  background-color: #1C4AA2;
+}
+
+.btn-success {
+  background-color: #5FD87B;
+  color: black;
+}
+
 .navbar img {
   width: 100px;
 }
 
 .navbar {
-  background: #5488c0;
+  background: #1C4AA2;
   min-width: 100vw;
   min-height: 50px;
   margin-bottom: 10px;
@@ -68,6 +77,13 @@ a:active, a:focus, a:hover {
   border-color: white;
 } 
 
+.card-title, .modal-title {
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.2;
+  margin-top: 0;
+}
+
 input.pid::-webkit-outer-spin-button,
 input.pid::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -76,6 +92,10 @@ input.pid::-webkit-inner-spin-button {
 
 input[type=number].pid {
   -moz-appearance: textfield;
+}
+
+input.cartQuantity {
+  width: 50px;
 }
 
 td {

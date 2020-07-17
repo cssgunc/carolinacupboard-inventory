@@ -1,32 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <%- include("../components/baselinks") -%>
 </head>
+
 <body>
   <%- include("../components/header") -%>
   <div class="container">
     <%- include("../components/alerts") -%>
-    <h2>Select Method</h2>
+    <h1>Select Method</h1>
     <div class="row">
       <div class="col-md-4">
         <div class="card">
-          <a class="card-link" href="/admin/users"></a>
-          <div class="card-body">
-            <h5 class="card-title">Manage Users</h5>
-            <p class="card-text">Add, edit, and delete users</p>
-          </div>
+          <a class="card-link" href="/admin/users">
+            <div class="card-body">
+              <p class="card-title">Manage Users</p>
+              <p class="card-text">Add, edit, and delete users</p>
+            </div>
+          </a>
         </div>
       </div>
       <div class="col-md-4">
         <div class="card">
-          <a class="card-link" href="/admin/history"></a>
-          <div class="card-body">
-            <h5 class="card-title">Transaction History</h5>
-            <p class="card-text">See log of inventory transactions</p>
-          </div>
+          <a class="card-link" href="/admin/history">
+            <div class="card-body">
+              <p class="card-title">Transaction History</p>
+              <p class="card-text">See log of inventory transactions</p>
+            </div>
+          </a>
         </div>
-      </div>  
-  <%- include("../components/scripts") -%>
+      </div>
+      <%- include("../components/scripts") -%>
 </body>
+
 </html>

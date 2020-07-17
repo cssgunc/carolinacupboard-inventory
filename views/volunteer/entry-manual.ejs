@@ -1,59 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<%- include("../components/baselinks") -%>
 </head>
+
 <body>
 	<%- include("../components/header") -%>
 	<div class="container">
 		<%- include("../components/alerts") -%>
-		<h2>Enter an Item Manually</h2>
+		<h1>Enter an Item Manually</h1>
 		<form action="/entry/manual" method="post">
 			<div class="form-group">
-				<label for="Item Name">Item Name: </label>
-				<div class="input-group">
-					<input name="name" class="form-control form-control-lg" type="text"
-						placeholder="Ex. Campbell's Chicken Noodle Soup" required <% if(response.foundItem && response.foundItem.brand_name && response.foundItem.name) {%>value="<%- foundItem.brand_name %><%- foundItem.name %>"<% } %>>
-				</div>
+				<label for="name">Item Name: </label>
+				<input id="name" name="name" class="form-control form-control-lg" type="text"
+					placeholder="Ex. Campbell's Chicken Noodle Soup" required
+					<% if(response.foundItem && response.foundItem.brand_name && response.foundItem.name) {%>value="<%- foundItem.brand_name %><%- foundItem.name %>"
+					<% } %>>
 			</div>
 			<div class="form-group">
-				<label for="Barcode">Barcode: </label>
-				<div class="input-group">
-					<input name="barcode" class="form-control form-control-lg" type="text" placeholder="Ex. 123456789098"
-						<% if(response.foundItem && response.foundItem.barcode) {%>value="<%= response.foundItem.barcode %>"<% } %>>
-				</div>
+				<label for="barcode">Barcode: </label>
+				<input id="barcode" name="barcode" class="form-control form-control-lg" type="text"
+					placeholder="Ex. 123456789098"
+					<% if(response.foundItem && response.foundItem.barcode) {%>value="<%= response.foundItem.barcode %>" <% } %>>
 			</div>
 			<div class="form-group">
-				<label for="Count">Count: </label>
-				<div class="input-group">
-					<input name="count" class="form-control form-control-lg" type="number" placeholder="Ex. 20" required>
-				</div>
+				<label for="count">Count: </label>
+				<input id="count" name="count" class="form-control form-control-lg" type="number" placeholder="Ex. 20" required>
 			</div>
 			<div class="form-group">
-				<label for="Description">Short Description:</label>
-				<div class="input-group">
-					<input name="description" class="form-control form-control-lg" type="text"
-						placeholder="Ex. Gluten-free soup expiring 4/20/19"
-						<% if(response.foundItem && response.foundItem.desc) {%>value="<%= response.foundItem.desc %>"<% } %>>
-				</div>
+				<label for="description">Short Description:</label>
+				<input id="description" name="description" class="form-control form-control-lg" type="text"
+					placeholder="Ex. Gluten-free soup expiring 4/20/19"
+					<% if(response.foundItem && response.foundItem.desc) {%>value="<%= response.foundItem.desc %>" <% } %>>
 			</div>
 			<div class="form-group">
-				<button class="form-control btn-success btn-md float-middle" style="margin:px" type="action" value="Submit New Item">Submit New Item
+				<button class="form-control btn-success btn-md float-middle" style="margin:px" type="action"
+					value="Submit New Item">Submit New Item
 				</button>
 			</div>
 		</form>
 		<% if (response && response.error) {%>
-			<div class="alert alert-danger">
-				<%= response.error%>
-			</div>
+		<div class="alert alert-danger">
+			<%= response.error%>
+		</div>
 		<% } %>
 	</div>
 	<% if(response.itemFound) { %>
-	<div class="modal fade" id="foundModal" tabindex="-1" role="dialog" aria-labelledby="foundModalLabel" aria-hidden="true">
+	<div class="modal fade" id="foundModal" tabindex="-1" role="dialog" aria-labelledby="foundModalLabel"
+		aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="foundModalLabel">Item already found in database, do you want to update this entry?</h5>
+					<p class="modal-title" id="foundModalLabel">Item already found in database, do you want to update this entry?
+					</p>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -61,28 +61,28 @@
 				<div class="modal-body">
 					<form name="foundForm" id="foundForm" action="/entry/manual/update" method="POST">
 						<div class="form-group">
-							<input class="form-control" type="text" name="id" id="foundModalId" readonly hidden
-							value="<%- response.itemFound.id %>">
+							<input class="form-control" type="text" name="id" id="foundModalId" readonly hidden aria-label="item id"
+								value="<%- response.itemFound.id %>">
 						</div>
 						<div class="form-group">
 							<label for="foundModalName">Item Name</label>
 							<input class="form-control" type="text" name="name" id="foundModalName" readonly
-							value="<%- response.itemFound.name %>">
+								value="<%- response.itemFound.name %>">
 						</div>
 						<div class="form-group">
 							<label for="foundModalBarcode">Barcode</label>
 							<input class="form-control" type="text" name="barcode" id="foundModalBarcode" readonly
-							value="<%= response.itemFound.barcode %>">
+								value="<%= response.itemFound.barcode %>">
 						</div>
 						<div class="form-group">
-							<label for="foundModalDesc">Description</label>
+							<label for="foundModalDescription">Description</label>
 							<input class="form-control" type="text" name="description" id="foundModalDescription" readonly
-							value="<%= response.itemFound.description %>">
+								value="<%= response.itemFound.description %>">
 						</div>
 						<div class="form-group">
-							<label for="foundModalDesc">Add or Remove</label>
-							<input class="form-control" type="number" name="quantity" id="foundModalCount" min="<%= -1*response.itemFound.count %>"
-							value=0>
+							<label for="foundModalCount">Add or Remove</label>
+							<input class="form-control" type="number" name="quantity" id="foundModalCount"
+								min="<%= -1*response.itemFound.count %>" value=0>
 						</div>
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 						<button type="submit" class="btn btn-primary" id="submitFound">Update</button>
@@ -94,7 +94,7 @@
 	<% } %>
 	<%- include("../components/scripts") -%>
 	<script type="text/javascript">
-		$(window).on('load',function(){
+		$(window).on('load', function () {
 			$('#foundModal').modal('show');
 		});
 	</script>
