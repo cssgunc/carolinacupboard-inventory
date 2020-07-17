@@ -8,7 +8,7 @@ require('dotenv').config();
 
 describe('History Routes - GET pages', () => {
     before(async () => {
-        await dbUtil.preTestSetup(false);
+        await dbUtil.preTestSetup();
     });
     
     describe('GET /history - create item and transaction, get user history', () => {

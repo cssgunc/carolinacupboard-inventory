@@ -6,13 +6,52 @@ const { v4: uuidv4 } = require("uuid"),
     InternalErrorException = require("../exceptions/internal-error-exception"),
     CarolinaCupboardException = require("../exceptions/carolina-cupboard-exception");
 
-/*
-Creates a new preorder
-Takes a cart, an array of objects that contain item id and quantity
-Creates a new Order object and creates a new transaction under that order for each cart item
-If any single transaction fails, the order is rolled back
-Returns true if successful, false if not
-*/
+
+/**
+ * Retrieves and returns a preorder by id
+ * @param {number} id 
+ */
+exports.getPreorder = async function (id) {
+    try {
+        let preorder = await Transaction.findOne({ where: { id: id } });
+        if (!preorder || preorder.volunteer_id !== 'PREORDER') {
+            throw new BadRequestException("The transaction could not be retrieved.");
+        }
+        return preorder;
+    } catch (e) {
+        if (e instanceof CarolinaCupboardException) {
+            throw e;
+        }
+        throw new InternalErrorException("A problem occurred when retrieving a preorder", e);
+    }
+}
+
+/**
+ * Retrieves and returns all preorders
+ */
+exports.getAllPreorders = async function () {
+    try {
+        let preorders = await Transaction.findAll({
+            where: {
+                volunteer_id: "PREORDER",
+                status: "pending"
+            }
+        });
+        return preorders;
+    } catch (e) {
+        throw new InternalErrorException("A problem occurred when retrieving all preorders", e);
+    }
+}
+
+/**
+ * Creates a new preorder
+ * Takes a cart, an array of objects that contain item id and quantity
+ * Creates a new Order object and creates a new transaction under that order for each cart item
+ * If any single transaction fails, the order is rolled back
+ * Returns true if successful, false if not
+ * @param {array} cart 
+ * @param {string} onyen 
+ */
 exports.createPreorder = async function (cart, onyen) {
     let processQueue = {};
     let completedTransactions = [];
@@ -88,35 +127,11 @@ exports.createPreorder = async function (cart, onyen) {
     return false;
 }
 
-exports.getPreorder = async function (id) {
-    try {
-        let preorder = await Transaction.findOne({ where: { id: id } });
-        if (!preorder || preorder.volunteer_id !== 'PREORDER') {
-            throw new BadRequestException("The transaction could not be retrieved.");
-        }
-        return preorder;
-    } catch (e) {
-        if (e instanceof CarolinaCupboardException) {
-            throw e;
-        }
-        throw new InternalErrorException("A problem occurred when retrieving a preorder", e);
-    }
-}
-
-exports.getAllPreorders = async function () {
-    try {
-        let preorders = await Transaction.findAll({
-            where: {
-                volunteer_id: "PREORDER",
-                status: "pending"
-            }
-        });
-        return preorders;
-    } catch (e) {
-        throw new InternalErrorException("A problem occurred when retrieving all preorders", e);
-    }
-}
-
+/**
+ * Marks a preorder as confirmed/completed
+ * @param {number} preorderId 
+ * @param {onyen} volunteerId 
+ */
 exports.completePreorder = async function (preorderId, volunteerId) {
     try {
         let preorder = await this.getPreorder(preorderId);
@@ -128,6 +143,11 @@ exports.completePreorder = async function (preorderId, volunteerId) {
     }
 }
 
+/**
+ * Marks a preorder as cancelled
+ * @param {number} preorderId 
+ * @param {onyen} volunteerId 
+ */
 exports.cancelPreorder = async function (preorderId, volunteerId) {
     try {
         let preorder = await this.getPreorder(preorderId);
@@ -141,6 +161,10 @@ exports.cancelPreorder = async function (preorderId, volunteerId) {
     }
 }
 
+/**
+ * Deletes a preorder by id
+ * @param {number} preorderId 
+ */
 exports.deletePreorder = async function (preorderId) {
     try {
         await Transaction.destroy({
@@ -153,6 +177,11 @@ exports.deletePreorder = async function (preorderId) {
     }
 }
 
+/**
+ * Re-adds quantity of an item that was reserved by a preorder
+ * @param {number} itemId 
+ * @param {number} count 
+ */
 exports.putbackCancelledItems = async function (itemId, count) {
     try {
         let item = await Item.findOne({ where: { id: itemId } });

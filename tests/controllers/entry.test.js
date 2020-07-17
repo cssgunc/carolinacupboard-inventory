@@ -18,7 +18,7 @@ const MANUAL_CREATE_SUCCESS = /New item successfully created, id:/,
 
 describe('Entry Routes - GET pages', () => {
     before(async () => {
-        await dbUtil.preTestSetup(false);
+        await dbUtil.preTestSetup();
     });
     
     describe('GET /entry - entry main page', () => {
@@ -75,32 +75,6 @@ describe('Entry Routes - GET pages', () => {
 });
 
 describe('Entry Routes - Entry Workflow', () => {
-    describe('POST /entry/search - search for item by name', () => {
-        it('expect success HTTP 200 status', (done) => {
-            let requestBody = {
-                searchTerm: 'chicken',
-                barcode: ''
-            };
-            supertest(app).post('/entry/search')
-                .set(testUtil.adminAuthHeaders)
-                .send(requestBody)
-                .expect(200, done);
-        });
-    });
-
-    describe('POST /entry/search - search for item by barcode', () => {
-        it('expect success HTTP 200 status', (done) => {
-            let requestBody = {
-                searchTerm: '',
-                barcode: '123456789012'
-            };
-            supertest(app).post('/entry/search')
-                .set(testUtil.adminAuthHeaders)
-                .send(requestBody)
-                .expect(200, done);
-        });
-    });
-
     describe('POST /entry/manual - create a new item', () => {
         it('expect success HTTP 200 status', (done) => {
             let requestBody = {
@@ -298,7 +272,7 @@ describe('Entry Routes - Import CSV', () => {
                 .expect(200)
                 .end(async (err, res) => {
                     // Clear imported volunteers
-                    await dbUtil.preTestSetup(false);
+                    await dbUtil.preTestSetup();
                     if (err) done(err);
                     else done();
                 });
@@ -315,7 +289,7 @@ describe('Entry Routes - Import CSV', () => {
                 .expect(200)
                 .end(async (err, res) => {
                     // Clear imported volunteers
-                    await dbUtil.preTestSetup(false);
+                    await dbUtil.preTestSetup();
                     if (err) done(err);
                     else done();
                 });
@@ -332,7 +306,7 @@ describe('Entry Routes - Import CSV', () => {
                 .expect(200)
                 .end(async (err, res) => {
                     // Clear imported volunteers
-                    await dbUtil.preTestSetup(false);
+                    await dbUtil.preTestSetup();
                     if (err) done(err);
                     else done();
                 });
@@ -349,7 +323,7 @@ describe('Entry Routes - Import CSV', () => {
                 .expect(200)
                 .end(async (err, res) => {
                     // Clear imported volunteers
-                    await dbUtil.preTestSetup(false);
+                    await dbUtil.preTestSetup();
                     if (err) done(err);
                     else done();
                 });
@@ -364,7 +338,7 @@ describe('Entry Routes - Import CSV', () => {
                 .expect(200)
                 .end(async (err, res) => {
                     // Clear imported volunteers
-                    await dbUtil.preTestSetup(false);
+                    await dbUtil.preTestSetup();
                     if (err) done(err);
                     else done();
                 });
@@ -384,14 +358,6 @@ describe('Entry Routes - Not Authorized', () => {
     describe('GET /entry/search - search entry page', () => {
         it('expect HTTP 403 status', (done) => {
             supertest(app).get('/entry/search')
-                .set(testUtil.userAuthHeaders)
-                .expect(403, done);
-        });
-    });
-
-    describe('POST /entry/search - search for item', () => {
-        it('expect HTTP 403 status', (done) => {
-            supertest(app).post('/entry/search')
                 .set(testUtil.userAuthHeaders)
                 .expect(403, done);
         });

@@ -4,7 +4,12 @@ const   User = require("../db/sequelize").users,
         InternalErrorException = require("../exceptions/internal-error-exception"),
         CarolinaCupboardException = require("../exceptions/carolina-cupboard-exception");
 
+/**
+ * Gets the onyen from the uid request header
+ * @param {object} req - request object 
+ */
 exports.getOnyen = async function(req) {
+    // If in dev mode, check for DEV_ONYEN env variable
     if(process.env.NODE_ENV === "dev") {
         if(process.env.DEV_ONYEN) {
             return process.env.DEV_ONYEN;
@@ -14,13 +19,11 @@ exports.getOnyen = async function(req) {
     return req.header("uid");
 }
 
+/**
+ * Gets the user from the user table with the given onyen and return their user type
+ * @param {string} onyen - onyen of user to retrieve
+ */
 exports.getUserType = async function (onyen) {
-    if(process.env.NODE_ENV === "dev" && !process.env.DEV_ONYEN) {
-        if(process.env.DEV_USERTYPE === "admin" || process.env.DEV_USERTYPE === "volunteer") {
-            return process.env.DEV_USERTYPE;
-        }
-        return "user";
-    }
     try {
         let user = await User.findOne({ where: { onyen: onyen } });
         if (!user) {

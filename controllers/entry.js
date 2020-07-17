@@ -9,16 +9,22 @@ const express = require("express"),
 const MANUAL_UPDATE_SUCCESS_MESSAGE = "Item successfully updated!";
 const MANUAL_UPDATE_ERROR_MESSAGE = "Error updating item.";
 
+/**
+ * Route serving homepage for item entry
+ */
 router.get("/", [userIsVolunteer], async function (req, res) {
     let response = {};
     res.render("volunteer/entry.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
+/**
+ * Route serving page for item entry table
+ */
 router.get("/search", [userIsVolunteer], async function (req, res) {
     let response = {};
     if (req.query.prevOnyen) response.prevOnyen = req.query.prevOnyen;
     try {
-        response.items = await itemService.getItems(null, null);
+        response.items = await itemService.getAllItems();
     } catch (e) {
         response.error = exceptionHandler.retrieveException(e);
     }
@@ -26,19 +32,9 @@ router.get("/search", [userIsVolunteer], async function (req, res) {
     res.render("volunteer/entry-search.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
-router.post('/search', [userIsVolunteer], async function (req, res) {
-    let response = {};
-    try {
-        let searchTerm = req.body.searchTerm === '' ? null : req.body.searchTerm;
-        let barcode = req.body.barcode === '' ? null : req.body.barcode;
-        response.items = await itemService.getItems(searchTerm, barcode);
-        res.render("volunteer/entry-search.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
-    } catch (e) {
-        response.error = exceptionHandler.retrieveException(e);
-        res.render("volunteer/entry-search.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
-    }
-});
-
+/**
+ * Route serving page for manual item entry
+ */
 router.get("/manual", [userIsVolunteer], async function (req, res) {
     response = {};
 
@@ -62,6 +58,12 @@ router.get("/manual", [userIsVolunteer], async function (req, res) {
     res.render("volunteer/entry-manual.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
+/**
+ * Route receiving form for new manual item creation
+ * Expects item name, barcode, description, and count in request body
+ * If the item exists, we pass the existing item back to the view
+ * Else we create a new item
+ */
 router.post('/manual', [userIsVolunteer], async function (req, res) {
     let response = {};
     try {
@@ -95,6 +97,11 @@ router.post('/manual', [userIsVolunteer], async function (req, res) {
     res.render("volunteer/entry-manual.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
+/**
+ * Route receiving form to update an existing item
+ * Expects an item id and quantity in request body
+ * Updates the item and then redirects back to /manual with query params to signal success or error
+ */
 router.post("/manual/update", [userIsVolunteer], async function (req, res) {
     let id = req.body.id;
     let quantity = parseInt(req.body.quantity);
@@ -133,6 +140,11 @@ router.post("/manual/update", [userIsVolunteer], async function (req, res) {
     }
 });
 
+/**
+ * Route receiving quantity to add to an existing item
+ * Expects an item id and quantity in request body
+ * Redirects to /entry/search
+ */
 router.post("/add", [userIsVolunteer], async function (req, res) {
     let id = req.body.id;
     let quantity = parseInt(req.body.quantity);
@@ -146,6 +158,13 @@ router.post("/add", [userIsVolunteer], async function (req, res) {
     }));
 });
 
+/**
+ * Route receiving quantity to remove from an existing item
+ * Expects an item id, visitor onyen, and quantity in request body
+ * If the visitor onyen is not in the user database, or their account info is not filled out
+ * the volunteer is shown a view to update this info
+ * Redirects to /entry/search
+ */
 router.post("/remove", [userIsVolunteer], async function (req, res) {
     let response = {};
 
@@ -162,6 +181,7 @@ router.post("/remove", [userIsVolunteer], async function (req, res) {
     if (!user) {
         user = await userService.createUser(onyen, 'user', null, null);
     }
+    // If user is missing account info, render a view for the volunteer to fill out the user's info
     if (!user.get('pid') || !user.get('email')) {
         response.onyen = onyen;
         response.pid = user.get('pid');
@@ -178,6 +198,11 @@ router.post("/remove", [userIsVolunteer], async function (req, res) {
     }));
 });
 
+/**
+ * Route receiving updated user info for a new visitor
+ * Expects visitor onyen, pid, and email address in request body
+ * Redirects to /entry/search
+ */
 router.post("/remove/update", [userIsVolunteer], async function (req, res) {
     let response = {};
 
@@ -185,6 +210,7 @@ router.post("/remove/update", [userIsVolunteer], async function (req, res) {
     let pid = req.body.pid;
     let email = req.body.email;
     
+    // Re-renders form if not enough info is given
     if (!pid || !email) {
         response.onyen = onyen;
         response.pid = pid;
@@ -207,6 +233,11 @@ router.post("/remove/update", [userIsVolunteer], async function (req, res) {
     }
 });
 
+/**
+ * Route receiving form to edit an item from the table entry view
+ * Expects item id, name, barcode, and description in request body
+ * Redirects to /entry/search
+ */
 router.post("/edit", [userIsVolunteer], async function (req, res) {
     let response = {};
 
@@ -223,20 +254,28 @@ router.post("/edit", [userIsVolunteer], async function (req, res) {
     res.redirect("/entry/search");
 });
 
+/**
+ * Route serving the item CSV import page
+ */
 router.get('/import', [userIsVolunteer], async function (req, res, next) {
     let response = {};
     res.render('volunteer/entry-import.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
+/**
+ * Route receiving a CSV file upload for item import
+ * expects CSV file in request files
+ */
 router.post('/import', [userIsVolunteer], async function (req, res, next) {
     let response = {};
 
     if (req.files != null) {
         let file = req.files.file;
+
+        // If not a CSV file, set response error
         if (!file.name.match(/\.csv$/i)) {
-            response.success = "Please upload a valid CSV file";
-        }
-        else {
+            response.error = "Please upload a valid CSV file";
+        } else {
             try {
                 let result = await itemService.appendCsv(file);
                 if (result) response.success = "CSV file successfully imported!";

@@ -12,7 +12,7 @@ const CSV_SUCCESS_MESSAGE = /CSV file successfully imported!/,
 
 describe('Admin Routes - GET pages', () => {
     before(async () => {
-        await dbUtil.preTestSetup(false);
+        await dbUtil.preTestSetup();
     });
     
     describe('GET /admin - admin main page', () => {
@@ -99,7 +99,7 @@ describe('Admin Routes - GET pages', () => {
 
 describe('Admin Routes - Sanity Checks', () => {
     before(async () => {
-        await dbUtil.preTestSetup(false);
+        await dbUtil.preTestSetup();
     });
 
     describe('POST /admin/users/edit - change PREORDER admin to volunteer', () => {
@@ -159,7 +159,7 @@ describe('Admin Routes - Sanity Checks', () => {
 
 describe('Admin Routes - Volunteer Management Workflow', () => {
     before(async () => {
-        await dbUtil.preTestSetup(false);
+        await dbUtil.preTestSetup();
     });
 
     describe('POST /admin/users/create - create new admin', () => {
@@ -293,7 +293,7 @@ describe('Admin Routes - Import CSV', () => {
                 .expect((res) => testUtil.matchResponseText(res, CSV_SUCCESS_MESSAGE)) // checks for success message in response html body
                 .end(async (err, res) => {
                     // Clear imported volunteers
-                    await dbUtil.preTestSetup(false);
+                    await dbUtil.preTestSetup();
                     if (err) done(err);
                     else done();
                 });
@@ -311,7 +311,7 @@ describe('Admin Routes - Import CSV', () => {
                 .expect((res) => testUtil.matchResponseText(res, CSV_SUCCESS_MESSAGE)) // checks for success message in response html body
                 .end(async (err, res) => {
                     // Clear imported volunteers
-                    await dbUtil.preTestSetup(false);
+                    await dbUtil.preTestSetup();
                     if (err) done(err);
                     else done();
                 });
@@ -329,7 +329,7 @@ describe('Admin Routes - Import CSV', () => {
                 .expect((res) => testUtil.matchResponseText(res, CSV_FAIL_MESSAGE)) // checks for fail message in response html body
                 .end(async (err, res) => {
                     // Clear imported volunteers
-                    await dbUtil.preTestSetup(false);
+                    await dbUtil.preTestSetup();
                     if (err) done(err);
                     else done();
                 });
@@ -347,7 +347,7 @@ describe('Admin Routes - Import CSV', () => {
                 .expect((res) => testUtil.matchResponseText(res, CSV_FILETYPE_MESSAGE)) // checks for fail message in response html body
                 .end(async (err, res) => {
                     // Clear imported volunteers
-                    await dbUtil.preTestSetup(false);
+                    await dbUtil.preTestSetup();
                     if (err) done(err);
                     else done();
                 });
@@ -363,7 +363,7 @@ describe('Admin Routes - Import CSV', () => {
                 .expect((res) => testUtil.matchResponseText(res, CSV_NOFILE_MESSAGE)) // checks for fail message in response html body
                 .end(async (err, res) => {
                     // Clear imported volunteers
-                    await dbUtil.preTestSetup(false);
+                    await dbUtil.preTestSetup();
                     if (err) done(err);
                     else done();
                 });
@@ -373,7 +373,7 @@ describe('Admin Routes - Import CSV', () => {
 
 describe('Admin Routes - Delete Tables', () => {
     before(async () => {
-        await dbUtil.preTestSetup(false);
+        await dbUtil.preTestSetup();
     });
 
     describe('POST /admin/delete/items/all - delete all items', () => {
@@ -410,7 +410,7 @@ describe('Admin Routes - Delete Tables', () => {
                 .set(testUtil.adminAuthHeaders)
                 .expect(200)
                 .end(async (err, res) => {
-                    await dbUtil.preTestSetup(false);
+                    await dbUtil.preTestSetup();
                     if (err) done(err);
                     else done();
                 });
@@ -429,7 +429,7 @@ describe('Admin Routes - Delete Tables', () => {
 
 describe('Admin Routes - Not Authorized', () => {
     before(async () => {
-        await dbUtil.preTestSetup(false);
+        await dbUtil.preTestSetup();
     });
 
     describe('GET /admin - admin main page', () => {

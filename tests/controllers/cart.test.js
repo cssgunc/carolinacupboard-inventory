@@ -11,7 +11,7 @@ const CHECKOUT_ERROR_MESSAGE = /error occurred/;
 
 describe('Cart Routes - GET pages', () => {
     before(async () => {
-        await dbUtil.preTestSetup(false);
+        await dbUtil.preTestSetup();
     });
     
     describe('GET /cart - get cart page', () => {
@@ -25,7 +25,7 @@ describe('Cart Routes - GET pages', () => {
 
 describe('Cart Routes - checkout', () => {
     before(async () => {
-        await dbUtil.preTestSetup(false);
+        await dbUtil.preTestSetup();
         await ItemService.createItem('chicken', '', '', 5);
     });
     

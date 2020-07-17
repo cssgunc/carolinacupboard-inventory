@@ -3,13 +3,15 @@ const express = require("express"),
     itemService = require("../services/item-service"),
     preorderService = require("../services/preorder-service"),
     exceptionHandler = require("../exceptions/exception-handler"),
-    userIsAuthenticated = require("./util/auth").userIsAuthenticated,
     userIsBasicUser = require('./util/auth').userIsBasicUser;
 
+/**
+ * Route serving visitor item table view
+ */
 router.get('/', [userIsBasicUser], async function (req, res, next) {
     let response = {};
     try {
-        response.items = await itemService.getItems(null, null);
+        response.items = await itemService.getAllItems();
     } catch (e) {
         response.error = exceptionHandler.retrieveException(e);
     }
