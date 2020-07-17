@@ -6,6 +6,10 @@ const testUtil          = require("../tests/util/test-util");
 // for scripts, exit should be true
 // when called by the server, exit should be false
 
+/**
+ * Drops all tables in sequelize
+ * @param {boolean} exit - If true, exit the process after finishing
+ */
 async function dropTables(exit) {
     try {
         await sequelize.drop();
@@ -16,6 +20,10 @@ async function dropTables(exit) {
     }
 }
 
+/**
+ * Creates all tables defined in sequelize
+ * @param {boolean} exit - If true, exit the process after finishing
+ */
 async function createTables(exit) {
     try {
         await sequelize.sync();
@@ -26,6 +34,10 @@ async function createTables(exit) {
     }
 }
 
+/**
+ * Creates the PREORDER and default admin users in the Users table
+ * @param {boolean} exit - If true, exit the process after finishing
+ */
 async function initAdmin(exit) {
     await userService.createUser("PREORDER", "admin", 0, "preorder@admin.com");
     if(process.env.DEFAULT_ADMIN) {
@@ -34,13 +46,20 @@ async function initAdmin(exit) {
     if (exit) process.exit(0);
 }
 
+/**
+ * Creates test users in the Users table
+ * @param {boolean} exit - If true, exit the process after finishing
+ */
 async function initTestUsers(exit) {
     await userService.createUser(testUtil.volunteerAuthHeaders.uid, "volunteer", 2, "volunteer@admin.com");
     await userService.createUser(testUtil.userAuthHeaders.uid, "user", 3, "user@admin.com");
     if (exit) process.exit(0);
 }
 
-exports.preTestSetup = async (exit) => {
+/**
+ * Cleans the database for testing
+ */
+exports.preTestSetup = async () => {
     await dropTables(false);
     await createTables(false);
     await initAdmin(false);
