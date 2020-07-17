@@ -64,7 +64,6 @@ exports.preTestSetup = async () => {
     await createTables(false);
     await initAdmin(false);
     await initTestUsers(false);
-    if (exit) process.exit(0);
 }
 
 exports.dropTables = dropTables;

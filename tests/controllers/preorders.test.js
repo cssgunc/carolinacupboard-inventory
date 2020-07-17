@@ -10,7 +10,7 @@ require('dotenv').config();
 describe('Preorder Routes - Preorder Management Workflow', () => {
     before(async () => {
         await ItemService.deleteAllItems();
-        await dbUtil.preTestSetup(false);
+        await dbUtil.preTestSetup();
         const item = await ItemService.createItem('chicken', '', '', 5);
         await PreorderService.createPreorder([{ id: item.get('id'), quantity: 1 }], testUtil.userAuthHeaders.uid);
         await PreorderService.createPreorder([{ id: item.get('id'), quantity: 1 }], testUtil.userAuthHeaders.uid);

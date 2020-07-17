@@ -7,7 +7,7 @@ require('dotenv').config();
 
 describe('Account Routes - User Info Update Workflow', () => {
     before(async () => {
-        await dbUtil.preTestSetup(false);
+        await dbUtil.preTestSetup();
     });
 
     describe('GET /account/update - account update page', () => {
