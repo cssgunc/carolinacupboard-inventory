@@ -13,7 +13,7 @@ const   { v4: uuidv4 } = require("uuid"),
 
 /**
  * Retrieves and returns an item by id
- * @param {number} itemId 
+ * @param {uuid} itemId 
  */
 exports.getItem = async function (itemId) {
     try {
@@ -101,13 +101,13 @@ let getItemByNameDesc = async function (name, desc) {
  */
 exports.createItem = async function (name, barcode, description, count) {
     try {
-        let item = await Item.build({
+        let item = await Item.create({
+            id: '',
             name: name,
             barcode: barcode,
             description: description ? description : '',
             count: count
         });
-        await item.save();
         return item;
     } catch (e) {
         if (e instanceof Sequelize.ValidationError) {
@@ -124,7 +124,7 @@ exports.createItem = async function (name, barcode, description, count) {
 /**
  * Updates an existing item in the Items table
  * Does not allow editing of count
- * @param {number} id 
+ * @param {uuid} id 
  * @param {string} name 
  * @param {number} barcode 
  * @param {string} description 
@@ -155,14 +155,14 @@ exports.editItem = async function (id, name, barcode, description) {
 
 /**
  * Creates a new transaction to add a specified quantity of an item
- * @param {number} itemId - id of item to transact
+ * @param {uuid} itemId - id of item to transact
  * @param {number} quantity - quantity of item to transact
  * @param {string} onyen - onyen of visitor who is taking or donating items
- * @param {number} volunteerId - onyen of volunteer who is helping the visitor
+ * @param {number} volunteerOnyen - onyen of volunteer who is helping the visitor
  */
-exports.addItems = async function (itemId, quantity, onyen, volunteerId) {
+exports.addItems = async function (itemId, quantity, onyen, volunteerOnyen) {
     try {
-        await this.createTransaction(itemId, quantity, onyen, volunteerId);
+        await this.createTransaction(itemId, quantity, onyen, volunteerOnyen);
     } catch (e) {
         if (e instanceof InternalErrorException) throw exceptionHandler.retrieveException(e);
         else throw e;
@@ -171,14 +171,14 @@ exports.addItems = async function (itemId, quantity, onyen, volunteerId) {
 
 /**
  * Creates a new transaction to remove a specified quantity of an item
- * @param {number} itemId - id of item to transact
+ * @param {uuid} itemId - id of item to transact
  * @param {number} quantity - quantity of item to transact
  * @param {string} onyen - onyen of visitor who is taking or donating items
- * @param {string} volunteerId - onyen of volunteer who is helping the visitor
+ * @param {string} volunteerOnyen - onyen of volunteer who is helping the visitor
  */
-exports.removeItems = async function (itemId, quantity, onyen, volunteerId) {
+exports.removeItems = async function (itemId, quantity, onyen, volunteerOnyen) {
     try {
-        await this.createTransaction(itemId, -quantity, onyen, volunteerId);
+        await this.createTransaction(itemId, -quantity, onyen, volunteerOnyen);
         let user = await userService.getUser(onyen);
 
         // Update first item date
@@ -201,12 +201,12 @@ exports.removeItems = async function (itemId, quantity, onyen, volunteerId) {
 
 /**
  * Creates a new transaction
- * @param {number} itemId - id of item to transact
+ * @param {uuid} itemId - id of item to transact
  * @param {number} quantity - quantity of item to transact
  * @param {string} onyen - onyen of visitor who is taking or donating items
- * @param {string} volunteerId - onyen of volunteer who is helping the visitor
+ * @param {string} volunteerOnyen - onyen of volunteer who is helping the visitor
  */
-exports.createTransaction = async function (itemId, quantity, onyen, volunteerId) {
+exports.createTransaction = async function (itemId, quantity, onyen, volunteerOnyen) {
     let item = await this.getItem(itemId);
 
     if(quantity < 0 && item.count < Math.abs(quantity)) {
@@ -222,7 +222,7 @@ exports.createTransaction = async function (itemId, quantity, onyen, volunteerId
             count: quantity,
             onyen: onyen,
             order_id: newOrderId,
-            volunteer_id: volunteerId,
+            volunteer_id: volunteerOnyen,
             status: "complete"
         });
         await transaction.save();
@@ -278,7 +278,7 @@ exports.appendCsv = async function (data) {
                             let barcode = entry[1] === "" ? "NULL" : "'" + entry[1] + "'";
                             // Prep values for query by enclosing in paren, wrapping in single quotes (except barcode), and joining by comma
                             // Postgres uses double single quotes to escape single quotes in strings, so we do a replace
-                            item = "(" + [entry[0], barcode, entry[2], entry[3], date, date].map((s,i) => { return i === 1 ? s : "'"+s.replace(/'/g, "''")+"'" }).join(",") + ")";
+                            item = "('" + uuidv4() + "'," + [entry[0], barcode, entry[2], entry[3], date, date].map((s,i) => { return i === 1 ? s : "'"+s.replace(/'/g, "''")+"'" }).join(",") + ")";
                         }
                         // Expects a file with the same format as an exported file
                         else if (entry.length === 7) {
@@ -287,7 +287,7 @@ exports.appendCsv = async function (data) {
                             let barcode = entry[2] === "" ? "NULL" : "'" + entry[2] + "'";
                             // Prep values for query by enclosing in paren, wrapping in single quotes (except barcode), and joining by comma
                             // Postgres uses double single quotes to escape single quotes in strings, so we do a replace
-                            item = "(" + [entry[1], barcode, entry[3], entry[4], date, date].map((s,i) => { return i === 1 ? s : "'"+s.replace(/'/g, "''")+"'" }).join(",") + ")";
+                            item = "('" + uuidv4() + "'," + [entry[1], barcode, entry[3], entry[4], date, date].map((s,i) => { return i === 1 ? s : "'"+s.replace(/'/g, "''")+"'" }).join(",") + ")";
                         }
                         else {
                             let error = "File not in the expected format, see line " + (i+1);
@@ -298,7 +298,7 @@ exports.appendCsv = async function (data) {
                         // Execute query, on conflict with name/desc composite primary key, add existing and new counts
                         sequelize.query(
                             `INSERT INTO items 
-                            (name, barcode, count, description, "createdAt", "updatedAt") 
+                            (id, name, barcode, count, description, "createdAt", "updatedAt") 
                             VALUES ${item}
                             ON CONFLICT (name, description)
                             DO UPDATE

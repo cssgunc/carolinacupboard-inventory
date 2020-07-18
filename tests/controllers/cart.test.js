@@ -8,6 +8,9 @@ require('dotenv').config();
 
 const CHECKOUT_SUCCESS_MESSAGE = /Your preorder has been successfully placed/;
 const CHECKOUT_ERROR_MESSAGE = /error occurred/;
+const CHECKOUT_TOOMANY_MESSAGE = /more than the quantity in the system/;
+
+var itemId = ''; 
 
 describe('Cart Routes - GET pages', () => {
     before(async () => {
@@ -27,13 +30,14 @@ describe('Cart Routes - checkout', () => {
     before(async () => {
         await dbUtil.preTestSetup();
         await ItemService.createItem('chicken', '', '', 5);
+        itemId = (await ItemService.getAllItems())[0].get('id');
     });
     
     describe('POST /cart - checkout valid cart', () => {
         it('expect success HTTP 200 status with success message', (done) => {
             const requestBody = {
                 cart: JSON.stringify([{
-                    id: 1,
+                    id: itemId,
                     quantity: 1
                 }])
             };
@@ -49,14 +53,14 @@ describe('Cart Routes - checkout', () => {
         it('expect success HTTP 200 status with error message', (done) => {
             const requestBody = {
                 cart: JSON.stringify([{
-                    id: 1,
+                    id: itemId,
                     quantity: 100
                 }])
             };
             supertest(app).post('/cart')
                 .set(testUtil.userAuthHeaders)
                 .send(requestBody)
-                .expect((res) => testUtil.matchResponseText(res, CHECKOUT_ERROR_MESSAGE))
+                .expect((res) => testUtil.matchResponseText(res, CHECKOUT_TOOMANY_MESSAGE))
                 .expect(200, done);
         });
     });

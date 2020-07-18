@@ -5,7 +5,6 @@ exports.init_table = function (sequelize) {
         id: {
             type: Sequelize.INTEGER,
             autoIncrement: true,
-            require: true,
             primaryKey: true
         },
 
@@ -15,28 +14,24 @@ exports.init_table = function (sequelize) {
         },
 		
         item_id: {
-            type: Sequelize.INTEGER,
+            type: Sequelize.UUID,
             allowNull: false,
-            require: true
         },
 
         item_name: {
             type: Sequelize.STRING,
             allowNull: true,
-            require: false
         },
 		
 		count: {
             type: Sequelize.INTEGER,
             allowNull: false,
-            require: true,
             unique: false
         },
 		
 		onyen: {
             type: Sequelize.STRING,
             allowNull: false,
-            require: true,
             unique: false,
             validate: {
                 isAlphanumeric: true
@@ -46,13 +41,11 @@ exports.init_table = function (sequelize) {
 		volunteer_id: {
             type: Sequelize.STRING,
             allowNull: false,
-            require: true
         },
 
 		status: {
             type: Sequelize.STRING,
             allowNull: false,
-            require: true,
             validate: {
                 isIn: [['pending', 'complete', 'cancelled']]
             }

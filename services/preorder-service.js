@@ -68,22 +68,20 @@ exports.createPreorder = async function (cart, onyen) {
         // Creates transactions for each item in the process queue
         for(id in processQueue) {
             quantity = processQueue[id];
-            console.log(id, quantity)
 
             // Skips if quantity is zero or less
             if (quantity <= 0) return;
-
+            console.log(id);
             let item = await Item.findOne({ where: { id: id } });
 
             if (!item) {
-                throw new BadRequestException("The item " + item.name + " doesn't exist in our inventory");
+                throw new BadRequestException("The item doesn't exist in our inventory");
             }
 
-            // console.log(item);
+            console.log(item);
 
             // Throws an error if there aren't enough in stock
             if (quantity > 0 && item.count < quantity) {
-                console.log("BAD");
                 throw new BadRequestException("The amount requested for " + item.name + " is " + (quantity - item.count) + " more than the quantity in the system");
             }
 
@@ -96,8 +94,6 @@ exports.createPreorder = async function (cart, onyen) {
                 volunteer_id: "PREORDER",
                 status: 'pending'
             });
-
-            console.log(transaction);
 
             await transaction.save();
 
@@ -115,6 +111,7 @@ exports.createPreorder = async function (cart, onyen) {
 
         return true;
     } catch (e) {
+        console.error(e);
         // If one transaction fails, we delete each of them and revert the counts
         completedTransactions.forEach(async (transaction) => {
             this.deletePreorder(transaction.id);
@@ -123,7 +120,11 @@ exports.createPreorder = async function (cart, onyen) {
         });
 
         await Order.destroy({ where: { id: newOrderId } });
+
+        throw e;
     }
+
+    console.error('Preorder failed');
     return false;
 }
 

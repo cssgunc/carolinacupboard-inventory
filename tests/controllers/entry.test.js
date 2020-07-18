@@ -1,7 +1,8 @@
 const supertest = require('supertest'),
     app = require('../../app'),
     dbUtil = require('../../db/db-util.js'),
-    testUtil = require('../util/test-util');
+    testUtil = require('../util/test-util'),
+    itemService = require('../../services/item-service');
 
 require('dotenv').config();
 
@@ -15,6 +16,8 @@ const MANUAL_CREATE_SUCCESS = /New item successfully created, id:/,
     CSV_FAIL_MESSAGE = /error occurred/,
     CSV_FILETYPE_MESSAGE = /Please upload a valid CSV file/,
     CSV_NOFILE_MESSAGE = /Please select a CSV file to upload/;
+
+var itemId = '';
 
 describe('Entry Routes - GET pages', () => {
     before(async () => {
@@ -114,18 +117,25 @@ describe('Entry Routes - Entry Workflow', () => {
                 description: 'meaty',
                 count: 1
             };
+
             supertest(app).post('/entry/manual')
                 .set(testUtil.adminAuthHeaders)
                 .send(requestBody)
                 .expect((res) => testUtil.matchResponseText(res, ITEM_FOUND_MESSAGE))
-                .expect(200, done);
+                .expect(200)
+                .end(async (err, res) => {
+                    if (err) done(err);
+                    let items = await itemService.getAllItems();
+                    itemId = items[0].get('id');
+                    done();
+                });
         });
     });
 
     describe('POST /entry/manual/update - manually add count to existing item', () => {
         it('expect success HTTP 302 status', (done) => {
             let requestBody = {
-                id: 1,
+                id: itemId,
                 quantity: 5
             };
             supertest(app).post('/entry/manual/update')
@@ -139,7 +149,7 @@ describe('Entry Routes - Entry Workflow', () => {
     describe('POST /entry/manual/update - manually remove count from existing item', () => {
         it('expect success HTTP 302 status', (done) => {
             let requestBody = {
-                id: 1,
+                id: itemId,
                 quantity: -1
             };
             supertest(app).post('/entry/manual/update')
@@ -153,7 +163,7 @@ describe('Entry Routes - Entry Workflow', () => {
     describe('POST /entry/manual/update - manually add count to existing item, invalid quantity', () => {
         it('expect success HTTP 302 status', (done) => {
             let requestBody = {
-                id: 1,
+                id: itemId,
                 quantity: -100
             };
             supertest(app).post('/entry/manual/update')
@@ -167,7 +177,7 @@ describe('Entry Routes - Entry Workflow', () => {
     describe('POST /entry/manual/update - manually add count to existing item, non-number quantity', () => {
         it('expect success HTTP 302 status', (done) => {
             let requestBody = {
-                id: 1,
+                id: itemId,
                 quantity: "test"
             };
             supertest(app).post('/entry/manual/update')
@@ -181,7 +191,7 @@ describe('Entry Routes - Entry Workflow', () => {
     describe('POST /entry/edit - edit an item from the search page', () => {
         it('expect success HTTP 302 status', (done) => {
             let requestBody = {
-                id: 1,
+                id: itemId,
                 name: 'newname',
                 barcode: '1234567890',
                 description: 'newname'
@@ -196,7 +206,7 @@ describe('Entry Routes - Entry Workflow', () => {
     describe('POST /entry/add - add from search entry page', () => {
         it('expect success HTTP 302 status', (done) => {
             let requestBody = {
-                id: 1,
+                id: itemId,
                 count: 1,
             };
             supertest(app).post('/entry/add')
@@ -209,7 +219,7 @@ describe('Entry Routes - Entry Workflow', () => {
     describe('POST /entry/remove - remove from search entry page, existing user', () => {
         it('expect success HTTP 302 status', (done) => {
             let requestBody = {
-                id: 1,
+                id: itemId,
                 count: 1,
                 onyen: testUtil.userAuthHeaders.uid
             };
@@ -223,7 +233,7 @@ describe('Entry Routes - Entry Workflow', () => {
     describe('POST /entry/remove - remove from search entry page, new user', () => {
         it('expect success HTTP 200 status', (done) => {
             let requestBody = {
-                id: 1,
+                id: itemId,
                 count: 1,
                 onyen: 'onyen'
             };
