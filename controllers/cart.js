@@ -29,6 +29,7 @@ router.post('/', [userIsBasicUser], async function(req, res, next) {
             response.error = 'Unknown error occurred. Please try again later or contact Carolina Cupboard staff.';
         }
     } catch(e) {
+        console.error(exceptionHandler.retrieveException(e));
         response.error = exceptionHandler.retrieveException(e);
     }
 

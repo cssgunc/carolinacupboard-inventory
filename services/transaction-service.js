@@ -29,8 +29,7 @@ exports.getUserPurchaseHistory = async function(onyen) {
             where: {
                 onyen: onyen,
                 count: {[Sequelize.Op.lt]: 0}
-            },
-            group: ['id', 'order_id']
+            }
         });
         return trans;
     } catch(e) {
