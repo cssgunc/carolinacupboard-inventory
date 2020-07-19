@@ -86,6 +86,7 @@ exports.createPreorder = async function (cart, onyen) {
             }
 
             let transaction = await Transaction.build({
+                id: '',
                 item_id: id,
                 item_name: item.name,
                 count: -quantity,
@@ -123,9 +124,6 @@ exports.createPreorder = async function (cart, onyen) {
 
         throw e;
     }
-
-    console.error('Preorder failed');
-    return false;
 }
 
 /**

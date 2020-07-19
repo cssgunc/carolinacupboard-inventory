@@ -1,10 +1,10 @@
-const Sequelize = require("sequelize");
+const   { v4: uuidv4 } = require("uuid"),
+        Sequelize = require("sequelize");
 
 exports.init_table = function (sequelize) {
-    return sequelize.define('transactions', {
+    let Transaction = sequelize.define('transactions', {
         id: {
-            type: Sequelize.INTEGER,
-            autoIncrement: true,
+            type: Sequelize.UUID,
             primaryKey: true
         },
 
@@ -51,4 +51,10 @@ exports.init_table = function (sequelize) {
             }
         }
     });
+
+    Transaction.beforeCreate((transaction) => {
+        return transaction.id = uuidv4();
+    });
+
+    return Transaction;
 }
