@@ -3,7 +3,6 @@ const User = require("../db/sequelize").users,
     BadRequestException = require("../exceptions/bad-request-exception"),
     InternalErrorException = require("../exceptions/internal-error-exception"),
     CarolinaCupboardException = require("../exceptions/carolina-cupboard-exception"),
-    initAdmin = require("../db/db-util").initAdmin,
     csvParser = require("csv-parse");
 
 /**
@@ -274,7 +273,11 @@ exports.deleteAllUsers = async function () {
             where: {},
             truncate: false
         });
-        initAdmin(false);
+
+        await this.createUser("PREORDER", "admin", 0, "preorder@admin.com");
+        if(process.env.DEFAULT_ADMIN) {
+            await this.createUser(process.env.DEFAULT_ADMIN, "admin", 1, "admin@admin.com");
+        }
     } catch (e) {
         if (e instanceof CarolinaCupboardException) {
             throw e;
