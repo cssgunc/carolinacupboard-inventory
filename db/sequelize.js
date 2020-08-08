@@ -35,6 +35,15 @@ if (process.env.POSTGRESQL_SERVICE_PORT) {
 
 let sequelize = new Sequelize(process.env.DATABASE_NAME, process.env.DATABASE_USER, process.env.DATABASE_PASSWORD, options);
 
+;(async () => {
+    try {
+        await sequelize.authenticate();
+        console.log('Connection has been established successfully.');
+    } catch (error) {
+        console.error('Unable to connect to the database:', error);
+    }
+})();
+
 //define models
 sequelize.items = Items.init_table(sequelize);
 sequelize.orders = Orders.init_table(sequelize);
