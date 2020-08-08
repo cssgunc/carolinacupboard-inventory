@@ -16,23 +16,28 @@ exports.userIsAuthenticated = async (req, res, next) => {
 
 // Checks if the user has filled out their PID and email
 exports.userHasInfo = async (req, res, next) => {
-    let user = await userService.getUser(res.locals.onyen);
+    try {
+        let user = await userService.getUser(res.locals.onyen);
 
-    // Allows requests to the /account routes because they are needed to update account info
-    if (req.originalUrl === '/account/update') {
-        // Existing users have a type, new users must be assigned one
-        res.locals.userType = user ? user.get('type') : 'user';
-        next();
-    } 
-    // New users are redirected to update info and users who are missing information are redirected to update info
-    else if (!user || !user.get('pid') || !user.get('email')) {
-        res.locals.firstTime = true;
-        res.redirect('/account/update');
-    } 
-    // All other users are forwarded to the next page
-    else {
-        res.locals.userType = user.get('type');
-        next();
+        // Allows requests to the /account routes because they are needed to update account info
+        if (req.originalUrl === '/account/update') {
+            // Existing users have a type, new users must be assigned one
+            res.locals.userType = user ? user.get('type') : 'user';
+            next();
+        } 
+        // New users are redirected to update info and users who are missing information are redirected to update info
+        else if (!user || !user.get('pid') || !user.get('email')) {
+            res.locals.firstTime = true;
+            res.redirect('/account/update');
+        } 
+        // All other users are forwarded to the next page
+        else {
+            res.locals.userType = user.get('type');
+            next();
+        }
+    } catch (e) {
+        console.log(exceptionHandler.retrieveException(e));
+        throw(exceptionHandler.retrieveException(e));
     }
 }
 

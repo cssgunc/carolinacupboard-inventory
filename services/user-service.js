@@ -13,8 +13,7 @@ exports.getUser = async function (onyen) {
     try {
         let user = await User.findOne({
             where: { onyen: onyen }
-        }
-        );
+        });
         return user;
     } catch (e) {
         throw new InternalErrorException("A problem occurred when retrieving user", e);
