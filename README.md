@@ -20,10 +20,11 @@ This is an inventory management app developed by UNC-CH CS+Social Good for Carol
 1. Go to `localhost:8080` in your web browser.
 
 ## Environment Variables
-`DATABASE_URL`: The url for your postgresql server
+`DATABASE_URL`: The url for the postgresql server
 
-- The format of the URL string is `postgres://username:password@databaseurl:portnumber/databasename`
-- If you've installed Postgres locally, the default should be `postgres://postgres:YOURPASSWORD@localhost:5432/postgres`
+`DATABASE_USER`: The login username for the postgresql server
+
+`DATABASE_PASSWORD`: The password for the postgresql login
 
 `DEFAULT_ADMIN`: The onyen that will be created in the `USERS` table as the default admin whenever the database is reinitialized
 

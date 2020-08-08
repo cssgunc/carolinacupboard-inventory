@@ -28,7 +28,7 @@ if(process.env.POSTGRESQL_SERVICE_PORT) {
     options.post = process.env.POSTGRESQL_SERVICE_PORT;
 }
 
-let sequelize = new Sequelize(process.env.DATABASE_URL, options);
+let sequelize = new Sequelize(process.env.DATABASE_URL, process.env.DATABASE_USER, process.env.DATABASE_PASSWORD, options);
 
 //define models
 sequelize.items = Items.init_table(sequelize);
