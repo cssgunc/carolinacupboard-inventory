@@ -2,7 +2,7 @@
   "kind": "Template",
   "apiVersion": "v1",
   "metadata": {
-    "name": "nodejs-example",
+    "name": "ccinventory",
     "annotations": {
       "openshift.io/display-name": "Node.js",
       "description": "An example Node.js application with no database. For more information about using this template, including OpenShift considerations, see https://github.com/sclorg/nodejs-ex/blob/master/README.md.",
@@ -17,8 +17,8 @@
   },
   "message": "The following service(s) have been created in your project: ${NAME}.\n\nFor more information about using this template, including OpenShift considerations, see https://github.com/sclorg/nodejs-ex/blob/master/README.md.",
   "labels": {
-      "template": "nodejs-example",
-      "app": "nodejs-example"
+      "template": "ccinventory",
+      "app": "ccinventory"
   },
   "objects": [
     {
@@ -153,7 +153,7 @@
             "imageChangeParams": {
               "automatic": true,
               "containerNames": [
-                "nodejs-example"
+                "ccinventory"
               ],
               "from": {
                 "kind": "ImageStreamTag",
@@ -179,7 +179,7 @@
           "spec": {
             "containers": [
               {
-                "name": "nodejs-example",
+                "name": "ccinventory",
                 "image": " ",
                 "ports": [
                   {
@@ -222,7 +222,7 @@
       "displayName": "Name",
       "description": "The name assigned to all of the frontend objects defined in this template.",
       "required": true,
-      "value": "nodejs-example"
+      "value": "ccinventory"
     },
     {
       "name": "NAMESPACE",
