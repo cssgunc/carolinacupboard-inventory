@@ -20,11 +20,15 @@ This is an inventory management app developed by UNC-CH CS+Social Good for Carol
 1. Go to `localhost:8080` in your web browser.
 
 ## Environment Variables
-`DATABASE_URL`: The url for the postgresql server
+`DATABASE_NAME`: The name of the postgresql server
 
 `DATABASE_USER`: The login username for the postgresql server
 
 `DATABASE_PASSWORD`: The password for the postgresql login
+
+`DATABASE_HOST`: The host address of the postgresql server
+
+`DATABASE_PORT`: The port number of the postgresql server
 
 `DEFAULT_ADMIN`: The onyen that will be created in the `USERS` table as the default admin whenever the database is reinitialized
 
@@ -134,7 +138,7 @@ You can only access the CloudApps web portal if you are on UNC network or using 
 This service runs our main application code. It is set up to automatically build from our Github repo. You can get the webhook for automatic builds by going to `Builds > ccinventory > Configuration`.
 
 The deployment's environment variables can be accessed through `Deployments > ccinventory > environments`. The deployment has the following environment variables:
-- `DATABASE_URL`: The url for the postgresql server
+- `DATABASE_NAME`: The name of the postgresql server
 - `DATABASE_USER`: The login username for the postgresql server
 - `DATABASE_PASSWORD`: The password for the postgresql login
 

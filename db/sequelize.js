@@ -4,7 +4,7 @@ let Sequelize       = require("sequelize"),
     Transactions    = require("../models/transactions"),
     Users           = require("../models/users");
 
-if (!process.env.DATABASE_URL) {
+if (!process.env.DATABASE_NAME) {
     require("dotenv").config()
 }
 
@@ -19,16 +19,21 @@ let options = {
     operatorsAliases: false,
     logging: false
 }
-if(process.env.POSTGRESQL_SERVICE_HOST) {
+if (process.env.POSTGRESQL_SERVICE_HOST) {
     console.log("POSTGRESQL_SERVICE_HOST: " + process.env.POSTGRESQL_SERVICE_HOST);
     options.host = process.env.POSTGRESQL_SERVICE_HOST;
-}
-if(process.env.POSTGRESQL_SERVICE_PORT) {
-    console.log("POSTGRESQL_SERVICE_PORT: " + process.env.POSTGRESQL_SERVICE_PORT);
-    options.post = process.env.POSTGRESQL_SERVICE_PORT;
+} else if (process.env.DATABASE_HOST) {
+    options.host = process.env.DATABASE_HOST;
 }
 
-let sequelize = new Sequelize(process.env.DATABASE_URL, process.env.DATABASE_USER, process.env.DATABASE_PASSWORD, options);
+if (process.env.POSTGRESQL_SERVICE_PORT) {
+    console.log("POSTGRESQL_SERVICE_PORT: " + process.env.POSTGRESQL_SERVICE_PORT);
+    options.port = process.env.POSTGRESQL_SERVICE_PORT;
+} else if (process.env.DATABASE_PORT) {
+    options.port = process.env.DATABASE_PORT;
+}
+
+let sequelize = new Sequelize(process.env.DATABASE_NAME, process.env.DATABASE_USER, process.env.DATABASE_PASSWORD, options);
 
 //define models
 sequelize.items = Items.init_table(sequelize);
