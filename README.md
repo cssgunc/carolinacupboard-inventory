@@ -26,13 +26,13 @@ This is an inventory management app developed by UNC-CH CS+Social Good for Carol
 
 `DATABASE_PASSWORD`: The password for the postgresql login
 
-`DATABASE_HOST`: The host address of the postgresql server
+`DATABASE_HOST`: The host address of the postgresql server (optional, defaults to `localhost`)
 
-`DATABASE_PORT`: The port number of the postgresql server
+`DATABASE_PORT`: The port number of the postgresql server (optional, defaults to `5432`)
 
-`DEFAULT_ADMIN`: The onyen that will be created in the `USERS` table as the default admin whenever the database is reinitialized
+`DEFAULT_ADMIN`: The onyen that will be created in the `USERS` table as the default admin whenever the database is reinitialized (optional)
 
-`DEV_ONYEN`: The onyen user you want the app to see you as when running in dev mode
+`DEV_ONYEN`: The onyen user you want the app to see you as when running in dev mode (optional)
 
 You may add more environment variables if you would like. You can access them through `process.env.ENV_VAR_NAME`
 
@@ -66,6 +66,10 @@ This folder contains files for custom exceptions. These are not fully implemente
 ### `models`
 
 This folder contains files that describe the table schemas to Sequelize so that it can properly create tables and modify entries. 
+
+### `pgdump`
+
+This folder contains SQL code that can be run to recreate the tables through psql. You probably won't need these unless a schema mismatch is causing connection errors. These need to be updated using `pg_dump` if you update the schemas in `models`.
 
 ### `scripts`
 
@@ -158,14 +162,64 @@ The route for the Shibboleth Proxy is chosen during provisioning and can be foun
 
 ### OpenShift CLI
 
-Carolina CloudApps runs on the OpenShift platform. At times, it may be preferable to use a CLI interface to manage services. You can get started with the CLI by reading the guide [here](https://docs.openshift.com/enterprise/3.0/cli_reference/get_started_cli.html).
+Carolina CloudApps runs on the OpenShift platform. At times, it may be preferable to use a CLI interface to manage services. You can install it [here](https://uncch.service-now.com/sp?id=kb_article_view&sysparm_article=KB0010400&sys_kb_id=94c9a178db5b37086cf4710439961909). You can get started with the CLI by reading the guide [here](https://docs.openshift.com/enterprise/3.0/cli_reference/get_started_cli.html).
 
-### Known Issues
+## CloudApps Setup
 
-#### Cold Starts
+### Provisioning Services
+
+You need to provision the three services mentioned above (Node.js, PostgreSQL, and UNC Shibboleth Proxy). 
+
+#### Node.js
+
+Put a link to your Git repo under `Git Repository`. Remember the `Application name` of your Node.js service for the next step.
+
+#### UNC Shibboleth Proxy
+
+You must create the Node.js service before the Shibboleth Proxy. When provisioning the Shibboleth Proxy put the name of your Node.js service under `Service to protect`. The rest of the settings can be left at default or changed based on your needs.
+
+The Shibboleth Proxy requires approval from the CloudApps ITS team so you should request provisioning ahead of time.
+
+#### PostgreSQL
+
+When provisioning the PostgreSQL service, create a `PostgreSQL Connection Username` and `PostgreSQL Connection Password`. You **don't** need to remember these.
+
+### Setting up Environment variables
+
+Enter your project and in the Overview click on your Node.js service. Go to the Environments tab. Create the following environment variables using `Add Value`:
+
+- `DATABASE_NAME`: the name of your PostgreSQL service
+- `DEFAULT_ADMIN`: an onyen of the first admin to be initialized
+
+Create the following environment variables using `Add Value from Config Map or Secret`:
+
+- `DATABASE_USER`: 
+    - resource = your PostgreSQL service
+    - key = `database-user`
+- `DATABASE_PASSWORD`: 
+    - resource = your PostgreSQL service
+    - key = `database-password`
+
+### Initializing the Database
+
+Please install the Openshift CLI here: https://uncch.service-now.com/sp?id=kb_article_view&sysparm_article=KB0010400&sys_kb_id=94c9a178db5b37086cf4710439961909
+
+Once it's installed and you've logged in with `oc login ...`, run `oc get pods`. Find the name of your current Node.js deployment pod. Run `oc rsh NAME_OF_NODE_DEPLOYMENT_POD`. Once you're connected, run `npm run bootstrap`. 
+
+**WARNING**: This will delete all existing data in the database.
+
+### Setting up automatic builds and deployments
+
+See https://help.unc.edu/sp?id=kb_article&sys_id=90f7ed34db1b37086cf47104399619eb
+
+and https://docs.github.com/en/developers/webhooks-and-events/creating-webhooks
+
+## Known CloudApps Issues
+
+### Cold Starts
 
 After a certain period of inactivity in a service, OpenShift will shutdown the pods used to host that service. When the service is accessed again after a shutdown, it takes a few minutes to start the pods. Typically the PostgreSQL pod will take longer to start than the Node.js pod.
 
-### Getting Help
+## Getting Help
 
 If you need help with CloudApps, you can search [help.unc.edu](https://help.unc.edu) for CloudApps articles. If you need more specific help, or need more clarification, you can request service (againt at [help.unc.edu](https://help.unc.edu)) and write a ticket for CloudApps Services.
